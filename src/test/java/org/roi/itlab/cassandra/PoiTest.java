@@ -16,13 +16,8 @@ public class PoiTest {
 
 	@Test
 	public void testPoiLoad() throws IOException {
-		final Function<String, Poi> mapToPoi = (line) -> {
-			String[] p = line.split("\\|");
-			return new Poi(p[1], p[4], Integer.parseInt(p[0]), Double.parseDouble(p[2]), Double.parseDouble(p[3]));
-		};
 
-		List<Poi> pois = Files.lines(Paths.get(testPois)).map(mapToPoi)
-				.collect(Collectors.toList());
+		List<Poi> pois = PoiLoader.loadFromCsv(testPois);
 
 		Assert.assertEquals(pois.size(), 39327);
 	}
