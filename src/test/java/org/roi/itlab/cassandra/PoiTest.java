@@ -20,5 +20,11 @@ public class PoiTest {
 		List<Poi> pois = PoiLoader.loadFromCsv(testPois);
 
 		Assert.assertEquals(pois.size(), 39327);
+
+		Poi poi = pois.get(0);
+		Assert.assertEquals(poi.getType(), 161);
+		Assert.assertEquals(poi.getName(), "Биржевая площадь");
+		Assert.assertEquals(poi.getLoc().getLatitude(), 59.9440931, 0.0001);
+		Assert.assertEquals(poi.getLoc().getLongitude(), 30.3055493, 0.0001);
 	}
 }
