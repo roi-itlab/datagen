@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
  */
 public class PoiLoader {
 
-    private PoiLoader() {
-    }
+    private PoiLoader() {}
 
     public static List<Poi> loadFromCsv(String filename) throws IOException {
         final Function<String, Poi> mapToPoi = line -> {
