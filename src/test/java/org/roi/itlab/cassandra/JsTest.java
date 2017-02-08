@@ -22,25 +22,12 @@ public class JsTest {
 	private static final String testJs = "./src/test/resources/org/roi/payg/user.js";
 	private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
 
-	public List<Poi> loadPois() throws IOException {
-		final Function<String, Poi> mapToPoi = (line) -> {
-			String[] p = line.split("\\|");
-			return new Poi(p[1], p[4], Integer.parseInt(p[0]), Double.parseDouble(p[2]), Double.parseDouble(p[3]));
-		};
-
-		List<Poi> pois = Files.lines(Paths.get(testPois)).map(mapToPoi)
-				.collect(Collectors.toList());
-
-		return pois;
-	}
-
-	
     @Test
     public void testJs() throws ScriptException, IOException, NoSuchMethodException {
     	byte[] bytes = Files.readAllBytes(Paths.get(testJs));
     	ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
     	engine.eval(new String(bytes));
-    	engine.setBindings(new SimpleBindings() {{put("pois", loadPois());}}, ScriptContext.GLOBAL_SCOPE);
+    	engine.setBindings(new SimpleBindings() {{put("pois", PoiLoader.loadFromCsv(testPois));}}, ScriptContext.GLOBAL_SCOPE);
     	Invocable invocable = (Invocable) engine;
     	User user = new User();
     	user.setName("Test");

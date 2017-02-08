@@ -13,51 +13,6 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <jackson.version>2.7.3</jackson.version>
     </properties>
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <skipDB>false</skipDB>
-            </properties>
-        </profile>
-        <profile>
-            <id>skipTestCompileAndRun</id>
-            <activation>
-                <property>
-                    <name>maven.test.skip</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <properties>
-                <skipDB>true</skipDB>
-            </properties>
-        </profile>
-        <profile>
-            <id>skipTestRun</id>
-            <activation>
-                <property>
-                    <name>skipTests</name>
-                </property>
-            </activation>
-            <properties>
-                <skipDB>true</skipDB>
-            </properties>
-        </profile>
-        <profile>
-            <id>skipITRun</id>
-            <activation>
-                <property>
-                    <name>skipITs</name>
-                </property>
-            </activation>
-            <properties>
-                <skipDB>true</skipDB>
-            </properties>
-        </profile>
-    </profiles>
     <dependencies>
         <dependency>
             <groupId>com.graphhopper</groupId>
@@ -89,65 +44,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19</version>
-                <configuration>
-                    <argLine>-Xmx256m</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.13</version>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>verify</id>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <configuration>
-                    <mainClass>org.roi.itlab.cassandra.PopulateDb</mainClass>
-                    <classpathScope>test</classpathScope>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>populatedb</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${skipDB}</skip>
-                        </configuration>
-                    </execution>
-                    <!-- <execution>
-                        <id>cleandb</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution> -->
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

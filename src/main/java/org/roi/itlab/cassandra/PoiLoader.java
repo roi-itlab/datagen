@@ -12,8 +12,11 @@ import java.util.stream.Collectors;
  */
 public class PoiLoader {
 
-    static public List<Poi> loadFromCsv(String filename) throws IOException {
-        final Function<String, Poi> mapToPoi = (line) -> {
+    private PoiLoader() {
+    }
+
+    public static List<Poi> loadFromCsv(String filename) throws IOException {
+        final Function<String, Poi> mapToPoi = line -> {
             String[] p = line.split("\\|");
             return new Poi(p[1], p[4], Integer.parseInt(p[0]), Double.parseDouble(p[2]), Double.parseDouble(p[3]));
         };
