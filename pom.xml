@@ -13,22 +13,22 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <jackson.version>2.7.3</jackson.version>
     </properties>
-    <repositories>
+<!--    <repositories>
         <repository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-    </repositories>
+    </repositories> -->
     <dependencies>
         <dependency>
             <groupId>com.graphhopper</groupId>
             <artifactId>graphhopper-core</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>0.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.graphhopper</groupId>
             <artifactId>graphhopper-reader-osm</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>0.8.2</version>
         </dependency>
 
         <dependency>
