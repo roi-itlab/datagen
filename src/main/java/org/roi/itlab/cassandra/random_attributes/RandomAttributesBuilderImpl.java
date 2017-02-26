@@ -6,6 +6,10 @@ package org.roi.itlab.cassandra.random_attributes;
 public class RandomAttributesBuilderImpl implements RandomAttributesBuilder {
     private Attributes att;
 
+    public  RandomAttributesBuilderImpl()
+    {
+        att = new Attributes();
+    }
     @Override
     public RandomAttributesBuilder setAge(int age) {
         att.setAge(age);

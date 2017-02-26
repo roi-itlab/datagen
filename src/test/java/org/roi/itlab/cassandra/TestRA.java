@@ -32,4 +32,5 @@ public class TestRA {
         Assert.assertEquals(attributes.getExpirience(), 10);
         Assert.assertEquals(attributes.getAgression(), 5);
     }
+
 }
