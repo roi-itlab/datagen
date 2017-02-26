@@ -13,6 +13,7 @@ public class RandomAttributesDirector {
 
     public Attributes constract()
     {
+        //test without random distributions
         return builder.setAge(25).setExperience(10).setAgression(5).build();
     }
 }
