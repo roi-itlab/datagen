@@ -19,16 +19,23 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories> -->
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
-            <groupId>com.graphhopper</groupId>
-            <artifactId>graphhopper-core</artifactId>
-            <version>0.8.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.graphhopper</groupId>
+            <groupId>com.github.roi-itlab.graphhopper</groupId>
             <artifactId>graphhopper-reader-osm</artifactId>
-            <version>0.8.2</version>
+            <version>-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.roi-itlab.graphhopper</groupId>
+            <artifactId>graphhopper-core</artifactId>
+            <version>-SNAPSHOT</version>
         </dependency>
 
         <dependency>
