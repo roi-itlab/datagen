@@ -12,8 +12,11 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <jackson.version>2.7.3</jackson.version>
-        <graphhopper.version>0.8.2</graphhopper.version>
+        <!--<graphhopper.group>com.graphhopper</graphhopper.group>-->
+        <!--<graphhopper.version>0.8.2</graphhopper.version>-->
         <!--<graphhopper.version>0.9-SNAPSHOT</graphhopper.version>-->
+        <graphhopper.group>com.github.roi-itlab.graphhopper</graphhopper.group>
+        <graphhopper.version>-SNAPSHOT</graphhopper.version>
     </properties>
 <!--    <repositories>
         <repository>
@@ -21,14 +24,20 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories> -->
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
-            <groupId>com.graphhopper</groupId>
+            <groupId>${graphhopper.group}</groupId>
             <artifactId>graphhopper-core</artifactId>
             <version>${graphhopper.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.graphhopper</groupId>
+            <groupId>${graphhopper.group}</groupId>
             <artifactId>graphhopper-reader-osm</artifactId>
             <version>${graphhopper.version}</version>
         </dependency>
