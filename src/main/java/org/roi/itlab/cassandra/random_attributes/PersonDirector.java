@@ -34,5 +34,18 @@ public class PersonDirector {
             System.out.println(a.getAge() + "   " + a.getExperience() + "   " + a.getWorkStart() + "    " + a.getWorkDuration());
         }
 
+        System.out.println("WG");
+        PersonBuilderWG g = new PersonBuilderWG();
+        director = new PersonDirector(g);
+        list.clear();
+        for(int i = 0; i < 10; ++i) {
+            list.add(director.constract());
+        }
+
+        for(Person a : list){
+            //System.out.println(a);
+            System.out.println(a.getAge() + "   " + a.getExperience() + "   " + a.getWorkStart() + "    " + a.getWorkDuration());
+        }
+
     }
 }
