@@ -8,6 +8,7 @@ public interface PersonBuilder {
     PersonBuilder setWorkStart(final int workStart);
     PersonBuilder setWorkDuration(final int workDuration);
     PersonBuilder setExperience(final int experience);
+    PersonBuilder setWorkEnd(final int workEnd);
 
     void buildAttributes();
 

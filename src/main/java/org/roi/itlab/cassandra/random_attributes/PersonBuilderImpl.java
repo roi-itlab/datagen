@@ -14,6 +14,7 @@ public class PersonBuilderImpl implements PersonBuilder{
     private List<Point> pointList2;
     private List<Point> pointList3;
     private List<Point> pointList4;
+    private final int LICENSE_AGE = 18;
 
     public PersonBuilderImpl()
     {
@@ -28,10 +29,10 @@ public class PersonBuilderImpl implements PersonBuilder{
 
 
         pointList2 = new ArrayList<>();
-        pointList2.add(new Point(0,0));
-        pointList2.add(new Point(4,2));
-        pointList2.add(new Point(10,3));
-        pointList2.add(new Point(20,3));
+        pointList2.add(new Point(0,1));
+        pointList2.add(new Point(5,2));
+        pointList2.add(new Point(30,4));
+        pointList2.add(new Point(60,2));
 
         pointList3 = new ArrayList<>();
         pointList3.add(new Point(7,3));
@@ -43,7 +44,6 @@ public class PersonBuilderImpl implements PersonBuilder{
         pointList4.add(new Point(8,4));
         pointList4.add(new Point(12,2));
 
-        //create();
     }
 
     public int rand(int a, int b, int c, List<Point> list)
@@ -76,10 +76,11 @@ public class PersonBuilderImpl implements PersonBuilder{
     public void buildAttributes()
     {
         person = new Person();
-        setAge(rand(75+18, -18,4,pointList));
-        setExperience(rand(20,0,4,pointList2));
+        setAge(rand(75+LICENSE_AGE, -LICENSE_AGE,4,pointList));
+        setExperience(rand(person.getAge()-LICENSE_AGE,0,4,pointList2));
         setWorkStart(rand(19,-7,11,pointList3));
         setWorkDuration(rand(13,-4,4,pointList4));
+        setWorkEnd(person.getWorkStart() + person.getWorkDuration());
     }
 
     @Override
@@ -107,8 +108,13 @@ public class PersonBuilderImpl implements PersonBuilder{
     }
 
     @Override
+    public PersonBuilder setWorkEnd(int workEnd) {
+        person.setWorkEnd(workEnd);
+        return this;
+    }
+
+    @Override
     public Person getResult() {
-        //buildAttributes();
         return person;
     }
 }
