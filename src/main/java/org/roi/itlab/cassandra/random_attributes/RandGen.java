@@ -28,10 +28,15 @@ public class RandGen {
     }
     private int rand()
     {
-        int m = 0;
-        while(m <=0)
+        int m = -1;
+        if(max+min > 0) {
+            while (m < 0) {
+                m = distribution(r.nextInt(max) + min, y * r.nextDouble(), list);
+            }
+        }
+        else
         {
-            m = distribution(r.nextInt(max)+min, y*r.nextDouble(), list);
+            m = distribution(max + min, y * r.nextDouble(), list);
         }
         return m;
     }
@@ -41,15 +46,14 @@ public class RandGen {
 
         for(int i=1; i < list.size();++i)
         {
-            if(a <= list.get(i).x && a > list.get(i-1).x)
+            if(a <= list.get(i).x && a >= list.get(i-1).x &&
+                    b < (list.get(i).y-list.get(i-1).y)/(list.get(i).x-list.get(i-1).x)*(a-list.get(i-1).x)+list.get(i-1).y)
             {
-                if(b < (list.get(i).y-list.get(i-1).y)/(list.get(i).x-list.get(i-1).x)*(a-list.get(i-1).x)+list.get(i-1).y)
-                {
                     return a;
-                }
+
             }
         }
-        return 0;
+        return -1;
     }
     public int generate()
     {

@@ -18,7 +18,6 @@ public class PersonBuilderImpl implements PersonBuilder{
 
     public PersonBuilderImpl()
     {
-        //person = new Person();
         r = new Random(System.currentTimeMillis());
 
         pointList = new ArrayList<>();
@@ -48,31 +47,34 @@ public class PersonBuilderImpl implements PersonBuilder{
 
     public int rand(int a, int b, int c, List<Point> list)
     {
-        int m = 0;
-        while(m <=0)
+        int m = -1;
+        if(a + b >0) {
+            while (m < 0) {
+                m = distribution(r.nextInt(a) + b, c * r.nextDouble(), list);
+            }
+        }
+        else
         {
-            m = distribution(r.nextInt(a)+b, c*r.nextDouble(), list);
+            m = distribution(a + b, c * r.nextDouble(), list);
         }
         return m;
     }
 
 
 
-    public int distribution(int a, double b, List<Point> list)
-    {
+    public int distribution(int a, double b, List<Point> list) {
 
-        for(int i=1; i < list.size();++i)
-        {
-            if(a <= list.get(i).x && a > list.get(i-1).x)
-            {
-                if(b < (list.get(i).y-list.get(i-1).y)/(list.get(i).x-list.get(i-1).x)*(a-list.get(i-1).x)+list.get(i-1).y)
-                {
-                    return a;
+            for (int i = 1; i < list.size(); ++i) {
+                if (a <= list.get(i).x && a >= list.get(i - 1).x &&
+                    b < (list.get(i).y - list.get(i - 1).y) / (list.get(i).x - list.get(i - 1).x) * (a - list.get(i - 1).x) + list.get(i - 1).y) {
+                        return a;
+                    }
                 }
-            }
-        }
-        return 0;
+
+        return -1;
     }
+
+    @Override
     public void buildAttributes()
     {
         person = new Person();

@@ -24,7 +24,7 @@ public class PersonBuilderWG implements PersonBuilder{
     public void buildAttributes()
     {
         person = new Person();
-        //System.out.println(person);
+
         list = new ArrayList<>();
         list.add(new Point(18,1));
         list.add(new Point(25,2));
