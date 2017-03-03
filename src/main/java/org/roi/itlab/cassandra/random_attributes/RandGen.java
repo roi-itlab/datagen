@@ -14,18 +14,13 @@ public class RandGen {
     private Random r;
     private List<Point> list;
 
-    public RandGen(int min, int max, int y, List<Point> list )
+    public RandGen()
     {
         r = new Random(System.currentTimeMillis());
-        this.list = list;
-        this.min = min;
-        this.max = max;
-        this.y =y;
     }
 
     public void initialize(int min, int max, int y, List<Point> list )
     {
-        r = new Random(System.currentTimeMillis());
         this.list = list;
         this.min = min;
         this.max = max;

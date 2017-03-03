@@ -15,6 +15,7 @@ public class PersonBuilderWG implements PersonBuilder{
     public PersonBuilderWG()
     {
         person = new Person();
+        generator = new RandGen();
     }
 
     private void create()
@@ -27,7 +28,7 @@ public class PersonBuilderWG implements PersonBuilder{
         list.add(new Point(30,3));
         list.add(new Point(60,1));
 
-        generator = new RandGen(-18,75+18,4, list);
+        generator.initialize(-18,75+18,4, list);
         setAge(generator.generate());
         //System.out.println(generator.generate());
         list.clear();
@@ -82,6 +83,7 @@ public class PersonBuilderWG implements PersonBuilder{
     @Override
     public Person build() {
         create();
+        //System.out.println(person.getAge() + "   " + person.getExperience() + "   " + person.getWorkStart() + "    " + person.getWorkDuration());
         return person;
     }
 }

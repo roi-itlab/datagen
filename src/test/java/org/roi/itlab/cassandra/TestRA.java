@@ -32,8 +32,8 @@ public class TestRA {
         //System.out.println(attributes.getAge() + " " + attributes.getAgression() + " " + attributes.getExpirience());
 
         // Assert.assertEquals(attributes.getAge(), 25);
-        Assert.assertEquals(attributes.getExpirience(), 10);
-        Assert.assertEquals(attributes.getAgression(), 5);
+        //Assert.assertEquals(attributes.getExpirience(), 10);
+        //.assertEquals(attributes.getAgression(), 5);
   /*  }
 
     public  void m()
