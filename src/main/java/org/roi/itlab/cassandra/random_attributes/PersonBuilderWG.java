@@ -18,7 +18,8 @@ public class PersonBuilderWG implements PersonBuilder{
         generator = new RandGen();
     }
 
-    private void create()
+    @Override
+    public void buildAttributes()
     {
         person = new Person();
         //System.out.println(person);
@@ -81,8 +82,8 @@ public class PersonBuilderWG implements PersonBuilder{
     }
 
     @Override
-    public Person build() {
-        create();
+    public Person getResult() {
+        //buildAttributes();
         //System.out.println(person.getAge() + "   " + person.getExperience() + "   " + person.getWorkStart() + "    " + person.getWorkDuration());
         return person;
     }

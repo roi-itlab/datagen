@@ -15,7 +15,8 @@ public class PersonDirector {
     }
     public Person constract()
     {
-        return builder.build();
+        builder.buildAttributes();
+        return builder.getResult();
     }
 
     public static void main(String[] args)

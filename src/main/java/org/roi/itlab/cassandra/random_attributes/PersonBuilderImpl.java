@@ -73,7 +73,7 @@ public class PersonBuilderImpl implements PersonBuilder{
         }
         return 0;
     }
-    private void create()
+    public void buildAttributes()
     {
         person = new Person();
         setAge(rand(75+18, -18,4,pointList));
@@ -107,11 +107,8 @@ public class PersonBuilderImpl implements PersonBuilder{
     }
 
     @Override
-    public Person build() {
-        create();
-        //System.out.println(person);
+    public Person getResult() {
+        //buildAttributes();
         return person;
-        //new PersonBuilderImpl().setAge(rand(65, -18,4,pointList)).setExperience(rand(30,0,4,pointList2)).
-          //      setAgression(rand(11,0,12,pointList3)).build();
     }
 }

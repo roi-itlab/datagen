@@ -9,5 +9,7 @@ public interface PersonBuilder {
     PersonBuilder setWorkDuration(final int workDuration);
     PersonBuilder setExperience(final int experience);
 
-    Person build();
+    void buildAttributes();
+
+    Person getResult();
 }
