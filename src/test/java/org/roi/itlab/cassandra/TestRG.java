@@ -40,18 +40,17 @@ public class TestRG {
                 mean += a.getAge();
             }
             mean_mean +=mean / list.size();
-         /*   mean =0;
+            mean =0;
             for (Person a : list2) {
                 mean += a.getAge();
             }
-            mean_mean2 +=mean / list2.size();*/
+            mean_mean2 +=mean / list2.size();
         }
     }
 
     @Test
     public void TestBuilder() throws Exception {
-        //System.out.println("Mean " + mean_mean/1000);
         Assert.assertEquals(mean_mean/1000, 30, 12);
-       // Assert.assertEquals(mean_mean2/1000, 30, 12);
+        Assert.assertEquals(mean_mean2/1000, 30, 12);
     }
 }
