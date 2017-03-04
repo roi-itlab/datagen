@@ -20,6 +20,7 @@ public class TestRG {
     List<Person> list2 = new ArrayList<>();
     int mean_mean2 = 0;
     Frequency f = new Frequency();
+    List<Comparable<?>> mode;
 
     @Before
     public  void init()
@@ -48,8 +49,9 @@ public class TestRG {
         }
         mean_mean2 =mean / list2.size();
         //System.out.println(mean_mean2);
-       /* List<Comparable<?>> mode = f.getMode();
-
+        mode = f.getMode();
+        //System.out.println(mode.get(0));
+        /*
         for(int i = 0 ; i < mode.size();++i)
         {
             System.out.println("Mode " + mode.get(i) + "  freq = " + f.getCount(mode.get(i)));
@@ -69,5 +71,6 @@ public class TestRG {
     public void TestBuilder() throws Exception {
         Assert.assertEquals(mean_mean, 30, 12);
         Assert.assertEquals(mean_mean2, 30, 12);
+        Assert.assertEquals(mode.get(0).toString(), "30");
     }
 }
