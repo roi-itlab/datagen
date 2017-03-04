@@ -1,6 +1,7 @@
 package org.roi.itlab.cassandra.random_attributes;
 
 import java.awt.*;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class PersonBuilderWG implements PersonBuilder{
         list.add(new Point(12,1));
 
         generator.initialize(-7,19,11, list);
-        setWorkStart(generator.generate());
+        setWorkStart(LocalTime.of(generator.generate(),0));
 
         list.clear();
         list.add(new Point(4,1));
@@ -56,9 +57,9 @@ public class PersonBuilderWG implements PersonBuilder{
         list.add(new Point(12,2));
 
         generator.initialize(-4,13,4,list);
-        setWorkDuration(generator.generate());
+        setWorkDuration(LocalTime.of(generator.generate(),0));
 
-        setWorkEnd(person.getWorkStart() + person.getWorkDuration());
+        setWorkEnd(LocalTime.of(person.getWorkStart().getHour() + person.getWorkDuration().getHour(),0));
     }
 
     @Override
@@ -74,19 +75,19 @@ public class PersonBuilderWG implements PersonBuilder{
     }
 
     @Override
-    public PersonBuilder setWorkDuration(int workDuration) {
+    public PersonBuilder setWorkDuration(LocalTime workDuration) {
         person.setWorkDuration(workDuration);
         return this;
     }
 
     @Override
-    public PersonBuilder setWorkStart(int workStart) {
+    public PersonBuilder setWorkStart(LocalTime workStart) {
         person.setWorkStart(workStart);
         return this;
     }
 
     @Override
-    public PersonBuilder setWorkEnd(int workEnd) {
+    public PersonBuilder setWorkEnd(LocalTime workEnd) {
         person.setWorkEnd(workEnd);
         return this;
     }

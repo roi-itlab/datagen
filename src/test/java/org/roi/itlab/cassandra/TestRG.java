@@ -46,6 +46,8 @@ public class TestRG {
             }
             mean_mean2 +=mean / list2.size();
         }
+        System.out.println(list.get(0).getAge()+ " "+ list.get(0).getExperience() + " "+ list.get(0).getWorkStart() +
+        " " + list.get(0).getWorkDuration() + " "+ list.get(0).getWorkEnd());
     }
 
     @Test

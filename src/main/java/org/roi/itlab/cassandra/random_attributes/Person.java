@@ -2,15 +2,17 @@ package org.roi.itlab.cassandra.random_attributes;
 
 import org.roi.itlab.cassandra.Poi;
 
+import java.time.LocalTime;
+
 /**
  * Created by Vadim on 01.03.2017.
  */
 public class Person {
     private int age;
-    private int workStart;
-    private int workDuration;
+    private LocalTime workStart;
+    private LocalTime workDuration;
     private int experience;
-    private int workEnd;
+    private LocalTime workEnd;
     private Poi home;
     private Poi work;
 
@@ -24,11 +26,11 @@ public class Person {
         return age;
     }
 
-    public int getWorkStart() {
+    public LocalTime getWorkStart() {
         return workStart;
     }
 
-    public int getWorkDuration() {
+    public LocalTime getWorkDuration() {
         return workDuration;
     }
 
@@ -36,7 +38,7 @@ public class Person {
         return experience;
     }
 
-    public int getWorkEnd() {
+    public LocalTime getWorkEnd() {
         return workEnd;
     }
 
@@ -60,11 +62,11 @@ public class Person {
         this.age = age;
     }
 
-    public void setWorkStart(int workStart) {
+    public void setWorkStart(LocalTime workStart) {
         this.workStart = workStart;
     }
 
-    public void setWorkDuration(int workDuration) {
+    public void setWorkDuration(LocalTime workDuration) {
         this.workDuration = workDuration;
     }
 
@@ -72,7 +74,7 @@ public class Person {
         this.experience = experience;
     }
 
-    public void setWorkEnd(int workEnd) {
+    public void setWorkEnd(LocalTime workEnd) {
         this.workEnd = workEnd;
     }
 

@@ -1,6 +1,7 @@
 package org.roi.itlab.cassandra.random_attributes;
 
 import java.awt.*;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 
@@ -80,9 +81,9 @@ public class PersonBuilderImpl implements PersonBuilder{
         person = new Person();
         setAge(rand(75+LICENSE_AGE, -LICENSE_AGE,4,pointList));
         setExperience(rand(person.getAge()-LICENSE_AGE,0,4,pointList2));
-        setWorkStart(rand(19,-7,11,pointList3));
-        setWorkDuration(rand(13,-4,4,pointList4));
-        setWorkEnd(person.getWorkStart() + person.getWorkDuration());
+        setWorkStart(LocalTime.of(rand(19,-7,11,pointList3),0));
+        setWorkDuration(LocalTime.of(rand(13,-4,4,pointList4),0));
+        setWorkEnd(LocalTime.of(person.getWorkStart().getHour() + person.getWorkDuration().getHour(),0));
     }
 
     @Override
@@ -98,19 +99,19 @@ public class PersonBuilderImpl implements PersonBuilder{
     }
 
     @Override
-    public PersonBuilder setWorkDuration(int workDuration) {
+    public PersonBuilder setWorkDuration(LocalTime workDuration) {
         person.setWorkDuration(workDuration);
         return this;
     }
 
     @Override
-    public PersonBuilder setWorkStart(int workStart) {
+    public PersonBuilder setWorkStart(LocalTime workStart) {
         person.setWorkStart(workStart);
         return this;
     }
 
     @Override
-    public PersonBuilder setWorkEnd(int workEnd) {
+    public PersonBuilder setWorkEnd(LocalTime workEnd) {
         person.setWorkEnd(workEnd);
         return this;
     }
