@@ -67,7 +67,7 @@ public class PersonBuilderImpl implements PersonBuilder{
 
             for (int i = 1; i < list.size(); ++i) {
                 if (a <= list.get(i).x && a >= list.get(i - 1).x &&
-                    b < (list.get(i).y - list.get(i - 1).y) / (list.get(i).x - list.get(i - 1).x) * (a - list.get(i - 1).x) + list.get(i - 1).y) {
+                    b < (double)(list.get(i).y - list.get(i - 1).y) / (list.get(i).x - list.get(i - 1).x) * (a - list.get(i - 1).x) + list.get(i - 1).y) {
                         return a;
                     }
                 }
