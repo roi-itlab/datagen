@@ -1,5 +1,7 @@
 package org.roi.itlab.cassandra.random_attributes;
 
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -12,16 +14,16 @@ public class RandGen {
     private int min;
     private int y;
     private Random r;
-    private List<Point> list;
+    PolynomialSplineFunction psf;
 
     public RandGen()
     {
         r = new Random(System.currentTimeMillis());
     }
 
-    public void initialize(int min, int max, int y, List<Point> list )
+    public void initialize(int min, int max, int y, PolynomialSplineFunction psf )
     {
-        this.list = list;
+        this.psf = psf;
         this.min = min;
         this.max = max;
         this.y =y;
@@ -31,19 +33,19 @@ public class RandGen {
         int m = -1;
         if(max+min > 0) {
             while (m < 0) {
-                m = distribution(r.nextInt(max) + min, y * r.nextDouble(), list);
+                m = distribution(r.nextInt(max) + min, y * r.nextDouble());
             }
         }
         else
         {
-            m = distribution(max + min, y * r.nextDouble(), list);
+            m = distribution(max + min, y * r.nextDouble());
         }
         return m;
     }
 
-    private int distribution(int a, double b, List<Point> list)
+    private int distribution(int a, double b)
     {
-
+        /*
         for(int i=1; i < list.size();++i)
         {
             if(a <= list.get(i).x && a >= list.get(i-1).x &&
@@ -52,6 +54,11 @@ public class RandGen {
                     return a;
 
             }
+        }*/
+
+        if(a >= psf.getKnots()[0] && b < psf.value((double)a))
+        {
+            return a;
         }
         return -1;
     }

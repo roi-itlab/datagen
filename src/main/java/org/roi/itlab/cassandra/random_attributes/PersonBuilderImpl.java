@@ -1,5 +1,9 @@
 package org.roi.itlab.cassandra.random_attributes;
 
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+
 import java.awt.*;
 import java.time.LocalTime;
 import java.util.*;
@@ -17,60 +21,67 @@ public class PersonBuilderImpl implements PersonBuilder{
     private List<Point> pointList4;
     private final int LICENSE_AGE = 18;
 
+    PolynomialSplineFunction psf1;
+    PolynomialSplineFunction psf2;
+    PolynomialSplineFunction psf3;
+    PolynomialSplineFunction psf4;
+
     public PersonBuilderImpl()
     {
         r = new Random(System.currentTimeMillis());
 
-        pointList = new ArrayList<>();
-        pointList.add(new Point(18,1));
-        pointList.add(new Point(25,2));
-        pointList.add(new Point(30,3));
-        pointList.add(new Point(60,1));
+        LinearInterpolator li = new LinearInterpolator();
+        SplineInterpolator si = new SplineInterpolator();
+        double[] x = {18.0,25.0,30.0,60.0,90.0};
+        double[] y  = {1.0,2.0,3.0,1.0, 0.1};
+        psf1 = li.interpolate(x, y);
+        PolynomialSplineFunction psf_s = si.interpolate(x, y);
+        /*
+        System.out.println(2.3 < psf.value(27.0));
+        System.out.println(1.1 < psf.value(20.0));
+        System.out.println(1.3 < psf.value(57.0));
 
+        System.out.println(2.3 < psf_s.value(27.0));
+        System.out.println(1.1 < psf_s.value(20.0));
+        System.out.println(1.8 < psf_s.value(57.0));
+        */
+        double[] x2 = {0.0,5.0,30.0,60.0};
+        double[] y2  = {1.0,2.0,4.0,2.0};
+        psf2 = li.interpolate(x2, y2);
 
-        pointList2 = new ArrayList<>();
-        pointList2.add(new Point(0,1));
-        pointList2.add(new Point(5,2));
-        pointList2.add(new Point(30,4));
-        pointList2.add(new Point(60,2));
+        double[] x3 = {7.0,9.0,12.0};
+        double[] y3  = {3.0,10.0,1.0};
+        psf3 = li.interpolate(x3, y3);
 
-        pointList3 = new ArrayList<>();
-        pointList3.add(new Point(7,3));
-        pointList3.add(new Point(9,10));
-        pointList3.add(new Point(12,1));
-
-        pointList4 = new ArrayList<>();
-        pointList4.add(new Point(4,1));
-        pointList4.add(new Point(8,4));
-        pointList4.add(new Point(12,2));
+        double[] x4 = {4.0,8.0,12.0};
+        double[] y4  = {1.0,4.0,2.0};
+        psf4 = li.interpolate(x4, y4);
 
     }
 
-    public int rand(int a, int b, int c, List<Point> list)
+    public int rand(int a, int b, int c, PolynomialSplineFunction psf)
     {
         int m = -1;
         if(a + b >0) {
             while (m < 0) {
-                m = distribution(r.nextInt(a) + b, c * r.nextDouble(), list);
+                m = distribution(r.nextInt(a) + b, c * r.nextDouble(), psf);
             }
         }
         else
         {
-            m = distribution(a + b, c * r.nextDouble(), list);
+            m = distribution(a + b, c * r.nextDouble(), psf);
         }
         return m;
     }
 
 
 
-    public int distribution(int a, double b, List<Point> list) {
+    public int distribution(int a, double b, PolynomialSplineFunction psf) {
 
-            for (int i = 1; i < list.size(); ++i) {
-                if (a <= list.get(i).x && a >= list.get(i - 1).x &&
-                    b < (double)(list.get(i).y - list.get(i - 1).y) / (list.get(i).x - list.get(i - 1).x) * (a - list.get(i - 1).x) + list.get(i - 1).y) {
-                        return a;
-                    }
-                }
+        if(a >= psf.getKnots()[0] && b < psf.value((double)a))
+        {
+            return a;
+        }
 
         return -1;
     }
@@ -79,10 +90,10 @@ public class PersonBuilderImpl implements PersonBuilder{
     public void buildAttributes()
     {
         person = new Person();
-        setAge(rand(75+LICENSE_AGE, -LICENSE_AGE,4,pointList));
-        setExperience(rand(person.getAge()-LICENSE_AGE,0,4,pointList2));
-        setWorkStart(LocalTime.of(rand(19,-7,11,pointList3),0));
-        setWorkDuration(LocalTime.of(rand(13,-4,4,pointList4),0));
+        setAge(rand(75+LICENSE_AGE, -LICENSE_AGE,4,psf1));
+        setExperience(rand(person.getAge()-LICENSE_AGE,0,4,psf2));
+        setWorkStart(LocalTime.of(rand(19,-7,11,psf3),0));
+        setWorkDuration(LocalTime.of(rand(13,-4,4,psf4),0));
         setWorkEnd(LocalTime.of(person.getWorkStart().getHour() + person.getWorkDuration().getHour(),0));
     }
 

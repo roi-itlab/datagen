@@ -1,5 +1,8 @@
 package org.roi.itlab.cassandra.random_attributes;
 
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+
 import java.awt.*;
 import java.time.LocalTime;
 import java.util.*;
@@ -11,7 +14,6 @@ import java.util.List;
 public class PersonBuilderWG implements PersonBuilder{
     private Person person;
     private RandGen generator;
-    private List<Point> list;
     private final int LICENSE_AGE = 18;
 
 
@@ -26,37 +28,37 @@ public class PersonBuilderWG implements PersonBuilder{
     {
         person = new Person();
 
-        list = new ArrayList<>();
-        list.add(new Point(18,1));
-        list.add(new Point(25,2));
-        list.add(new Point(30,3));
-        list.add(new Point(60,1));
+        LinearInterpolator li = new LinearInterpolator();
+        //SplineInterpolator si = new SplineInterpolator();
+        PolynomialSplineFunction psf;
+        double[] x = {18.0,25.0,30.0,60.0,90.0};
+        double[] y  = {1.0,2.0,3.0,1.0, 0.1};
+        psf = li.interpolate(x, y);
 
-        generator.initialize(-LICENSE_AGE,75+LICENSE_AGE,4, list);
+        //PolynomialSplineFunction psf_s = si.interpolate(x, y);
+
+        generator.initialize(-LICENSE_AGE,75+LICENSE_AGE,4, psf);
         setAge(generator.generate());
 
-        list.clear();
-        list.add(new Point(0,1));
-        list.add(new Point(5,2));
-        list.add(new Point(30,4));
-        list.add(new Point(60,2));
+        double[] x2 = {0.0,5.0,30.0,60.0};
+        double[] y2  = {1.0,2.0,4.0,2.0};
+        psf = li.interpolate(x2, y2);
 
-        generator.initialize(0,person.getAge()-LICENSE_AGE,4,list);
+        generator.initialize(0,person.getAge()-LICENSE_AGE,4,psf);
         setExperience(generator.generate());
-        list.clear();
-        list.add(new Point(7,3));
-        list.add(new Point(9,10));
-        list.add(new Point(12,1));
 
-        generator.initialize(-7,19,11, list);
+        double[] x3 = {7.0,9.0,12.0};
+        double[] y3  = {3.0,10.0,1.0};
+        psf = li.interpolate(x3, y3);
+
+        generator.initialize(-7,19,11, psf);
         setWorkStart(LocalTime.of(generator.generate(),0));
 
-        list.clear();
-        list.add(new Point(4,1));
-        list.add(new Point(8,4));
-        list.add(new Point(12,2));
+        double[] x4 = {4.0,8.0,12.0};
+        double[] y4  = {1.0,4.0,2.0};
+        psf = li.interpolate(x4, y4);
 
-        generator.initialize(-4,13,4,list);
+        generator.initialize(-4,13,4, psf);
         setWorkDuration(LocalTime.of(generator.generate(),0));
 
         setWorkEnd(LocalTime.of(person.getWorkStart().getHour() + person.getWorkDuration().getHour(),0));
