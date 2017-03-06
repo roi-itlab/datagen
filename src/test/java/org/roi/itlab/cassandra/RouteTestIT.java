@@ -37,8 +37,8 @@ public class RouteTestIT {
     	    setWeighting("fastest").
     	    setVehicle("car").
     	    setLocale(Locale.US);
-//		req.getHints().put(Parameters.Routing.ADD_DETAILS_TO_ANNOTATION, true);
-//		req.getHints().put(Parameters.Routing.SINGLE_NODE_INSTRUCTIONS, true);
+		req.getHints().put(Parameters.Routing.ADD_DETAILS_TO_ANNOTATION, true);
+		req.getHints().put(Parameters.Routing.SINGLE_NODE_INSTRUCTIONS, true);
     	GHResponse rsp = hopper.route(req);
 
     	// first check for errors
