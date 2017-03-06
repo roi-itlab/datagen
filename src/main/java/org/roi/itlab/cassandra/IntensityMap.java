@@ -58,8 +58,58 @@ public class IntensityMap {
         }
     }
 
+    private class Segment {
+        private final GHPoint start;
+        private final GHPoint finish;
+
+
+        public Segment(GHPoint start, GHPoint finish) {
+            this.start = new GHPoint(start.getLat(), start.getLon());
+            this.finish = new GHPoint(finish.getLat(), finish.getLon());
+        }
+
+        @Override
+        public String toString( ) {
+            return start.toString() + ' ' + finish.toString( );
+        }
+
+        @Override
+        public boolean equals(Object ob) {
+            if (ob == null) {
+                return false;
+            }
+            if (this.start == ((Segment)ob).start &&
+                    this.finish == ((Segment)ob).finish) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private class Timetable {
+        public static final int SIZE = 288;
+        private int[] timetable;
+
+        public Timetable( ) {
+            timetable = new int[SIZE];
+        }
+
+        public int getIntensity(long time) {
+            return timetable[getMinutes(time) / 5];
+        }
+
+        public int getIntensityByNumber(int n) {
+            return timetable[n];
+        }
+
+        public void intensify(long time) {
+            ++timetable[getMinutes(time) / 5];
+        }
+    }
+
 
     Map<String, Traffic> map;
+    //Map<Segment, Timetable> map;
 
     public IntensityMap(List<Long> timeList, List<PathWrapper> pathList) {
 
@@ -74,6 +124,7 @@ public class IntensityMap {
             List<GPXEntry> gpxList = pathList.get(i).getInstructions().createGPXList();
             for (int j = 1; j < gpxList.size(); ++j) {
                 Traffic traffic = new Traffic(gpxList.get(j - 1), gpxList.get(j), gpxList.get(j - 1).getTime() + timeList.get(i));
+                //Segment segment = new Segment(gpxList.get(j - 1), gpxList.get(j));
                 //checking if there has already been a movement on a given segment
                 if (map.containsKey(traffic.toString())) {
                     //if it has been, increasing the intencity of traffic
@@ -83,13 +134,20 @@ public class IntensityMap {
                     //if not, creating new fild with our data
                     map.put(traffic.toString(), traffic);
                 }
+                /*if (map.containsKey(segment)) {
+                    map.get(segment).intensify(gpxList.get(j - 1).getTime() + timeList.get(i));
+                }
+                else {
+                    map.put(segment, new Timetable());
+                    map.get(segment).intensify(gpxList.get(j - 1).getTime() + timeList.get(i));
+                }*/
             }
         }
     }
 
     //translates the miliseconds from 1970-01-01 @ 00:00:00 to minutes from the beginning of the current day
-    private long getMinutes(long time) {
-        return (time/1000/60 - time/1000/60/60/24 * 60 * 24);
+    private int getMinutes(long time) {
+        return (int)(time/1000/60 - time/1000/60/60/24 * 60 * 24);
     }
 
     @Override
