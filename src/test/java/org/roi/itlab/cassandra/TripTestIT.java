@@ -17,14 +17,14 @@ import java.io.IOException;
 import java.util.*;
 
 
-public class TripTest {
+public class TripTestIT {
     private static final String testOsm = "./src/test/resources/org/roi/payg/saint-petersburg_russia.osm.pbf";
     private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
-    List<Poi> pois;
-    Random rng;
-    List<Trip> trips = new ArrayList<>();
-    List<Path> paths = new ArrayList<>();
-    GraphHopper hopper;
+    private List<Poi> pois;
+    private Random rng;
+    private List<Trip> trips = new ArrayList<>();
+    private List<Path> paths = new ArrayList<>();
+    private GraphHopper hopper;
 
     @Before
 
@@ -32,7 +32,7 @@ public class TripTest {
     public void init() throws IOException {
 
         // create one GraphHopper instance
-        hopper = new GraphHopperOSM().setOSMFile(testOsm).forServer();
+        hopper = new GraphHopperOSM().setOSMFile(testOsm).forServer().setEnableInstructions(false);
         // where to store graphhopper files?
         hopper.setGraphHopperLocation("./target");
         hopper.setEncodingManager(new EncodingManager("car,bike"));
@@ -45,7 +45,7 @@ public class TripTest {
 
 
         //random trips
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             int temp = rng.nextInt(30000);
             Poi a = pois.get(temp);
             Poi b = pois.get(temp + rng.nextInt(50));
@@ -56,16 +56,19 @@ public class TripTest {
 
     @Test
     public void testFeed() {
+        int routingFailedCounter=0;
         //accumulating paths
         for (Trip trip :
                 trips) {
             try {
                 paths.add(trip.calcPath(hopper));
             } catch (IllegalStateException e) {
-
+                routingFailedCounter++;
             }
         }
-        Assert.assertTrue(">10% unroutable paths", paths.size() < 9000);
+
+        System.out.println(paths.size());
+        Assert.assertTrue(">10% unroutable paths", paths.size() > 9000);
 
 
         //trying to generate traffic on edges, but not using time.
@@ -83,5 +86,7 @@ public class TripTest {
                 frequencies.computeIfPresent(id, (a, b) -> b + 1);
             }
         }
+
+        System.out.println(edges.size());
     }
 }
