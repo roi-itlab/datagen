@@ -103,6 +103,9 @@ public class IntensityMap {
 
     public int getIntensity(GHPoint start, GHPoint finish, long time) {
         Traffic tr = new Traffic(start, finish, time);
-        return map.get(tr.toString()).getTrafficIntensity();
+        if (map.containsKey(tr.toString())) {
+            return map.get(tr.toString()).getTrafficIntensity();
+        }
+        return 0;
     }
 }

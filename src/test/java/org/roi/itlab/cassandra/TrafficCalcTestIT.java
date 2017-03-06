@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by liza_moskovskaya on 05/03/2017.
  */
-public class TrafficCalcTest {
+public class TrafficCalcTestIT {
     //test data
     private static final String testOsm = "./src/test/resources/org/roi/payg/saint-petersburg_russia.osm.pbf";
     private static final int N = 5;
@@ -61,7 +61,7 @@ public class TrafficCalcTest {
 
         assertEquals(intensityMap.getIntensity(new GHPoint(59.94395486885208, 30.26372187429045), new GHPoint(59.943898058173765, 30.263535050977804), 1488186250000L), 3);
         assertEquals(intensityMap.getIntensity(new GHPoint(59.92686174646456,30.24094749780627), new GHPoint(59.92673416926181,30.24050434633028), 1488186250000L), 1);
-        //Assert.assertNotEquals(intensityMap.getIntensity(new GHPoint(59.92686174646456,30.24094749780627), new GHPoint(59.92673416926181,30.24050434633028), 1488185900000L), 1);
+        Assert.assertNotEquals(intensityMap.getIntensity(new GHPoint(59.92686174646456,30.24094749780627), new GHPoint(59.92673416926181,30.24050434633028), 1488185900000L), 1);
         //assertEquals(intensityMap.getIntensity(new GHPoint(59.94215853383001,30.231562001218542), new GHPoint(59.942312388322776,30.231492524552923), 1488186500000L), 2);
     }
 
