@@ -31,8 +31,11 @@ public class RandomGenerator{
 
     public int getRandomValue() {
         int rand = -1;
+        int controlPoint;
         while (rand < 0) {
-            int controlPoint = ThreadLocalRandom.current().nextInt(min, max);;
+            try{
+                controlPoint = ThreadLocalRandom.current().nextInt(min, max);
+            }catch (IllegalArgumentException ex){ controlPoint = 0;}
             double controlValue = proportionalWeight *ThreadLocalRandom.current().nextDouble();
             if(controlPoint >= psf.getKnots()[0]&& controlValue<psf.value(controlPoint))
                 rand = controlPoint;
