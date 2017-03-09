@@ -30,33 +30,31 @@ public class TestRA {
         for(int j = 0 ; j < 1000000;++j) {
             personDirector.constructPerson();
             list.add(personDirector.getPerson());
+            mean += personDirector.getPerson().getAge();
             f.addValue(list.get(j).getAge());
         }
 
-        for (Person a : list) {
-            mean += a.getAge();
-        }
-        mean_mean = (int)mean / list.size();
-       // System.out.println(mean_mean);
-        mode = f.getMode();
-       /* System.out.println(mode.get(0));
 
-        for(int i = 0 ; i < mode.size();++i)
+        mean_mean = (int)mean / list.size();
+        System.out.println(mean_mean);
+        mode = f.getMode();
+
+       /* for(int i = 0 ; i < mode.size();++i)
         {
             System.out.println("Mode " + mode.get(i) + "  freq = " + f.getCount(mode.get(i)));
         }
-        for(int i = 18 ; i < 75;++i)
+        for(int i = 18 ; i < 80;++i)
         {
             System.out.println( i+ " freq = " + f.getCount(i));
         }
         System.out.println(list.get(0).getAge()+ " "+ list.get(0).getExperience() + " "+ list.get(0).getWorkStart() +
-        " " + list.get(0).getWorkDuration() + " "+ list.get(0).getWorkEnd());
-        */
+        " " + list.get(0).getWorkDuration() + " "+ list.get(0).getWorkEnd());*/
+
     }
 
     @Test
     public void TestBuilder() throws Exception {
-        Assert.assertEquals(mean_mean, 35, 20);
+        Assert.assertEquals(mean_mean, 35, 15);
         Assert.assertEquals(mode.get(0).toString(), "30");
     }
 }
