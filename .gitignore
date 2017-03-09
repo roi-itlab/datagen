@@ -5,6 +5,7 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 dependency-reduced-pom.xml
+src/main/java/org/roi/itlab/cassandra/random_attributes/PersonExample.java
 buildNumber.properties
 .mvn/timing.properties
 .idea/

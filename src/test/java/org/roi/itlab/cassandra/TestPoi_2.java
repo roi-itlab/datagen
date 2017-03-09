@@ -14,7 +14,7 @@ import org.junit.Test;
  * Created by Vadim on 20.02.2017.
  */
 public class TestPoi_2 {
-    private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
+    private static final String testPois = "./src/PersonExample/resources/org/roi/payg/saint-petersburg_russia.csv";
 
     @Test
     public void testPoiLoad() throws IOException {

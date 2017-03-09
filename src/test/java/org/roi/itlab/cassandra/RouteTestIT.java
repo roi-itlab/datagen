@@ -21,7 +21,7 @@ import com.graphhopper.util.PointList;
 
 public class RouteTestIT {
 
-    private static final String testOsm = "./src/test/resources/org/roi/payg/saint-petersburg_russia.osm.pbf";
+    private static final String testOsm = "./src/PersonExample/resources/org/roi/payg/saint-petersburg_russia.osm.pbf";
 	
     @Test
     public void testFeed() {

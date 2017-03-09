@@ -19,8 +19,8 @@ import org.junit.Test;
 
 public class JsTest {
 
-	private static final String testJs = "./src/test/resources/org/roi/payg/user.js";
-	private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
+	private static final String testJs = "./src/PersonExample/resources/org/roi/payg/user.js";
+	private static final String testPois = "./src/PersonExample/resources/org/roi/payg/saint-petersburg_russia.csv";
 
     @Test
     public void testJs() throws ScriptException, IOException, NoSuchMethodException {

@@ -12,7 +12,7 @@ import org.junit.Test;
 
 public class PoiTest {
 
-	private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
+	private static final String testPois = "./src/PersonExample/resources/org/roi/payg/saint-petersburg_russia.csv";
 
 	@Test
 	public void testPoiLoad() throws IOException {

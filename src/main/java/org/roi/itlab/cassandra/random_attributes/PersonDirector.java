@@ -7,8 +7,8 @@ package org.roi.itlab.cassandra.random_attributes;
 public class PersonDirector {
     private PersonBuilder personBuilder;
 
-    public PersonBuilder getPersonBuilder() {
-        return personBuilder;
+    public Person getPerson() {
+        return personBuilder.getPerson();
     }
 
     public void setPersonBuilder(PersonBuilder personBuilder) {
