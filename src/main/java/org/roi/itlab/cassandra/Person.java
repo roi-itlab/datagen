@@ -1,8 +1,9 @@
-package org.roi.itlab.cassandra.random_attributes;
+package org.roi.itlab.cassandra;
 
 import org.roi.itlab.cassandra.Poi;
 
 import java.time.LocalTime;
+import java.util.*;
 
 /**
  * Created by Vadim on 01.03.2017.
@@ -15,6 +16,9 @@ public class Person {
     private LocalTime workEnd;
     private Poi home;
     private Poi work;
+    private UUID id;
+    private String firstName;
+    private String lastName;
 
     private int skill;
     private int rushFactor;
