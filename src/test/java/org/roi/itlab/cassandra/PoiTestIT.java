@@ -20,7 +20,7 @@ import com.mongodb.MongoClient;
 
 public class PoiTestIT {
 
-	private static final String testPois = "./src/PersonExample/resources/org/roi/payg/saint-petersburg_russia.csv";
+	private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
 
 	Morphia morphia = new Morphia();
 	Datastore datastore;
