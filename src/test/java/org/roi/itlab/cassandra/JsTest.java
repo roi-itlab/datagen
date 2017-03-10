@@ -19,18 +19,18 @@ import org.junit.Test;
 
 public class JsTest {
 
-	private static final String testJs = "./src/test/resources/org/roi/payg/user.js";
-	private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
+    private static final String testJs = "./src/test/resources/org/roi/payg/user.js";
+    private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
 
     @Test
     public void testJs() throws ScriptException, IOException, NoSuchMethodException {
-    	byte[] bytes = Files.readAllBytes(Paths.get(testJs));
-    	ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-    	engine.eval(new String(bytes));
-    	engine.setBindings(new SimpleBindings() {{put("pois", PoiLoader.loadFromCsv(testPois));}}, ScriptContext.GLOBAL_SCOPE);
-    	Invocable invocable = (Invocable) engine;
-    	User user = new User();
-    	user.setName("Test");
-		Object result = invocable.invokeFunction("printUser", user);
-	}
+        byte[] bytes = Files.readAllBytes(Paths.get(testJs));
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+        engine.eval(new String(bytes));
+        engine.setBindings(new SimpleBindings() {{put("pois", PoiLoader.loadFromCsv(testPois));}}, ScriptContext.GLOBAL_SCOPE);
+        Invocable invocable = (Invocable) engine;
+        User user = new User();
+        user.setName("Test");
+        Object result = invocable.invokeFunction("printUser", user);
+    }
 }
