@@ -31,31 +31,27 @@ public class PersonBuilderImpl extends PersonBuilder{
         setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
     }
 
-    @Override
+
     public PersonBuilder setAge(int age) {
         person.setAge(age);
         return this;
     }
 
-    @Override
     public PersonBuilder setExperience(int experience) {
         person.setExperience(experience);
         return this;
     }
 
-    @Override
     public PersonBuilder setWorkDuration(LocalTime workDuration) {
         person.setWorkDuration(workDuration);
         return this;
     }
 
-    @Override
     public PersonBuilder setWorkStart(LocalTime workStart) {
         person.setWorkStart(workStart);
         return this;
     }
 
-    @Override
     public PersonBuilder setWorkEnd(LocalTime workEnd) {
         person.setWorkEnd(workEnd);
         return this;
