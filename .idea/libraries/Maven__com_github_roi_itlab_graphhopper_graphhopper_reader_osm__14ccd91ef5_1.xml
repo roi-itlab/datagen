@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.roi-itlab.graphhopper:graphhopper-reader-osm:-14ccd91ef5-1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/roi-itlab/graphhopper/graphhopper-reader-osm/-14ccd91ef5-1/graphhopper-reader-osm--14ccd91ef5-1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/roi-itlab/graphhopper/graphhopper-reader-osm/-14ccd91ef5-1/graphhopper-reader-osm--14ccd91ef5-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/roi-itlab/graphhopper/graphhopper-reader-osm/-14ccd91ef5-1/graphhopper-reader-osm--14ccd91ef5-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

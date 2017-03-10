@@ -18,7 +18,7 @@ public class WorkStartGenerator {
         double[] y = {3.0,10.0,1.0};
         psf = li.interpolate(x, y);
 
-        workStartGenerator.initialize(11, psf);
+       // workStartGenerator.initialize(11, psf);
     }
     public int getRandomValue()
     {

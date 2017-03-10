@@ -25,7 +25,7 @@ public class PersonBuilderImpl extends PersonBuilder{
     public void buildAttributes()
     {
         person = new Person();
-        setAge(ageGenerator.getRandomValue());
+        //setAge(ageGenerator.getRandomValue());
         setWorkStart(LocalTime.of(workStartGenerator.getRandomValue(),0));
         setWorkDuration(LocalTime.of(workDurationGenerator.getRandomValue(),0));
         setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
