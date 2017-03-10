@@ -9,7 +9,6 @@ import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 public class AgeRandomGenerator {
 
     private RandomGenerator ageGenerator;
-    private final int LICENSE_AGE = 18;
 
     public AgeRandomGenerator()
     {

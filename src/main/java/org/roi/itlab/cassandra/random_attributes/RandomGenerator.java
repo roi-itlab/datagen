@@ -14,9 +14,6 @@ public class RandomGenerator {
     private int weight;
     PolynomialSplineFunction psf;
 
-    public RandomGenerator()
-    {
-    }
 
     public void initialize(int weight, PolynomialSplineFunction psf )
     {
