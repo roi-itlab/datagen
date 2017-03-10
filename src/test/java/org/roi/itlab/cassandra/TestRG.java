@@ -28,18 +28,15 @@ public class TestRG {
         PersonBuilder rab = new PersonBuilderImpl();
         PersonDirector rad = new PersonDirector(rab);
 
-        int mean =0;
-
         for(int j = 0 ; j < 1000000;++j) {
             list.add(rad.constract());
             age.addValue(list.get(j).getAge());
-            mean += list.get(j).getAge();
+            mean_mean += list.get(j).getAge();
             workStartTime.addValue(list.get(j).getWorkStart());
         }
-        mean_mean = mean / list.size();
+        mean_mean = mean_mean / list.size();
 
         mode = age.getMode();
-
         /*
         Iterator<Comparable<?>>  iter = workStartTime.valuesIterator();
         StringBuilder outBuffer = new StringBuilder();
