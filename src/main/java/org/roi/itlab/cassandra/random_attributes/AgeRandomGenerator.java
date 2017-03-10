@@ -1,6 +1,8 @@
 package org.roi.itlab.cassandra.random_attributes;
 
+import org.apache.commons.math3.analysis.interpolation.HermiteInterpolator;
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 
 /**
  * author Anush
@@ -8,7 +10,7 @@ import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
 public class AgeRandomGenerator extends RandomGeneratorBuilder{
 
     private final int LICENSE_AGE = 18;
-    private final int MAX_AGE = 80;
+    private final int MAX_AGE = 75;
     @Override
     public void buildGenerator() {
         double[] x = {18.0,25.0,30.0,60.0,90.0};

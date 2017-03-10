@@ -1,6 +1,7 @@
 package org.roi.itlab.cassandra.random_attributes;
 
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 
 /**
  * author Anush
