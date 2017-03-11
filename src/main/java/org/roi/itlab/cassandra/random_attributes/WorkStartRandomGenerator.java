@@ -1,15 +1,13 @@
 package org.roi.itlab.cassandra.random_attributes;
 
-import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
-import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math3.analysis.interpolation.*;
 
 /**
  * author Anush
  */
 public class WorkStartRandomGenerator extends RandomGeneratorBuilder {
 
-    private final int EARLY_WORK_START = 7;
-    private final int LATEST_WORK_START = 19;
+    private final int LATEST_WORK_START = 12;
 
     @Override
     public void buildGenerator() {
@@ -19,9 +17,8 @@ public class WorkStartRandomGenerator extends RandomGeneratorBuilder {
 
         LinearInterpolator li = new LinearInterpolator();
         randomGenerator = new RandomGenerator();
-        randomGenerator.setMin(EARLY_WORK_START);
-        randomGenerator.setMax(LATEST_WORK_START);
-        randomGenerator.setProportionalWeight(11);
         randomGenerator.setPsf(li.interpolate(x,y));
+        //randomGenerator.setMax(LATEST_WORK_START);
+        randomGenerator.setProportionalWeight(11);
     }
 }

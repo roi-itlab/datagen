@@ -1,8 +1,6 @@
-package org.roi.itlab.cassandra.random_attributes;
+package org.roi.itlab.cassandra.person;
 
-import org.roi.itlab.cassandra.Person;
-
-import java.time.LocalTime;
+import org.roi.itlab.cassandra.person.Person;
 
 /**
  * Created by Vadim on 01.03.2017.

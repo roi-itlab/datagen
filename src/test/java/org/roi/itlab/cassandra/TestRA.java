@@ -44,12 +44,6 @@ public class TestRA {
         age_mode = age_freq.getMode();
 
 
-         System.out.println("Average_age: " + age_mean + " year");
-        for(int i = 18 ; i < 75;++i)
-        {
-            System.out.println( i + " freq = " + age_freq.getCount(i));
-        }
-
         RandomGeneratorBuilder  workStartRandomGenerator = new WorkStartRandomGenerator();
         randomGeneratorDirector.setRandomGeneratorBuilder(workStartRandomGenerator);
         randomGeneratorDirector.constructRandomGenerator();
@@ -66,13 +60,7 @@ public class TestRA {
         workstart_mean =  (int)mean/count;
         workstart_mode = workstart_freq.getMode();
 
-        /*System.out.println("Average start_time: " + LocalTime.of(workstart_mean,0));
 
-        for(int i = 7 ; i < 19;++i)
-        {
-            System.out.println( LocalTime.of(i,0) + " freq = " + workstart_freq.getCount(i));
-        }
-        */
 
         RandomGeneratorBuilder  workDurationRandomGenerator = new WorkDurationRandomGenerator();
         randomGeneratorDirector.setRandomGeneratorBuilder(workDurationRandomGenerator);
@@ -89,14 +77,7 @@ public class TestRA {
 
         workduration_mean =  (int)mean/count;
         workduration_mode = workduration_freq.getMode();
-        /*
-        System.out.println("Average duration: " + workduration_mean + " hour");
 
-        for(int i = 4 ; i < 12;++i)
-        {
-            System.out.println( i + " freq = " + workduration_freq.getCount(i));
-        }
-        */
 
     }
 

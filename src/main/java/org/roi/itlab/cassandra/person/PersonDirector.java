@@ -1,7 +1,5 @@
-package org.roi.itlab.cassandra.random_attributes;
+package org.roi.itlab.cassandra.person;
 
-
-import org.roi.itlab.cassandra.Person;
 
 /**
  * Created by Vadim on 02.03.2017.

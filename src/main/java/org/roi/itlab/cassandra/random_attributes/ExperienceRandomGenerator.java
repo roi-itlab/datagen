@@ -1,7 +1,6 @@
 package org.roi.itlab.cassandra.random_attributes;
 
-import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
-import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math3.analysis.interpolation.*;
 
 /**
  * author Anush
@@ -25,9 +24,10 @@ public class ExperienceRandomGenerator extends RandomGeneratorBuilder{
         double[] y  = {1.0,2.0,4.0,2.0};
         LinearInterpolator li = new LinearInterpolator();
         randomGenerator = new RandomGenerator();
+        randomGenerator.setPsf(li.interpolate(x,y));
         randomGenerator.setMin(MIN_EXP);
         randomGenerator.setMax(max_exp);
         randomGenerator.setProportionalWeight(4);
-        randomGenerator.setPsf(li.interpolate(x,y));
+
     }
 }

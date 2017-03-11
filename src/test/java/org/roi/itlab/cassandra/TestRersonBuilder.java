@@ -1,20 +1,22 @@
 package org.roi.itlab.cassandra;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.math3.stat.Frequency;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.roi.itlab.cassandra.random_attributes.*;
+import org.roi.itlab.cassandra.person.Person;
+import org.roi.itlab.cassandra.person.PersonBuilder;
+import org.roi.itlab.cassandra.person.PersonBuilderImpl;
+import org.roi.itlab.cassandra.person.PersonDirector;
 
 
 /**
  * Created by Vadim on 26.02.2017.
  */
-public class TestRG {
+public class TestRersonBuilder {
     List<Person> list = new ArrayList<>();
     int mean_mean = 0;
 
@@ -57,6 +59,6 @@ public class TestRG {
         Assert.assertEquals(mean_mean, 30, 15);
         Assert.assertEquals(age.getUniqueCount(), 73);
         Assert.assertEquals(mode.get(0).toString(), "30");
-        Assert.assertEquals(workStartTime.getUniqueCount(), 6);
+        Assert.assertEquals(workStartTime.getUniqueCount(), 13);
     }
 }
