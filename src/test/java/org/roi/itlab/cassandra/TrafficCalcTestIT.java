@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by liza_moskovskaya on 05/03/2017.
  */
-public class TrafficCalcTest {
+public class TrafficCalcTestIT {
     //test data
     private static final String testOsm = "./src/test/resources/org/roi/payg/saint-petersburg_russia.osm.pbf";
     private static final int N = 5;
@@ -35,7 +35,7 @@ public class TrafficCalcTest {
     private List<PathWrapper> pathList = new ArrayList<>(5);
 
     @Test
-    public void TestTraffic( ) {
+    public void TestTrafficIT( ) {
         GraphHopper hopper = new GraphHopperOSM().setOSMFile(testOsm).forServer();
         hopper.setGraphHopperLocation("./target");
         hopper.setEncodingManager(new EncodingManager("car,bike"));
