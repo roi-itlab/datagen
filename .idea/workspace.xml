@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="305b0771-b1fc-4293-8c7a-afba4720cf20" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/Person.java" afterPath="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/Person.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/PersonBuilderImpl.java" afterPath="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/PersonBuilderImpl.java" />
     </list>
     <ignored path="datagen.iws" />
@@ -26,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PersonBuilderImpl.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PersonBuilderImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/PersonBuilderImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3846154">
-              <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -38,15 +38,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Person.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Person.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/Person.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="18" column="20" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.53846157">
+              <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#570#571#0" expanded="true" />
-                <element signature="e#595#596#0" expanded="true" />
+                <element signature="e#580#581#0" expanded="true" />
+                <element signature="e#605#606#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -195,8 +195,8 @@
         <option value="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/random_attributes/RandomGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/PersonDirector.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/random_attributes/ExperienceRandomGenerator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/Person.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/PersonBuilderImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/Person.java" />
       </list>
     </option>
   </component>
@@ -1033,7 +1033,7 @@
       <workItem from="1489149768170" duration="687000" />
       <workItem from="1489151892447" duration="13862000" />
       <workItem from="1489216738021" duration="6118000" />
-      <workItem from="1489225075681" duration="77000" />
+      <workItem from="1489225075681" duration="209000" />
     </task>
     <servers />
   </component>
@@ -1070,7 +1070,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="160144000" />
+    <option name="totallyTimeSpent" value="160276000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1194,8 +1194,8 @@
           <caret line="19" column="10" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#570#571#0" expanded="true" />
-            <element signature="e#595#596#0" expanded="true" />
+            <element signature="e#580#581#0" expanded="true" />
+            <element signature="e#605#606#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1216,8 +1216,8 @@
           <caret line="58" column="33" selection-start-line="58" selection-start-column="33" selection-end-line="58" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#570#571#0" expanded="true" />
-            <element signature="e#595#596#0" expanded="true" />
+            <element signature="e#580#581#0" expanded="true" />
+            <element signature="e#605#606#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1546,24 +1546,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/Person.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/PersonBuilderImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="20" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#570#571#0" expanded="true" />
-            <element signature="e#595#596#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/PersonBuilderImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/roi/itlab/cassandra/person/Person.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3846154">
-          <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.53846157">
+          <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#580#581#0" expanded="true" />
+            <element signature="e#605#606#0" expanded="true" />
           </folding>
         </state>
       </provider>

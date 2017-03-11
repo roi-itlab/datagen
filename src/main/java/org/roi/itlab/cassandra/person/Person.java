@@ -17,8 +17,8 @@ public class Person {
     private Poi home;
     private Poi work;
     private UUID id;
-    private String firstName;
-    private String lastName;
+    private String firstName = "";
+    private String lastName = "";
 
     private int skill;
     private int rushFactor;
