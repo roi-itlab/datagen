@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static java.util.Objects.hash;
 
-class MapOfIntensity {
+class IntensityMap {
 
     private class Segment {
         private final GHPoint start;
@@ -83,7 +83,7 @@ class MapOfIntensity {
 
     private Map<Segment, Timetable> map;
 
-    MapOfIntensity(List<Long> timeList, List<PathWrapper> pathList) {
+    IntensityMap(List<Long> timeList, List<PathWrapper> pathList) {
 
         if (timeList.size( ) != pathList.size( )) {
             throw new IllegalArgumentException( );
