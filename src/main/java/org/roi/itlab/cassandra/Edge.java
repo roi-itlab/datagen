@@ -13,13 +13,16 @@ public class Edge {
     //including start and end points
     private PointList geometry;
     private double distance;
+    // distance/average speed
+    private int time;
 
-    public Edge(int id, Point start, Point end, PointList geometry, double distance) {
+    public Edge(int id, Point start, Point end, PointList geometry, double distance, int time) {
         this.start = start;
         this.end = end;
         this.id = id;
         this.geometry = geometry;
         this.distance = distance;
+        this.time = time;
     }
 
 
@@ -39,9 +42,8 @@ public class Edge {
         return distance;
     }
 
-    @Override
-    public String toString( ) {
-        return start.toString() + ' ' + end.toString( );
+    public int getTime() {
+        return time;
     }
 
     @Override
@@ -52,26 +54,20 @@ public class Edge {
         if (ob.getClass() != this.getClass()) {
             return false;
         }
-        if (start.equals(((Edge)ob).start) && end.equals(((Edge)ob).end)) {
+        if (this.id == ((Edge) ob).id) {
             return true;
         }
         return false;
     }
 
     @Override
-    public int hashCode( ) {
-        int hash = 7;
-        hash = 83 * hash + (int) (Double.doubleToLongBits(start.getLat() / 0.0001) ^
-                (Double.doubleToLongBits(start.getLat() / 0.0001) >>> 32));
-        hash = 83 * hash +
-                (int) (Double.doubleToLongBits(start.getLon() / 0.0001) ^
-                        (Double.doubleToLongBits(start.getLon() / 0.0001) >>> 32));
-        hash = 83 * hash +
-                (int) (Double.doubleToLongBits(end.getLat() / 0.0001) ^
-                        (Double.doubleToLongBits(end.getLat() / 0.0001) >>> 32));
-        hash = 83 * hash +
-                (int) (Double.doubleToLongBits(end.getLon() / 0.0001) ^
-                        (Double.doubleToLongBits(end.getLon() / 0.0001) >>> 32));
-        return hash;
+    public String toString() {
+        return "edge id: "+id + " start: " + start.toString() + " end: " + end.toString();
+    }
+
+
+    @Override
+    public int hashCode() {
+        return this.id;
     }
 }

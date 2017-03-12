@@ -22,7 +22,10 @@ public class Routing {
             setEnableInstructions(false).
             setGraphHopperLocation("./target").setInMemory().
             importOrLoad();
+    private static final Map<Integer, Edge> EDGES_STORAGE = new HashMap<>();
 
+    //not sure if it should be an utility class
+    // or instanced to initialize graphhopper with custom properties
     private Routing() {
         throw new IllegalAccessError("Utility class");
     }
@@ -38,35 +41,34 @@ public class Routing {
     public static Route route(double fromLat, double fromLon, double toLat, double toLon) {
         Path path = calcPath(fromLat, fromLon, toLat, toLon);
         NodeAccess nodes = hopper.getGraphHopperStorage().getBaseGraph().getNodeAccess();
-        long time = 0;
         List<Edge> edges = new ArrayList<>();
-        List<Long> timing = new ArrayList<>();
         for (EdgeIteratorState edgeIteratorState :
                 path.calcEdges()) {
             if (!(edgeIteratorState instanceof VirtualEdgeIteratorState)) {
-                int baseNodeId = edgeIteratorState.getBaseNode();
-                int adjNodeId = edgeIteratorState.getAdjNode();
-                double x1 = nodes.getLongitude(adjNodeId);
-                double x2 = nodes.getLongitude(baseNodeId);
-                double x3 = nodes.getLat(adjNodeId);
-                double x4 = nodes.getLat(baseNodeId);
                 int id = edgeIteratorState.getEdge();
-                double distance = edgeIteratorState.getDistance();
-                FlagEncoder encoder = hopper.getEncodingManager().getEncoder("car");
-                long flags = edgeIteratorState.getFlags();
-                double speed = encoder.getSpeed(flags);
-                PointList geometry = edgeIteratorState.fetchWayGeometry(3);
-                Edge tempedge = new Edge(id, new Point(x4, x2), new Point(x3, x1), geometry, distance);
-                edges.add(tempedge);
-                timing.add(time);
-                time += distance * 3600 / (speed);
+                if (EDGES_STORAGE.containsKey(id)) {
+                    edges.add(EDGES_STORAGE.get(id));
+                } else {
+                    //getting Edge details
+                    int baseNodeId = edgeIteratorState.getBaseNode();
+                    int adjNodeId = edgeIteratorState.getAdjNode();
+                    double x1 = nodes.getLongitude(adjNodeId);
+                    double x2 = nodes.getLongitude(baseNodeId);
+                    double x3 = nodes.getLat(adjNodeId);
+                    double x4 = nodes.getLat(baseNodeId);
+                    double distance = edgeIteratorState.getDistance();
+                    FlagEncoder encoder = hopper.getEncodingManager().getEncoder("car");
+                    long flags = edgeIteratorState.getFlags();
+                    double speed = encoder.getSpeed(flags);
+                    PointList geometry = edgeIteratorState.fetchWayGeometry(3);
+                    int time = (int) (distance * 3600 / (speed));
+                    Edge tempedge = new Edge(id, new Point(x4, x2), new Point(x3, x1), geometry, distance, time);
+                    EDGES_STORAGE.put(id, tempedge);
+                    edges.add(tempedge);
+                }
             }
         }
-        long[] temp = new long[timing.size()];
-        for (int i = 0; i < timing.size(); i++) {
-            temp[i] = timing.get(i);
-        }
-        return new Route(edges.toArray(new Edge[0]), temp);
+        return new Route(edges.toArray(new Edge[0]));
 
     }
 
@@ -85,5 +87,12 @@ public class Routing {
             throw new IllegalStateException("routing failed");
         }
         return paths.get(0);
+    }
+
+    public static Edge getEdge(int id){
+        if (EDGES_STORAGE.containsKey(id)) {
+            return EDGES_STORAGE.get(id);
+        }
+        return null;
     }
 }
