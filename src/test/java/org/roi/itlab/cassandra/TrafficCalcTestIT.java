@@ -8,6 +8,8 @@ import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.Parameters;
 import com.graphhopper.util.shapes.GHPoint;
+import org.junit.Assert;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -31,7 +33,9 @@ public class TrafficCalcTestIT {
     private List<PathWrapper> pathList = new ArrayList<>(5);
 
     @Test
+
     public void TestTrafficIT( ) {
+
         GraphHopper hopper = new GraphHopperOSM().setOSMFile(testOsm).forServer();
         hopper.setGraphHopperLocation("./target");
         hopper.setEncodingManager(new EncodingManager("car,bike"));
@@ -53,12 +57,13 @@ public class TrafficCalcTestIT {
             pathList.add(path);
         }
         IntensityMap intensityMap = new IntensityMap(timeList, pathList);
+
         System.out.println("\n" + intensityMap);
 
         assertEquals(intensityMap.getIntensity(new GHPoint(59.94395486885208, 30.26372187429045), new GHPoint(59.943898058173765, 30.263535050977804), 1488186250000L), 3);
         assertEquals(intensityMap.getIntensity(new GHPoint(59.92686174646456,30.24094749780627), new GHPoint(59.92673416926181,30.24050434633028), 1488186250000L), 1);
-        //Assert.assertNotEquals(intensityMap1.getIntensity(new GHPoint(59.92686174646456,30.24094749780627), new GHPoint(59.92673416926181,30.24050434633028), 1488185900000L), 1);
-        //assertEquals(intensityMap1.getIntensity(new GHPoint(59.94215853383001,30.231562001218542), new GHPoint(59.942312388322776,30.231492524552923), 1488186500000L), 2);
+        Assert.assertNotEquals(intensityMap.getIntensity(new GHPoint(59.92686174646456,30.24094749780627), new GHPoint(59.92673416926181,30.24050434633028), 1488185900000L), 1);
+        //assertEquals(intensityMap.getIntensity(new GHPoint(59.94215853383001,30.231562001218542), new GHPoint(59.942312388322776,30.231492524552923), 1488186500000L), 2);
     }
 
 

@@ -139,6 +139,10 @@ class IntensityMap {
 
     int getIntensity(GHPoint start, GHPoint finish, long time) {
         Segment s = new Segment(start, finish);
-        return map.get(s).getIntensity(time);
+        if (map.containsKey(s)) {
+          return map.get(s).getIntensity(time);
+        }
+        return 0;
+
     }
 }
