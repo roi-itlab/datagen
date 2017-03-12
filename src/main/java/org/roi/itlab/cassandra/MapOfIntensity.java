@@ -11,18 +11,14 @@ import java.util.Map;
 
 import static java.util.Objects.hash;
 
-
-/**
- * Created by liza_moskovskaya on 05/03/2017.
- */
-public class IntensityMap1 {
+class MapOfIntensity {
 
     private class Segment {
         private final GHPoint start;
         private final GHPoint finish;
 
 
-        public Segment(GHPoint start, GHPoint finish) {
+        Segment(GHPoint start, GHPoint finish) {
             this.start = new GHPoint(start.getLat(), start.getLon());
             this.finish = new GHPoint(finish.getLat(), finish.getLon());
         }
@@ -37,8 +33,10 @@ public class IntensityMap1 {
             if (ob == null) {
                 return false;
             }
-            if (this.start == ((Segment)ob).start &&
-                    this.finish == ((Segment)ob).finish) {
+            if (ob.getClass() != this.getClass()) {
+                return false;
+            }
+            if (start.equals(((Segment)ob).start) && finish.equals(((Segment)ob).finish)) {
                 return true;
             }
             return false;
@@ -63,31 +61,29 @@ public class IntensityMap1 {
     }
 
     private class Timetable {
-        public static final int SIZE = 288;
+        static final int SIZE = 288;
         private int[] timetable;
 
-        public Timetable( ) {
+        Timetable( ) {
             timetable = new int[SIZE];
         }
 
-        public int getIntensity(long time) {
+        int getIntensity(long time) {
             return timetable[getMinutes(time) / 5];
         }
 
-        public int getIntensityByNumber(int n) {
+        int getIntensityByNumber(int n) {
             return timetable[n];
         }
 
-        public void intensify(long time) {
+        void intensify(long time) {
             ++timetable[getMinutes(time) / 5];
         }
     }
 
+    private Map<Segment, Timetable> map;
 
-    //Map<String, Traffic> map;
-    Map<Segment, Timetable> map;
-
-    public IntensityMap1(List<Long> timeList, List<PathWrapper> pathList) {
+    MapOfIntensity(List<Long> timeList, List<PathWrapper> pathList) {
 
         if (timeList.size( ) != pathList.size( )) {
             throw new IllegalArgumentException( );
@@ -124,24 +120,24 @@ public class IntensityMap1 {
 
     @Override
     public String toString( ) {
-        StringBuffer buffer = new StringBuffer( );
+        StringBuilder builder = new StringBuilder( );
         int hour;
         int minute;
         for (Segment s : map.keySet()) {
-            buffer.append(s.toString() + ":\n");
+            builder.append(s.toString() + ":\n");
             for (int i = 0; i < Timetable.SIZE; ++i) {
                 if (map.get(s).getIntensityByNumber(i) != 0) {
                     hour = i * 5 / 60;
                     minute = i * 5 % 60;
-                    buffer.append(hour + ":" + minute + " " + map.get(s).getIntensityByNumber(i) + "\n");
+                    builder.append(hour + ":" + minute + " " + map.get(s).getIntensityByNumber(i) + "\n");
                 }
             }
-            buffer.append("\n");
+            builder.append("\n");
         }
-        return buffer.toString();
+        return builder.toString();
     }
 
-    public int getIntensity(GHPoint start, GHPoint finish, long time) {
+    int getIntensity(GHPoint start, GHPoint finish, long time) {
         Segment s = new Segment(start, finish);
         return map.get(s).getIntensity(time);
     }

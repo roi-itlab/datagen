@@ -16,9 +16,6 @@ import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by liza_moskovskaya on 05/03/2017.
- */
 public class TrafficCalcTestIT {
     //test data
     private static final String testOsm = "./src/test/resources/org/roi/payg/saint-petersburg_russia.osm.pbf";
@@ -55,7 +52,7 @@ public class TrafficCalcTestIT {
             timeList.add(time[i]);
             pathList.add(path);
         }
-        IntensityMap1 intensityMap1 = new IntensityMap1(timeList, pathList);
+        MapOfIntensity intensityMap1 = new MapOfIntensity(timeList, pathList);
         System.out.println("\n" + intensityMap1);
 
         assertEquals(intensityMap1.getIntensity(new GHPoint(59.94395486885208, 30.26372187429045), new GHPoint(59.943898058173765, 30.263535050977804), 1488186250000L), 3);
