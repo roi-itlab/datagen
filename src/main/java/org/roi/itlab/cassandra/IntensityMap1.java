@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Objects.hash;
+
 
 /**
  * Created by liza_moskovskaya on 05/03/2017.
  */
-public class IntensityMap {
+public class IntensityMap1 {
 
     private class Segment {
         private final GHPoint start;
@@ -45,14 +47,17 @@ public class IntensityMap {
         @Override
         public int hashCode( ) {
             int hash = 7;
+            hash = 83 * hash + (int) (Double.doubleToLongBits(start.getLat() / 0.0001) ^
+                    (Double.doubleToLongBits(start.getLat() / 0.0001) >>> 32));
             hash = 83 * hash +
-                    (int) (Double.doubleToLongBits(start.getLat() / 0.0001) ^ (Double.doubleToLongBits(start.getLat() / 0.0001) >>> 32));
+                    (int) (Double.doubleToLongBits(start.getLon() / 0.0001) ^
+                            (Double.doubleToLongBits(start.getLon() / 0.0001) >>> 32));
             hash = 83 * hash +
-                    (int) (Double.doubleToLongBits(start.getLon() / 0.0001) ^ (Double.doubleToLongBits(start.getLon() / 0.0001) >>> 32));
+                    (int) (Double.doubleToLongBits(finish.getLat() / 0.0001) ^
+                            (Double.doubleToLongBits(finish.getLat() / 0.0001) >>> 32));
             hash = 83 * hash +
-                    (int) (Double.doubleToLongBits(finish.getLat() / 0.0001) ^ (Double.doubleToLongBits(finish.getLat() / 0.0001) >>> 32));
-            hash = 83 * hash +
-                    (int) (Double.doubleToLongBits(finish.getLon() / 0.0001) ^ (Double.doubleToLongBits(finish.getLon() / 0.0001) >>> 32));
+                    (int) (Double.doubleToLongBits(finish.getLon() / 0.0001) ^
+                            (Double.doubleToLongBits(finish.getLon() / 0.0001) >>> 32));
             return hash;
         }
     }
@@ -82,7 +87,7 @@ public class IntensityMap {
     //Map<String, Traffic> map;
     Map<Segment, Timetable> map;
 
-    public IntensityMap(List<Long> timeList, List<PathWrapper> pathList) {
+    public IntensityMap1(List<Long> timeList, List<PathWrapper> pathList) {
 
         if (timeList.size( ) != pathList.size( )) {
             throw new IllegalArgumentException( );
@@ -94,8 +99,13 @@ public class IntensityMap {
             //receiving a list of gpx
             List<GPXEntry> gpxList = pathList.get(i).getInstructions().createGPXList();
             for (int j = 1; j < gpxList.size(); ++j) {
-                Segment segment = new Segment(gpxList.get(j - 1), gpxList.get(j));
+                final Segment segment = new Segment(gpxList.get(j - 1), gpxList.get(j));
                 //checking if there has already been a movement on a given segment
+                for (Segment s : map.keySet()) {
+                    if (hash(s.hashCode()) == hash(segment.hashCode())) {
+                        System.out.print("!");
+                    }
+                }
                 if (map.containsKey(segment)) {
                     map.get(segment).intensify(gpxList.get(j - 1).getTime() + timeList.get(i));
                 }
