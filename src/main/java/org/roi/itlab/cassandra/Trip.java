@@ -1,5 +1,7 @@
 package org.roi.itlab.cassandra;
 
+import java.util.Random;
+
 public class Trip {
     private final Poi from;
     private final Poi to;
@@ -45,6 +47,11 @@ public class Trip {
             calcRoute();
             return this.route;
         }
+    }
+
+    public long getRandomStartTime( ) {
+        Random rng = new Random( );
+        return startTime + (long)(((-1)^(rng.nextInt(2))) * rng.nextDouble( ) * 10000 * 60);
     }
 
 }

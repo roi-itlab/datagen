@@ -1,6 +1,7 @@
 package org.roi.itlab.cassandra;
 
 import com.graphhopper.PathWrapper;
+import com.graphhopper.json.geo.Point;
 import com.graphhopper.util.GPXEntry;
 import com.graphhopper.util.shapes.GHPoint;
 
@@ -13,7 +14,7 @@ import static java.util.Objects.hash;
 
 class IntensityMap {
 
-    private class Segment {
+    /*private class Segment {
         private final GHPoint start;
         private final GHPoint finish;
 
@@ -58,7 +59,7 @@ class IntensityMap {
                             (Double.doubleToLongBits(finish.getLon() / 0.0001) >>> 32));
             return hash;
         }
-    }
+    }*/
 
     private class Timetable {
         static final int SIZE = 288;
@@ -81,33 +82,25 @@ class IntensityMap {
         }
     }
 
-    private Map<Segment, Timetable> map;
+    private Map<Edge, Timetable> map;
 
-    IntensityMap(List<Long> timeList, List<PathWrapper> pathList) {
+    IntensityMap(List<Long> timeList, List<Route> routes) {
 
-        if (timeList.size( ) != pathList.size( )) {
-            throw new IllegalArgumentException( );
+        if (timeList.size( ) != routes.size( )) {
+            throw new IllegalArgumentException("Sizes of the lists must be equal!");
         }
 
         map = new HashMap<>( );
 
-        for (int i = 0; i < pathList.size(); ++i) {
-            //receiving a list of gpx
-            List<GPXEntry> gpxList = pathList.get(i).getInstructions().createGPXList();
-            for (int j = 1; j < gpxList.size(); ++j) {
-                final Segment segment = new Segment(gpxList.get(j - 1), gpxList.get(j));
+        for (int i = 0; i < routes.size(); ++i) {
+            for (int j = 0; j < routes.get(i).getSize(); ++j) {
                 //checking if there has already been a movement on a given segment
-                for (Segment s : map.keySet()) {
-                    if (hash(s.hashCode()) == hash(segment.hashCode())) {
-                        System.out.print("!");
-                    }
-                }
-                if (map.containsKey(segment)) {
-                    map.get(segment).intensify(gpxList.get(j - 1).getTime() + timeList.get(i));
+                if (map.containsKey(routes.get(i).getEdges()[j])) {
+                    map.get(routes.get(i).getEdges()[j]).intensify(routes.get(i).getTiming()[j] + timeList.get(i));
                 }
                 else {
-                    map.put(segment, new Timetable());
-                    map.get(segment).intensify(gpxList.get(j - 1).getTime() + timeList.get(i));
+                    map.put(routes.get(i).getEdges()[j], new Timetable());
+                    map.get(routes.get(i).getEdges()[j]).intensify(routes.get(i).getTiming()[j] + timeList.get(i));
                 }
             }
         }
@@ -123,13 +116,13 @@ class IntensityMap {
         StringBuilder builder = new StringBuilder( );
         int hour;
         int minute;
-        for (Segment s : map.keySet()) {
-            builder.append(s.toString() + ":\n");
+        for (Edge e : map.keySet()) {
+            builder.append(e.toString() + ":\n");
             for (int i = 0; i < Timetable.SIZE; ++i) {
-                if (map.get(s).getIntensityByNumber(i) != 0) {
+                if (map.get(e).getIntensityByNumber(i) != 0) {
                     hour = i * 5 / 60;
                     minute = i * 5 % 60;
-                    builder.append(hour + ":" + minute + " " + map.get(s).getIntensityByNumber(i) + "\n");
+                    builder.append(hour + ":" + minute + " " + map.get(e).getIntensityByNumber(i) + "\n");
                 }
             }
             builder.append("\n");
@@ -137,12 +130,10 @@ class IntensityMap {
         return builder.toString();
     }
 
-    int getIntensity(GHPoint start, GHPoint finish, long time) {
-        Segment s = new Segment(start, finish);
-        if (map.containsKey(s)) {
-          return map.get(s).getIntensity(time);
+    int getIntensity(Edge edge, long time) {
+        if (map.containsKey(edge)) {
+          return map.get(edge).getIntensity(time);
         }
         return 0;
-
     }
 }
