@@ -11,6 +11,7 @@ import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.person.PersonBuilder;
 import org.roi.itlab.cassandra.person.PersonBuilderImpl;
 import org.roi.itlab.cassandra.person.PersonDirector;
+import org.roi.itlab.cassandra.random_attributes.RandomGenerator;
 
 
 /**
@@ -52,6 +53,7 @@ public class TestRersonBuilder {
         }
         System.out.println(outBuffer.toString());
         */
+
     }
 
     @Test

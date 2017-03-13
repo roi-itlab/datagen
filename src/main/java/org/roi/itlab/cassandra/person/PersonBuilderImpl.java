@@ -36,9 +36,9 @@ public class PersonBuilderImpl extends PersonBuilder{
         person = new Person();
         setUUID(UUID.randomUUID());
 
-        setAge(ageGenerator.getRandomValue());
-        setWorkStart(LocalTime.of(workStartGenerator.getRandomValue(),0));
-        setWorkDuration(LocalTime.of(workDurationGenerator.getRandomValue(),0));
+        setAge(ageGenerator.getRandomInt());
+        setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
+        setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
         setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
     }
 

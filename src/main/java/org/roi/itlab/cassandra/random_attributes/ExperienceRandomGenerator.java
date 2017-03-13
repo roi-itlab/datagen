@@ -22,12 +22,12 @@ public class ExperienceRandomGenerator extends RandomGeneratorBuilder{
 
         double[] x = {0.0,5.0,30.0,60.0};
         double[] y  = {1.0,2.0,4.0,2.0};
-        LinearInterpolator li = new LinearInterpolator();
-        randomGenerator = new RandomGenerator();
-        randomGenerator.setPsf(li.interpolate(x,y));
-        randomGenerator.setMin(MIN_EXP);
+        //LinearInterpolator li = new LinearInterpolator();
+        randomGenerator = new RandomGenerator(x,y);
+        //randomGenerator.setPsf(li.interpolate(x,y));
+        //randomGenerator.setMin(MIN_EXP);
         randomGenerator.setMax(max_exp);
-        randomGenerator.setProportionalWeight(4);
+        //randomGenerator.setProportionalWeight(4);
 
     }
 }

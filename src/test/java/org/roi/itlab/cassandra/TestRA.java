@@ -1,6 +1,5 @@
 package org.roi.itlab.cassandra;
 
-import java.time.LocalTime;
 import java.util.List;
 
 import org.apache.commons.math3.stat.Frequency;
@@ -35,7 +34,7 @@ public class TestRA {
         int tmp;
 
         for(int j = 0 ; j < count;++j) {
-           tmp = randGen.getRandomValue();
+           tmp = randGen.getRandomInt();
            mean += tmp;
            age_freq.addValue(tmp);
         }
@@ -52,7 +51,7 @@ public class TestRA {
         mean = 0;
 
         for(int j = 0 ; j < count;++j) {
-            tmp = randGen.getRandomValue();
+            tmp = randGen.getRandomInt();
             mean += tmp;
             workstart_freq.addValue(tmp);
         }
@@ -70,7 +69,7 @@ public class TestRA {
         mean = 0;
 
         for(int j = 0 ; j < count;++j) {
-            tmp = randGen.getRandomValue();
+            tmp = randGen.getRandomInt();
             mean += tmp;
             workduration_freq.addValue(tmp);
         }

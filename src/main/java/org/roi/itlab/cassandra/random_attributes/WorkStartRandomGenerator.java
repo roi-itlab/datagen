@@ -15,10 +15,10 @@ public class WorkStartRandomGenerator extends RandomGeneratorBuilder {
         double[] x = {7.0,9.0,12.0,19.0};
         double[] y  = {3.0,10.0,1.0,0.1};
 
-        LinearInterpolator li = new LinearInterpolator();
-        randomGenerator = new RandomGenerator();
-        randomGenerator.setPsf(li.interpolate(x,y));
+        randomGenerator = new RandomGenerator(x,y);
+        //LinearInterpolator li = new LinearInterpolator();
+        //randomGenerator.setPsf(li.interpolate(x,y));
         //randomGenerator.setMax(LATEST_WORK_START);
-        randomGenerator.setProportionalWeight(11);
+        //randomGenerator.setProportionalWeight(getMaxValue(y));
     }
 }
