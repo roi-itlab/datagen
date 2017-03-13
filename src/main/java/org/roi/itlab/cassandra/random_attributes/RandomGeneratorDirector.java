@@ -12,6 +12,7 @@ public class RandomGeneratorDirector {
 
     public void setRandomGeneratorBuilder(RandomGeneratorBuilder randomGeneratorBuilder) {
         this.randomGeneratorBuilder = randomGeneratorBuilder;
+
     }
 
     public void constructRandomGenerator() {
