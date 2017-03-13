@@ -2,20 +2,29 @@ package org.roi.itlab.cassandra;
 
 
 import com.graphhopper.json.geo.Point;
+import com.graphhopper.util.PointList;
 
-/**
- * Created by Vlad on 06.03.2017.
- */
+//Road segment
 public class Edge {
+
     final int id;
     private final Point start;
     private final Point end;
+    //including start and end points
+    private PointList geometry;
+    private double distance;
+    // distance/average speed
+    private int time;
 
-    public Edge(int id,Point start,Point end) {
-        this.start=start;
-        this.end=end;
+    public Edge(int id, Point start, Point end, PointList geometry, double distance, int time) {
+        this.start = start;
+        this.end = end;
         this.id = id;
+        this.geometry = geometry;
+        this.distance = distance;
+        this.time = time;
     }
+
 
     public Point getStart() {
         return start;
@@ -23,5 +32,42 @@ public class Edge {
 
     public Point getEnd() {
         return end;
+    }
+
+    public PointList getGeometry() {
+        return geometry;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    @Override
+    public boolean equals(Object ob) {
+        if (ob == null) {
+            return false;
+        }
+        if (ob.getClass() != this.getClass()) {
+            return false;
+        }
+        if (this.id == ((Edge) ob).id) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "edge id: "+id + " start: " + start.toString() + " end: " + end.toString();
+    }
+
+
+    @Override
+    public int hashCode() {
+        return this.id;
     }
 }

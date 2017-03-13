@@ -1,111 +1,106 @@
 package org.roi.itlab.cassandra;
 
-import com.graphhopper.PathWrapper;
-import com.graphhopper.util.GPXEntry;
-import com.graphhopper.util.shapes.GHPoint;
-
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Objects.hash;
 
-/**
- * Created by liza_moskovskaya on 05/03/2017.
- */
-public class IntensityMap {
+class IntensityMap {
 
-    private class Traffic {
-        //this class keeps an information about the coordinates of the segment, time interval (5 minutes), in which the movement occurs and the intensity of the traffic
-        private final GHPoint start;
-        private final GHPoint finish;
-        private final long time;
-        private int trafficIntensity;
+    private class Timetable {
+        static final int SIZE = 288;
+        private int[] timetable;
 
-        public Traffic(GHPoint start, GHPoint finish, long time) {
-            this.start = new GHPoint(start.getLat(), start.getLon());
-            this.finish = new GHPoint(finish.getLat(), finish.getLon());
-            this.time = getMinutes(time) / 5 * 5;
-            trafficIntensity = 1;
+        Timetable() {
+            timetable = new int[SIZE];
         }
 
-
-        public int getTrafficIntensity() {
-            return trafficIntensity;
+        int getIntensity(long time) {
+            return timetable[getMinutes(time) / 5];
         }
 
-
-        public void intensify( ) {
-            trafficIntensity += 1;
+        int getIntensityByNumber(int n) {
+            return timetable[n];
         }
 
-        @Override
-        public String toString( ) {
-            return start.toString() + ' ' + finish.toString( ) + ' ' + time / 60 + ':' + time % 60;
-        }
-
-        @Override
-        public boolean equals(Object ob) {
-            if (ob == null) {
-                return false;
-            }
-            if (this.start == ((Traffic)ob).start &&
-                    this.finish == ((Traffic)ob).finish &&
-                    getMinutes(this.time) == getMinutes(((Traffic)ob).time)) {
-                return true;
-            }
-            return false;
+        void intensify(long time) {
+            ++timetable[getMinutes(time) / 5];
         }
     }
 
+    private Map<Edge, Timetable> map;
 
-    Map<String, Traffic> map;
+    public IntensityMap() {
+        map = new HashMap<>();
+    }
 
-    public IntensityMap(List<Long> timeList, List<PathWrapper> pathList) {
+    public IntensityMap(int capacity) {
+        map = new HashMap<>(capacity);
+    }
 
-        if (timeList.size( ) != pathList.size( )) {
-            throw new IllegalArgumentException( );
+    public void put(long starttime, Route route) {
+        long time = starttime;
+        for (Edge e :
+                route.getEdges()) {
+            map.putIfAbsent(e, new Timetable());
+            map.get(e).intensify(time);
+            time += e.getTime();
+        }
+    }
+
+    public void put(List<Long> timeList, List<Route> routes) {
+
+        if (timeList.size() != routes.size()) {
+            throw new IllegalArgumentException("Sizes of the lists must be equal!");
         }
 
-        map = new HashMap<>( );
+        for (int i = 0; i < routes.size(); ++i) {
+            this.put(timeList.get(i), routes.get(i));
 
-        for (int i = 0; i < pathList.size(); ++i) {
-            //receiving a list of gpx
-            List<GPXEntry> gpxList = pathList.get(i).getInstructions().createGPXList();
-            for (int j = 1; j < gpxList.size(); ++j) {
-                Traffic traffic = new Traffic(gpxList.get(j - 1), gpxList.get(j), gpxList.get(j - 1).getTime() + timeList.get(i));
-                //checking if there has already been a movement on a given segment
-                if (map.containsKey(traffic.toString())) {
-                    //if it has been, increasing the intencity of traffic
-                    map.get(traffic.toString()).intensify();
-                }
-                else {
-                    //if not, creating new fild with our data
-                    map.put(traffic.toString(), traffic);
-                }
-            }
         }
     }
 
     //translates the miliseconds from 1970-01-01 @ 00:00:00 to minutes from the beginning of the current day
-    private long getMinutes(long time) {
-        return (time/1000/60 - time/1000/60/60/24 * 60 * 24);
+    private int getMinutes(long time) {
+        return (int) (time / 1000 / 60 - time / 1000 / 60 / 60 / 24 * 60 * 24);
     }
 
     @Override
-    public String toString( ) {
-        StringBuffer buffer = new StringBuffer( );
-        for (String tr : map.keySet()) {
-            buffer.append(tr + ' ' + map.get(tr).getTrafficIntensity() + '\n');
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        int hour;
+        int minute;
+        for (Map.Entry<Edge, Timetable> entry : map.entrySet()) {
+            builder.append(entry.getKey().toString() + ":\n");
+            for (int i = 0; i < Timetable.SIZE; ++i) {
+                if (entry.getValue().getIntensityByNumber(i) != 0) {
+                    hour = i * 5 / 60;
+                    minute = i * 5 % 60;
+                    builder.append(hour + ":" + minute + " " + entry.getValue().getIntensityByNumber(i) + "\n");
+                }
+            }
+            builder.append("\n");
         }
-        return buffer.toString();
+        return builder.toString();
     }
 
-    public int getIntensity(GHPoint start, GHPoint finish, long time) {
-        Traffic tr = new Traffic(start, finish, time);
-        if (map.containsKey(tr.toString())) {
-            return map.get(tr.toString()).getTrafficIntensity();
+    //traffic intensity on one edge
+    int getIntensity(Edge edge, long time) {
+        if (map.containsKey(edge)) {
+            return map.get(edge).getIntensity(time);
         }
         return 0;
+    }
+
+    //traffic intensity on road network
+    Map<Edge, Integer> getIntensity(long time) {
+        Map<Edge, Integer> temp = new HashMap<>();
+        for (Edge edge :
+                map.keySet()) {
+            temp.put(edge, getIntensity(edge, time));
+        }
+        return temp;
     }
 }
