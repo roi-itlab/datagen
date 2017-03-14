@@ -1,6 +1,5 @@
 package org.roi.itlab.cassandra;
 
-import java.time.LocalTime;
 import java.util.List;
 
 import org.apache.commons.math3.stat.Frequency;
@@ -35,7 +34,7 @@ public class TestRA {
         int tmp;
 
         for(int j = 0 ; j < count;++j) {
-           tmp = randGen.getRandomValue();
+           tmp = randGen.getRandomInt();
            mean += tmp;
            age_freq.addValue(tmp);
         }
@@ -43,12 +42,6 @@ public class TestRA {
         age_mean = (int)mean/count;
         age_mode = age_freq.getMode();
 
-
-         System.out.println("Average_age: " + age_mean + " year");
-        for(int i = 18 ; i < 75;++i)
-        {
-            System.out.println( i + " freq = " + age_freq.getCount(i));
-        }
 
         RandomGeneratorBuilder  workStartRandomGenerator = new WorkStartRandomGenerator();
         randomGeneratorDirector.setRandomGeneratorBuilder(workStartRandomGenerator);
@@ -58,7 +51,7 @@ public class TestRA {
         mean = 0;
 
         for(int j = 0 ; j < count;++j) {
-            tmp = randGen.getRandomValue();
+            tmp = randGen.getRandomInt();
             mean += tmp;
             workstart_freq.addValue(tmp);
         }
@@ -66,13 +59,7 @@ public class TestRA {
         workstart_mean =  (int)mean/count;
         workstart_mode = workstart_freq.getMode();
 
-        /*System.out.println("Average start_time: " + LocalTime.of(workstart_mean,0));
 
-        for(int i = 7 ; i < 19;++i)
-        {
-            System.out.println( LocalTime.of(i,0) + " freq = " + workstart_freq.getCount(i));
-        }
-        */
 
         RandomGeneratorBuilder  workDurationRandomGenerator = new WorkDurationRandomGenerator();
         randomGeneratorDirector.setRandomGeneratorBuilder(workDurationRandomGenerator);
@@ -82,21 +69,14 @@ public class TestRA {
         mean = 0;
 
         for(int j = 0 ; j < count;++j) {
-            tmp = randGen.getRandomValue();
+            tmp = randGen.getRandomInt();
             mean += tmp;
             workduration_freq.addValue(tmp);
         }
 
         workduration_mean =  (int)mean/count;
         workduration_mode = workduration_freq.getMode();
-        /*
-        System.out.println("Average duration: " + workduration_mean + " hour");
 
-        for(int i = 4 ; i < 12;++i)
-        {
-            System.out.println( i + " freq = " + workduration_freq.getCount(i));
-        }
-        */
 
     }
 
