@@ -9,6 +9,8 @@ import com.graphhopper.routing.Path;
 import com.graphhopper.routing.VirtualEdgeIteratorState;
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.storage.NodeAccess;
+import com.graphhopper.util.DistanceCalc;
+import com.graphhopper.util.DistanceCalcEarth;
 import com.graphhopper.util.EdgeIteratorState;
 import com.graphhopper.util.PointList;
 
@@ -23,6 +25,7 @@ public class Routing {
             setGraphHopperLocation("./target").setInMemory().
             importOrLoad();
     private static final Map<Integer, Edge> EDGES_STORAGE = new HashMap<>();
+    private static final DistanceCalc DIST_EARTH = new DistanceCalcEarth();
 
     //not sure if it should be an utility class
     // or instanced to initialize graphhopper with custom properties
@@ -62,7 +65,7 @@ public class Routing {
                     double speed = encoder.getSpeed(flags);
                     PointList geometry = edgeIteratorState.fetchWayGeometry(3);
                     int time = (int) (distance * 3600 / (speed));
-                    Edge tempedge = new Edge(id, new Point(x4, x2), new Point(x3, x1), geometry, distance, time);
+                    Edge tempedge = new Edge(id, new Point(x4, x2), new Point(x3, x1), geometry, distance, time, speed);
                     EDGES_STORAGE.put(id, tempedge);
                     edges.add(tempedge);
                 }
@@ -86,13 +89,19 @@ public class Routing {
         if (rsp.hasErrors()) {
             throw new IllegalStateException("routing failed");
         }
+        if (paths.get(0).getDistance() > 5 * DIST_EARTH.calcDist(fromLat, fromLon, toLat, toLon))
+            throw new IllegalStateException("routing failed");
         return paths.get(0);
     }
 
-    public static Edge getEdge(int id){
+    public static Edge getEdge(int id) {
         if (EDGES_STORAGE.containsKey(id)) {
             return EDGES_STORAGE.get(id);
         }
         return null;
+    }
+
+    public static Map<Integer, Edge> getEdgesStorage() {
+        return EDGES_STORAGE;
     }
 }
