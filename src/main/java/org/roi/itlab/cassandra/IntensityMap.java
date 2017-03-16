@@ -64,7 +64,7 @@ class IntensityMap {
 
     //translates the miliseconds from 1970-01-01 @ 00:00:00 to minutes from the beginning of the current day
     private int getMinutes(long time) {
-        return (int) (time / 1000 / 60 - time / 1000 / 60 / 60 / 24 * 60 * 24);
+        return (int) (time / 1000 / 60 % (60 * 24));
     }
 
     @Override
