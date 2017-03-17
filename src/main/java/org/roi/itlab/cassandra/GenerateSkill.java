@@ -3,15 +3,19 @@
  */
 // for example
 // GenerateSkill u= new GenerateSkill(4,x,y,z);
-// System.out.println("Std Skill: "+u.std);
-// System.out.println("Mean Skill: "+u.mean);
+// System.out.println("Skill: "+u.skill);
+
 
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.RealDistribution;
+
 
 public class GenerateSkill {
         double mean;
         double std;
+        double skill;
     GenerateSkill(double exper, double experience [], double meanskill[], double stdskill[]) {
 
             SplineInterpolator si = new SplineInterpolator(); //
@@ -20,6 +24,9 @@ public class GenerateSkill {
 
             PolynomialSplineFunction spsf = si.interpolate(experience, stdskill); // Computes an interpolating function for the data set for std Skill
             std = spsf.value(exper); // std skil for the Accepted exper
+
+            RealDistribution dist = new NormalDistribution(mean, std);
+            skill = dist.sample();
         }
 
     }
