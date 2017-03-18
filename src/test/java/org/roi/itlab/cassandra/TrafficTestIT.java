@@ -38,7 +38,7 @@ public class TrafficTestIT {
         List<Poi> pois = PoiLoader.loadFromCsv(testPois);
         List<Poi> offices = PoiLoader.loadFromCsv(officePois);
         List<Point> homelocations = new LocationGenerator(new MersenneTwister(1), pois, new Pair<Integer, Double>(20, 200.0)).sample(ROUTES_COUNT);
-        List<Point> worklocations = new LocationGenerator(new MersenneTwister(1), pois, new Pair<Integer, Double>(1, 200.0)).sample(ROUTES_COUNT);
+        List<Point> worklocations = new LocationGenerator(new MersenneTwister(1), offices, new Pair<Integer, Double>(1, 200.0)).sample(ROUTES_COUNT);
 
         //generating locations and routes;
         int routingFailedCounter = 0;

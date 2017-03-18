@@ -43,11 +43,9 @@ public class LocationGenerator {
     }
 
     public List<Point> sample(int size) {
-        List<Point> points = new ArrayList<>();
-        Location[] randomLocations = new Location[size];
-        locations.sample(size, randomLocations);
-        for (Location location : randomLocations) {
-            points.add(location.getPoint());
+        List<Point> points = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            points.add(sample());
         }
 
         return points;
