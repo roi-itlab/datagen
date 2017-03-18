@@ -22,7 +22,7 @@ public class JsTest {
     private static final String testJs = "./src/test/resources/org/roi/payg/user.js";
     private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
 
-    @Test
+//    @Test
     public void testJs() throws ScriptException, IOException, NoSuchMethodException {
         byte[] bytes = Files.readAllBytes(Paths.get(testJs));
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
