@@ -15,6 +15,9 @@ import org.mongodb.morphia.geo.Point;
 
 public class GenerateLocations {
 
+    private static int metersPerLatDeg = 111135;
+    private static int metersPerLngDeg = 55660;
+    
     public GenerateLocations() {
     }
 
