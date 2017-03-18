@@ -144,8 +144,8 @@ public class GenerateLocations {
 
     }
 
-   //returns list of random points generated nearby pois from the source list
-    public static List<Point> generateRandomLocations(int numberOfLocations, List<Poi> sourceList, int radius) {
+    //returns list of random points generated nearby pois from the source list
+    public static List<Point> generateRandomLocations(int numberOfLocations, List<Poi> sourceList, double radius) {
         Random r = new Random(System.currentTimeMillis());
         List<Point> resultList = new ArrayList<>();
         for (int i = 0; i < numberOfLocations; i++){
@@ -159,5 +159,5 @@ public class GenerateLocations {
             resultList.add(GeoJson.point(lat, lng));
         }
         return resultList;
-     }
- }
+    }
+}
