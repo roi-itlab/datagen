@@ -1,4 +1,4 @@
-/**
+package org.roi.itlab.cassandra; /**
  * Created by neron on 10.03.2017.
  */
 // for example
@@ -13,21 +13,25 @@ import org.apache.commons.math3.distribution.RealDistribution;
 
 
 public class GenerateSkill {
-        double mean;
-        double std;
-        double skill;
-    GenerateSkill(double exper, double experience [], double meanskill[], double stdskill[]) {
+    double mean;
+    double std;
+    double skill;
 
-            SplineInterpolator si = new SplineInterpolator(); //
-            PolynomialSplineFunction mpsf = si.interpolate(experience, meanskill); // Computes an interpolating function for the data set for mean Skill
-            mean = mpsf.value(exper); // mean skil for the Accepted exper
+    public GenerateSkill(double exper, double experience[], double meanskill[], double stdskill[]) {
 
-            PolynomialSplineFunction spsf = si.interpolate(experience, stdskill); // Computes an interpolating function for the data set for std Skill
-            std = spsf.value(exper); // std skil for the Accepted exper
+        SplineInterpolator si = new SplineInterpolator(); //
+        PolynomialSplineFunction mpsf = si.interpolate(experience, meanskill); // Computes an interpolating function for the data set for mean Skill
+        mean = mpsf.value(exper); // mean skil for the Accepted exper
 
-            RealDistribution dist = new NormalDistribution(mean, std);
-            skill = dist.sample();
-        }
+        PolynomialSplineFunction spsf = si.interpolate(experience, stdskill); // Computes an interpolating function for the data set for std Skill
+        std = spsf.value(exper); // std skil for the Accepted exper
 
+        RealDistribution dist = new NormalDistribution(mean, std);
+        skill = dist.sample();
     }
+
+    public double getSkill() {
+        return skill;
+    }
+}
 

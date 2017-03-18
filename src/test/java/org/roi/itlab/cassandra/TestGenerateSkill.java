@@ -1,13 +1,16 @@
-/**
+package org.roi.itlab.cassandra; /**
  * Created by neron on 12.03.2017.
  */
 import java.util.*;
 import org.apache.commons.math3.special.Erf;
-
+import org.junit.Assert;
+import org.junit.Test;
 
 public class TestGenerateSkill {
         static int num = 100;
-        public static void main(String[] args) {
+
+        @Test
+        public void testKA() {
 
             //задаем дискретные значения x-стаж, у-средний Skill, z-среднеквадратическое отклонение, g-стаж для которого ищем Skill
             double[] x = new double[]{0, 1, 5};
@@ -28,7 +31,7 @@ public class TestGenerateSkill {
             //запись Skill в массив
             for (int i = 0; i < num; i++) {
                 u = new GenerateSkill(g, x, y, z);
-                value[i] = u.skill;
+                value[i] = u.getSkill();
             }
             Arrays.sort(value);
 
@@ -40,11 +43,9 @@ public class TestGenerateSkill {
                 }
             }
 
-            if(max<=ka){
-                System.out.println("Vse normal'no");}
-            else {System.out.println("Gde-to kosyak");}
-
+            Assert.assertTrue(max<=ka);
         }
+
         // функция распределения построенная по точкам(практическая)
         public static double FuncPrakt(double s,double[] p) {
             double r=0;
