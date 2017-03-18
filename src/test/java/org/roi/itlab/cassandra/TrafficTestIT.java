@@ -2,6 +2,8 @@ package org.roi.itlab.cassandra;
 
 import com.graphhopper.util.DistanceCalc;
 import com.graphhopper.util.DistanceCalcEarth;
+import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.util.Pair;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongodb.morphia.geo.Point;
@@ -9,6 +11,7 @@ import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.person.PersonBuilder;
 import org.roi.itlab.cassandra.person.PersonBuilderImpl;
 import org.roi.itlab.cassandra.person.PersonDirector;
+import org.roi.itlab.cassandra.random_attributes.LocationGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,8 +37,8 @@ public class TrafficTestIT {
     public static void init() throws IOException {
         List<Poi> pois = PoiLoader.loadFromCsv(testPois);
         List<Poi> offices = PoiLoader.loadFromCsv(officePois);
-        List<Point> homelocations = GenerateLocations.generateRandomLocations(ROUTES_COUNT, GenerateLocations.getPoisOfTypes(pois, 20), 200);
-        List<Point> worklocations = GenerateLocations.generateRandomLocations(ROUTES_COUNT, offices, 200);
+        List<Point> homelocations = new LocationGenerator(new MersenneTwister(1), pois, new Pair<Integer, Double>(20, 200.0)).sample(ROUTES_COUNT);
+        List<Point> worklocations = new LocationGenerator(new MersenneTwister(1), pois, new Pair<Integer, Double>(1, 200.0)).sample(ROUTES_COUNT);
 
         //generating locations and routes;
         int routingFailedCounter = 0;
