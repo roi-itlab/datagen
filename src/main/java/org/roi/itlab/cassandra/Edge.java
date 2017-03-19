@@ -15,14 +15,16 @@ public class Edge {
     private double distance;
     // distance/average speed
     private int time;
+    private double speed;
 
-    public Edge(int id, Point start, Point end, PointList geometry, double distance, int time) {
+    public Edge(int id, Point start, Point end, PointList geometry, double distance, int time, double speed) {
         this.start = start;
         this.end = end;
         this.id = id;
         this.geometry = geometry;
         this.distance = distance;
         this.time = time;
+        this.speed = speed;
     }
 
 
@@ -46,6 +48,10 @@ public class Edge {
         return time;
     }
 
+    public double getSpeed() {
+        return speed;
+    }
+
     @Override
     public boolean equals(Object ob) {
         if (ob == null) {
@@ -62,7 +68,7 @@ public class Edge {
 
     @Override
     public String toString() {
-        return "edge id: "+id + " start: " + start.toString() + " end: " + end.toString();
+        return "edge id: " + id + " start: " + start.toString() + " end: " + end.toString();
     }
 
 
