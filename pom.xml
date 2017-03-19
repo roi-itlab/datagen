@@ -80,6 +80,9 @@
                 </goals>
             </execution>
         </executions>
+        <configuration>
+            <argLine>-Xmx2048m</argLine>
+        </configuration>
     </plugin>
     </plugins>
     </build>

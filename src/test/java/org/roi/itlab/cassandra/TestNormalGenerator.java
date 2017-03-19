@@ -4,17 +4,19 @@ package org.roi.itlab.cassandra; /**
 
 //для 5000 тестов по 10000 сгенерированных элементов в каждом, всегда строится нормально
 import java.util.*;
+
+import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.special.Erf;
 import org.junit.Assert;
 import org.junit.Test;
-import org.roi.itlab.cassandra.GenerateSkill;
+import org.roi.itlab.cassandra.random_attributes.NormalGenerator;
 
 
-public class TestGenerateSkillComplex {
+public class TestNormalGenerator {
         static int num = 10000;
 
         @Test
-        public void testKA() {
+        public void testDistribution() {
             //int result=0; // для проверки
             //for (int t = 0; t < 5000; t++) {
                 //задаем дискретные значения x-стаж, у-средний Skill, z-среднеквадратическое отклонение, g-стаж для которого ищем Skill
@@ -23,7 +25,6 @@ public class TestGenerateSkillComplex {
                 double[] z = new double[]{0, 0.1, 2.5};
                 double g = 4;
                 int kor=5; //для корекции выборки, выкидываем по 5 крайних элементов, т.к , возможно , это промахи
-                GenerateSkill u = new GenerateSkill(g, x, y, z);
                 // double ka=0.120720674867;// процентная точка распределения Колмогорова для 100 элемнтов
                 //double ka=Math.sqrt((-1/(2*num))*Math.log(0.05));//-(1/(6*num)); // не правльно считает
                 double ka = 0.122220674867;// для 10000
@@ -34,10 +35,10 @@ public class TestGenerateSkillComplex {
                 double[] value = new double[num];// храним сгенерированнвые Skill для определенного стажа
                 double[] valuey = new double[num];//храним координаты y для функции распределения(практической)
 
-                //запись Skill в массив
+                NormalGenerator normalGenerator = new NormalGenerator(new MersenneTwister(1), x, y, z);
+            //запись Skill в массив
                 for (int i = 0; i < num; i++) {
-                    u = new GenerateSkill(g, x, y, z);
-                    value[i] = u.getSkill();
+                    value[i] = normalGenerator.getRandomDouble(g);
                     mean += value[i];
                 }
                 mean = mean / num;
