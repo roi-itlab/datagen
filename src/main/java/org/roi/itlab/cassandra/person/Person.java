@@ -1,5 +1,6 @@
 package org.roi.itlab.cassandra.person;
 
+import org.mongodb.morphia.geo.Point;
 import org.roi.itlab.cassandra.Poi;
 
 import java.time.LocalTime;
@@ -14,8 +15,8 @@ public class Person {
     private LocalTime workDuration;
     private int experience;
     private LocalTime workEnd;
-    private Poi home;
-    private Poi work;
+    private Point home;
+    private Point work;
     private UUID id;
     private String firstName = "";
     private String lastName = "";
@@ -70,11 +71,11 @@ public class Person {
         return workEnd;
     }
 
-    public Poi getHome() {
+    public Point getHome() {
         return home;
     }
 
-    public Poi getWork() {
+    public Point getWork() {
         return work;
     }
 
@@ -106,11 +107,11 @@ public class Person {
         this.workEnd = workEnd;
     }
 
-    public void setHome(Poi home) {
+    public void setHome(Point home) {
         this.home = home;
     }
 
-    public void setWork(Poi work) {
+    public void setWork(Point work) {
         this.work = work;
     }
 
@@ -120,5 +121,23 @@ public class Person {
 
     public void setRushFactor(int rushFactor) {
         this.rushFactor = rushFactor;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "age=" + age +
+                ", workStart=" + workStart +
+                ", workDuration=" + workDuration +
+                ", experience=" + experience +
+                ", workEnd=" + workEnd +
+                ", home=" + home +
+                ", work=" + work +
+                ", id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", skill=" + skill +
+                ", rushFactor=" + rushFactor +
+                '}';
     }
 }

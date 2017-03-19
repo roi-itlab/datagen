@@ -1,5 +1,6 @@
 package org.roi.itlab.cassandra.person;
 
+import org.mongodb.morphia.geo.Point;
 import org.roi.itlab.cassandra.random_attributes.*;
 
 import java.time.LocalTime;
@@ -12,6 +13,7 @@ public class PersonBuilderImpl extends PersonBuilder{
     private RandomGenerator ageGenerator;
     private RandomGenerator workDurationGenerator;
     private RandomGenerator workStartGenerator;
+    private LocationGenerate locationGenerate;
 
 
     public PersonBuilderImpl()
@@ -28,6 +30,8 @@ public class PersonBuilderImpl extends PersonBuilder{
         director.setRandomGeneratorBuilder(new WorkDurationRandomGenerator());
         director.constructRandomGenerator();
         workDurationGenerator = director.getRandomGenerator();
+
+        locationGenerate = new LocationGenerate();
     }
 
     @Override
@@ -40,6 +44,8 @@ public class PersonBuilderImpl extends PersonBuilder{
         setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
         setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
         setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
+        setHome(locationGenerate.sample());
+        setWork(locationGenerate.sample());
     }
 
     public PersonBuilder setUUID(UUID uuid)
@@ -70,6 +76,17 @@ public class PersonBuilderImpl extends PersonBuilder{
 
     public PersonBuilder setWorkEnd(LocalTime workEnd) {
         person.setWorkEnd(workEnd);
+        return this;
+    }
+    public PersonBuilder setHome(Point point)
+    {
+        person.setHome(point);
+        return this;
+    }
+
+    public PersonBuilder setWork(Point point)
+    {
+        person.setWork(point);
         return this;
     }
 

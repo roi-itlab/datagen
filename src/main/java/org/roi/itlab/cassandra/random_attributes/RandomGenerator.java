@@ -13,11 +13,13 @@ public class RandomGenerator{
     private double min;
     private int proportionalWeight;
     private PolynomialSplineFunction psf;
+    private org.apache.commons.math3.random.RandomGenerator rng;
 
     public RandomGenerator(){}
 
-    public RandomGenerator(double[] x, double[] y)
+    public RandomGenerator(org.apache.commons.math3.random.RandomGenerator rng, double[] x, double[] y)
     {
+        this.rng = rng;
         LinearInterpolator li = new LinearInterpolator();
         setPsf(li.interpolate(x,y));
         this.min = psf.getKnots()[0];
@@ -50,9 +52,10 @@ public class RandomGenerator{
         int controlPoint;
         while (rand < 0) {
             try{
-                controlPoint = ThreadLocalRandom.current().nextInt((int)min, (int)max+1);
+                controlPoint = (int)(rng.nextInt((int)(max+min+1))-min);
+                //controlPoint = ThreadLocalRandom.current().nextInt((int)min, (int)max+1);
             }catch (IllegalArgumentException ex){ controlPoint = 0;}
-            double controlValue = proportionalWeight * ThreadLocalRandom.current().nextDouble();
+            double controlValue = proportionalWeight * rng.nextDouble();//ThreadLocalRandom.current().nextDouble();
             try {
                 if (controlPoint >= psf.getKnots()[0] && controlValue < psf.value(controlPoint))
                     rand = controlPoint;
@@ -66,9 +69,10 @@ public class RandomGenerator{
         double controlPoint;
         while (rand < 0) {
             try{
-                controlPoint = ThreadLocalRandom.current().nextDouble(min, max+1.0);
+                controlPoint = (max+min)*rng.nextDouble() - min;
+                //controlPoint = ThreadLocalRandom.current().nextDouble(min, max+1.0);
             }catch (IllegalArgumentException ex){ controlPoint = 0;}
-            double controlValue = proportionalWeight * ThreadLocalRandom.current().nextDouble();
+            double controlValue = proportionalWeight * rng.nextDouble();// ThreadLocalRandom.current().nextDouble();
             try {
                 if (controlPoint >= psf.getKnots()[0] && controlValue < psf.value(controlPoint))
                     rand = controlPoint;
