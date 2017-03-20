@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.graphhopper.util.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,10 +15,6 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.PathWrapper;
 import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.routing.util.EncodingManager;
-import com.graphhopper.util.GPXEntry;
-import com.graphhopper.util.Instruction;
-import com.graphhopper.util.InstructionList;
-import com.graphhopper.util.PointList;
 
 public class RouteTestIT {
 
@@ -36,10 +33,12 @@ public class RouteTestIT {
     	hopper.importOrLoad();
 
     	// simple configuration of the request object, see the GraphHopperServlet classs for more possibilities.
-    	GHRequest req = new GHRequest(59.96226, 30.298873, 59.817727, 30.326528).
+		GHRequest req = new GHRequest(59.96226, 30.298873, 59.817727, 30.326528).
     	    setWeighting("fastest").
     	    setVehicle("car").
     	    setLocale(Locale.US);
+		req.getHints().put(Parameters.Routing.ADD_DETAILS_TO_ANNOTATION, true);
+		req.getHints().put(Parameters.Routing.SINGLE_NODE_INSTRUCTIONS, true);
     	GHResponse rsp = hopper.route(req);
 
     	// first check for errors
