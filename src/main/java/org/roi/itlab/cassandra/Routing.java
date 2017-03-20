@@ -7,6 +7,7 @@ import com.graphhopper.json.geo.Point;
 import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.routing.Path;
 import com.graphhopper.routing.VirtualEdgeIteratorState;
+import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.storage.NodeAccess;
 import com.graphhopper.util.DistanceCalc;
@@ -23,7 +24,9 @@ public class Routing {
             forDesktop().
             setEnableInstructions(false).
             setGraphHopperLocation("./target").setInMemory().
+            setEncodingManager(new EncodingManager("car,bike")).
             importOrLoad();
+
     private static final Map<Integer, Edge> EDGES_STORAGE = new HashMap<>();
     private static final DistanceCalc DIST_EARTH = new DistanceCalcEarth();
 

@@ -7,4 +7,4 @@ cache:
   - "$HOME/.sonar/cache"
 addons:
   sonarqube: true
-script: mvn -DskipITs=true -DindentSize=4 clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+script: mvn -DindentSize=4 clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
