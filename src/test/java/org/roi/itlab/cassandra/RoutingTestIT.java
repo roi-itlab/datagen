@@ -15,8 +15,6 @@ public class RoutingTestIT {
     private Random rng;
 
     @Before
-
-
     public void init() throws IOException {
 
         pois = PoiLoader.loadFromCsv(testPois);

@@ -63,7 +63,7 @@ public class TestRersonBuilder {
     public void TestBuilder() throws Exception {
         Assert.assertEquals(mean_mean, 30, 15);
         Assert.assertEquals(age.getUniqueCount(), 58);
-        Assert.assertEquals(mode.get(0).toString(), "30");
+        Assert.assertEquals(mode.get(0).toString(), "33");
         Assert.assertEquals(workStartTime.getUniqueCount(), 13);
     }
 }

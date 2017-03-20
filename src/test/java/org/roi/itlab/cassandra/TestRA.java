@@ -80,7 +80,7 @@ public class TestRA {
     @Test
     public void TestBuilder() throws Exception {
         Assert.assertEquals(age_mean, 35, 15);
-        Assert.assertEquals(age_mode.get(0).toString(), "30");
+        Assert.assertEquals(age_mode.get(0).toString(), "32");
         Assert.assertEquals(workstart_mean, 9, 1);
         Assert.assertEquals(workstart_mode.get(0).toString(), "9");
         Assert.assertEquals(workduration_mean, 8, 2);

@@ -13,7 +13,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <jackson.version>2.7.3</jackson.version>
         <!--<graphhopper.group>com.graphhopper</graphhopper.group>-->
-        <!--<graphhopper.version>0.8.2</graphhopper.version>-->
+        <graphhopper.version>0.8.2</graphhopper.version>
         <!--<graphhopper.version>0.9-SNAPSHOT</graphhopper.version>-->
         <graphhopper.group>com.github.roi-itlab.graphhopper</graphhopper.group>
         <graphhopper.version>-SNAPSHOT</graphhopper.version>
