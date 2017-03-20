@@ -9,11 +9,14 @@ import java.util.Scanner;
  */
 
 //TODO rename ?
-public class CSVReader {
+public class CSVReader  {
 
-    private final String filePath = "/distrbutions.csv";
+    private final String filePath = "distribution.csv";
 
     public void Read() throws FileNotFoundException {
+        final String dir = System.getProperty("user.dir");
+        System.out.println("current dir = " + dir);
+
         Scanner scanner = new Scanner(new File(filePath));
         scanner.useDelimiter(",");
         while(scanner.hasNext()){

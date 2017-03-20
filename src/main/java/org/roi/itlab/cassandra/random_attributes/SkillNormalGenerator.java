@@ -12,9 +12,9 @@ public class SkillNormalGenerator {
     public SkillNormalGenerator(org.apache.commons.math3.random.RandomGenerator rng)
     {
         //TODO rename arrays, add arrays/ csv to constractor
-        x = new double[]{0, 1, 5};
-        means = new double[]{0, 1,25};
-        sigma = new double[]{0, 0.1, 2.5};
+        x = new double[]{0, 1, 5, 10, 50};
+        means = new double[]{0, 1,25, 30, 15};
+        sigma = new double[]{0, 0.1, 2.5, 4, 7};
 
 
         normalExperienceGenerator = new NormalGenerator( rng, x, means, sigma);

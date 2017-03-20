@@ -12,6 +12,7 @@ import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.person.PersonBuilder;
 import org.roi.itlab.cassandra.person.PersonBuilderImpl;
 import org.roi.itlab.cassandra.person.PersonDirector;
+import org.roi.itlab.cassandra.random_attributes.CSVReader;
 import org.roi.itlab.cassandra.random_attributes.RandomGenerator;
 
 
@@ -58,8 +59,14 @@ public class TestRersonBuilder {
         for(int i = 0 ; i < 15; ++i){
             System.out.println(list.get(i));
         }
-*/
-
+    */
+    /*
+        CSVReader reader = new CSVReader();
+        try{reader.Read();}
+        catch (Exception e){
+            System.out.println(e);
+        }
+        */
     }
 
     @Test
