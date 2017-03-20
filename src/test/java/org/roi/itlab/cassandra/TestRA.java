@@ -12,7 +12,7 @@ import org.roi.itlab.cassandra.random_attributes.*;
  * author Anush
  */
 public class TestRA {
-    int count =10000;
+    int count =1000000;
     int age_mean,workstart_mean,workduration_mean;
     Frequency age_freq,workstart_freq,workduration_freq;
     List<Comparable<?>> age_mode,workstart_mode,workduration_mode;
