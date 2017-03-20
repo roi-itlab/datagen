@@ -20,7 +20,7 @@ public class Person {
     private String firstName = "";
     private String lastName = "";
 
-    private int skill;
+    private double skill;
     private int rushFactor;
 
     public Person()
@@ -78,7 +78,7 @@ public class Person {
         return work;
     }
 
-    public int getSkill() {
+    public double getSkill() {
         return skill;
     }
 
@@ -114,11 +114,26 @@ public class Person {
         this.work = work;
     }
 
-    public void setSkill(int skill) {
+    public void setSkill(double skill) {
         this.skill = skill;
     }
 
     public void setRushFactor(int rushFactor) {
         this.rushFactor = rushFactor;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "age=" + age +
+                ", workStart=" + workStart +
+                ", workDuration=" + workDuration +
+                ", experience=" + experience +
+                ", workEnd=" + workEnd +
+                ", home=" + home +
+                ", work=" + work +
+                ", id=" + id +
+                ", skill=" + skill +
+                '}';
     }
 }

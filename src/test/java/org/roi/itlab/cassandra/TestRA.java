@@ -27,15 +27,14 @@ public class TestRA {
         RandomGeneratorDirector randomGeneratorDirector = new RandomGeneratorDirector();
         RandomGeneratorBuilder  ageRandomGenerator = new AgeRandomGenerator();
         randomGeneratorDirector.setRandomGeneratorBuilder(ageRandomGenerator);
-        randomGeneratorDirector.constructRandomGenerator();
-        RandomGenerator randGen = randomGeneratorDirector.getRandomGenerator();
 
         long mean = 0;
         int tmp;
 
         for(int j = 0 ; j < count;++j) {
-           tmp = randGen.getRandomInt();
-           mean += tmp;
+            randomGeneratorDirector.constructRandomGenerator(j);
+            tmp = randomGeneratorDirector.getRandomGenerator().getRandomInt();
+            mean += tmp;
            age_freq.addValue(tmp);
         }
 
@@ -45,13 +44,12 @@ public class TestRA {
 
         RandomGeneratorBuilder  workStartRandomGenerator = new WorkStartRandomGenerator();
         randomGeneratorDirector.setRandomGeneratorBuilder(workStartRandomGenerator);
-        randomGeneratorDirector.constructRandomGenerator();
-        randGen = randomGeneratorDirector.getRandomGenerator();
 
         mean = 0;
 
         for(int j = 0 ; j < count;++j) {
-            tmp = randGen.getRandomInt();
+            randomGeneratorDirector.constructRandomGenerator(j);
+            tmp = randomGeneratorDirector.getRandomGenerator().getRandomInt();
             mean += tmp;
             workstart_freq.addValue(tmp);
         }
@@ -63,13 +61,12 @@ public class TestRA {
 
         RandomGeneratorBuilder  workDurationRandomGenerator = new WorkDurationRandomGenerator();
         randomGeneratorDirector.setRandomGeneratorBuilder(workDurationRandomGenerator);
-        randomGeneratorDirector.constructRandomGenerator();
-        randGen = randomGeneratorDirector.getRandomGenerator();
 
         mean = 0;
 
         for(int j = 0 ; j < count;++j) {
-            tmp = randGen.getRandomInt();
+            randomGeneratorDirector.constructRandomGenerator(j);
+            tmp = randomGeneratorDirector.getRandomGenerator().getRandomInt();
             mean += tmp;
             workduration_freq.addValue(tmp);
         }

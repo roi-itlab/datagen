@@ -1,80 +1,80 @@
 package org.roi.itlab.cassandra.person;
 
+import org.apache.commons.math3.random.MersenneTwister;
+import org.mongodb.morphia.geo.GeoJson;
+import org.roi.itlab.cassandra.Location;
+import org.roi.itlab.cassandra.Poi;
 import org.roi.itlab.cassandra.random_attributes.*;
 
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * Created by Vadim on 02.03.2017.
+ * author Vadim
+ * author Anush
  */
 public class PersonBuilderImpl extends PersonBuilder{
-    private RandomGenerator ageGenerator;
-    private RandomGenerator workDurationGenerator;
-    private RandomGenerator workStartGenerator;
 
+    public PersonBuilderImpl() {
 
-    public PersonBuilderImpl()
-    {
-        RandomGeneratorDirector director = new RandomGeneratorDirector();
-        director.setRandomGeneratorBuilder(new AgeRandomGenerator());
-        director.constructRandomGenerator();
-        ageGenerator = director.getRandomGenerator();
-
-        director.setRandomGeneratorBuilder(new WorkStartRandomGenerator());
-        director.constructRandomGenerator();
-        workStartGenerator = director.getRandomGenerator();
-
-        director.setRandomGeneratorBuilder(new WorkDurationRandomGenerator());
-        director.constructRandomGenerator();
-        workDurationGenerator = director.getRandomGenerator();
+        createNewPerson();
     }
 
     @Override
-    public void buildAttributes()
+    public void buildAttributes(int seed)
     {
-        person = new Person();
-        setUUID(UUID.randomUUID());
+        //генерирование возраста
+        RandomGeneratorDirector randomGeneratorDirector = new RandomGeneratorDirector();
+        randomGeneratorDirector.setRandomGeneratorBuilder(new AgeRandomGenerator());
+        randomGeneratorDirector.constructRandomGenerator(seed);
+        RandomGenerator randGen = randomGeneratorDirector.getRandomGenerator();
+        person.setAge(randGen.getRandomInt());
 
-        setAge(ageGenerator.getRandomInt());
-        setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
-        setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
-        setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
+        //генерирование стажа
+        ExperienceRandomGenerator experienceRandomGenerator = new ExperienceRandomGenerator();
+        experienceRandomGenerator.setAge(person.getAge());
+        randomGeneratorDirector.setRandomGeneratorBuilder(experienceRandomGenerator);
+        randomGeneratorDirector.constructRandomGenerator(seed);
+        randGen = randomGeneratorDirector.getRandomGenerator();
+        person.setExperience(randGen.getRandomInt());
+
+        //генерирование времени начала работы
+        randomGeneratorDirector.setRandomGeneratorBuilder(new WorkStartRandomGenerator());
+        randomGeneratorDirector.constructRandomGenerator(seed);
+        randGen = randomGeneratorDirector.getRandomGenerator();
+        person.setWorkStart(LocalTime.of(randGen.getRandomInt(),0));
+
+        //генерирование продолжительности работы
+        randomGeneratorDirector.setRandomGeneratorBuilder(new WorkDurationRandomGenerator());
+        randomGeneratorDirector.constructRandomGenerator(seed);
+        randGen = randomGeneratorDirector.getRandomGenerator();
+        person.setWorkDuration(LocalTime.of(randGen.getRandomInt(),0));
+
+        person.setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())%24,0));
+
+        person.setId(UUID.randomUUID());
+
+        //генерирование местоположений
+        org.apache.commons.math3.random.RandomGenerator rng = new MersenneTwister(1);
+        Location big = new Location(rng, GeoJson.point(60, 40), 500, 2);
+        Location small = new Location(rng, GeoJson.point(61, 41), 100, 1);
+        LocationGenerator generator = new LocationGenerator(rng, Arrays.asList(new Location[] {big, small}));
+        Poi home = new Poi();
+        home.setLoc(generator.sample());
+        person.setHome(home);
+
+        Poi work = new Poi();
+        work.setLoc(generator.sample());
+        person.setWork(work);
+
+        //генерирование Skill
+        double[] x = new double[]{0, 1, 5, 10, 60};
+        double[] y = new double[]{0, 1, 25, 30, 32};
+        double[] z = new double[]{0, 0.1, 2.5, 3.0, 3.2};
+        NormalGenerator normalGenerator = new NormalGenerator(new MersenneTwister(seed), x, y, z);
+        person.setSkill(normalGenerator.getRandomDouble(person.getExperience()+0.01));
+
     }
 
-    public PersonBuilder setUUID(UUID uuid)
-    {
-        person.setId(uuid);
-        return this;
-    }
-
-    public PersonBuilder setAge(int age) {
-        person.setAge(age);
-        return this;
-    }
-
-    public PersonBuilder setExperience(int experience) {
-        person.setExperience(experience);
-        return this;
-    }
-
-    public PersonBuilder setWorkDuration(LocalTime workDuration) {
-        person.setWorkDuration(workDuration);
-        return this;
-    }
-
-    public PersonBuilder setWorkStart(LocalTime workStart) {
-        person.setWorkStart(workStart);
-        return this;
-    }
-
-    public PersonBuilder setWorkEnd(LocalTime workEnd) {
-        person.setWorkEnd(workEnd);
-        return this;
-    }
-
-    @Override
-    public Person getResult() {
-        return person;
-    }
 }
