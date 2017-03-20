@@ -17,7 +17,8 @@ import org.roi.itlab.cassandra.random_attributes.RandomGenerator;
 
 
 /**
- * Created by Vadim on 26.02.2017.
+ *author Vadim
+ * author Anush
  */
 public class TestRersonBuilder {
     List<Person> list = new ArrayList<>();
@@ -30,11 +31,13 @@ public class TestRersonBuilder {
     @Before
     public  void init()
     {
-        PersonBuilder rab = new PersonBuilderImpl();
-        PersonDirector rad = new PersonDirector(rab);
+        PersonDirector personDirector = new PersonDirector();
+        PersonBuilder personBuilderImpl = new PersonBuilderImpl();
+        personDirector.setPersonBuilder(personBuilderImpl);
 
-        for(int j = 0 ; j < 1000000;++j) {
-            list.add(rad.constract());
+        for(int j = 0 ; j < 1000;++j) {
+            personDirector.constructPerson(j);
+            list.add(personDirector.getPerson());
             age.addValue(list.get(j).getAge());
             mean_mean += list.get(j).getAge();
             workStartTime.addValue(list.get(j).getWorkStart());
@@ -72,8 +75,8 @@ public class TestRersonBuilder {
     @Test
     public void TestBuilder() throws Exception {
         Assert.assertEquals(mean_mean, 30, 15);
-        Assert.assertEquals(age.getUniqueCount(), 73);
-        Assert.assertEquals(mode.get(0).toString(), "30");
+        Assert.assertEquals(age.getUniqueCount(), 58);
+        Assert.assertEquals(mode.get(0).toString(), "33");
         Assert.assertEquals(workStartTime.getUniqueCount(), 13);
     }
 }

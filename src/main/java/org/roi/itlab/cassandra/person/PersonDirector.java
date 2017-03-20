@@ -5,18 +5,21 @@ package org.roi.itlab.cassandra.person;
  * Created by Vadim on 02.03.2017.
  */
 public class PersonDirector {
-    private PersonBuilder builder;
+    private PersonBuilder personBuilder;
 
-    public PersonDirector(final PersonBuilder builder)
-    {
-        this.builder = builder;
+    public Person getPerson() {
+        return personBuilder.getPerson();
     }
 
-    public Person constract()
-    {
-        builder.buildAttributes();
-        return builder.getResult();
+    public void setPersonBuilder(PersonBuilder personBuilder) {
+        this.personBuilder = personBuilder;
     }
+
+    public void constructPerson(int seed) {
+
+        personBuilder.buildAttributes(seed);
+    }
+
 
 
 }
