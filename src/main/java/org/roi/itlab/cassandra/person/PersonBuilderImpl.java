@@ -1,7 +1,9 @@
 package org.roi.itlab.cassandra.person;
 
 import org.apache.commons.math3.random.MersenneTwister;
-import org.mongodb.morphia.geo.Point;
+import org.mongodb.morphia.geo.GeoJson;
+import org.roi.itlab.cassandra.Location;
+import org.roi.itlab.cassandra.Poi;
 import org.roi.itlab.cassandra.random_attributes.*;
 
 import java.time.LocalTime;
