@@ -41,6 +41,7 @@ public class TestRersonBuilder {
         mean_mean = mean_mean / list.size();
 
         mode = age.getMode();
+/*
 
         Iterator<Comparable<?>> iter = age.valuesIterator();
         StringBuilder outBuffer = new StringBuilder();
@@ -57,6 +58,8 @@ public class TestRersonBuilder {
         for(int i = 0 ; i < 15; ++i){
             System.out.println(list.get(i));
         }
+*/
+
     }
 
     @Test

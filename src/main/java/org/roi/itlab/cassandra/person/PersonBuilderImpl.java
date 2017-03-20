@@ -20,6 +20,7 @@ public class PersonBuilderImpl extends PersonBuilder{
     private WorkLocationGenerator workLocationGenerator;
     private ExperienceNormalGenerator experienceNormalGenerator;
     private SkillNormalGenerator skillNormalGenerator;
+    private RushFactorNormalGenerator rushFactorNormalGenerator;
 
     private final int LICENSE_AGE = 18;
 
@@ -44,7 +45,7 @@ public class PersonBuilderImpl extends PersonBuilder{
 
         experienceNormalGenerator = new ExperienceNormalGenerator(new MersenneTwister(1));
         skillNormalGenerator = new SkillNormalGenerator(new MersenneTwister(1));
-
+        rushFactorNormalGenerator = new RushFactorNormalGenerator(new MersenneTwister(1));
         homeLocationGenerator = new HomeLocationGenerator();
 
         workLocationGenerator = new WorkLocationGenerator();
@@ -84,6 +85,7 @@ public class PersonBuilderImpl extends PersonBuilder{
             setSkill(normalSkillGenerator.getRandomDouble(d));*/
         person.setExperience((int)experienceNormalGenerator.getDouble(person.getAge()));
         person.setSkill(skillNormalGenerator.getDouble(person.getExperience()));
+        person.setRushFactor(rushFactorNormalGenerator.getDouble(person.getAge()));
 
         person.setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
         person.setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
