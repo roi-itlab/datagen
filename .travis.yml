@@ -9,7 +9,7 @@ addons:
   sonarqube: true
 script:
     - 'if [ ${TRAVIS_SECURE_ENV_VARS} = "true" ]; then
-          mvn -DindentSize=4 clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+          mvn -DindentSize=4 clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar;
       else
-          mvn clean install
+          mvn clean install;
       fi'
