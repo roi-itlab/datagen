@@ -26,4 +26,5 @@ public class ExperienceRandomGenerator extends RandomGeneratorBuilder{
         randomGenerator = new RandomGenerator(rng,x,y);
         randomGenerator.setMax(max_exp);
     }
+
 }

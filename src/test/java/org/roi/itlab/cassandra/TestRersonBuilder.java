@@ -1,6 +1,7 @@
 package org.roi.itlab.cassandra;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.math3.stat.Frequency;
@@ -11,6 +12,7 @@ import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.person.PersonBuilder;
 import org.roi.itlab.cassandra.person.PersonBuilderImpl;
 import org.roi.itlab.cassandra.person.PersonDirector;
+import org.roi.itlab.cassandra.random_attributes.CSVReader;
 import org.roi.itlab.cassandra.random_attributes.RandomGenerator;
 
 
@@ -43,20 +45,31 @@ public class TestRersonBuilder {
         mean_mean = mean_mean / list.size();
 
         mode = age.getMode();
-        /*
-        Iterator<Comparable<?>>  iter = workStartTime.valuesIterator();
+/*
+
+        Iterator<Comparable<?>> iter = age.valuesIterator();
         StringBuilder outBuffer = new StringBuilder();
         while (iter.hasNext())
         {
             Comparable<?> value = iter.next();
             outBuffer.append(value);
             outBuffer.append('\t');
-            outBuffer.append(workStartTime.getCount(value));
+            outBuffer.append(age.getCount(value));
             outBuffer.append('\n');
         }
         System.out.println(outBuffer.toString());
-        */
 
+        for(int i = 0 ; i < 15; ++i){
+            System.out.println(list.get(i));
+        }
+    */
+    /*
+        CSVReader reader = new CSVReader();
+        try{reader.Read();}
+        catch (Exception e){
+            System.out.println(e);
+        }
+        */
     }
 
     @Test

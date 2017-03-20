@@ -1,9 +1,7 @@
 package org.roi.itlab.cassandra.person;
 
 import org.apache.commons.math3.random.MersenneTwister;
-import org.mongodb.morphia.geo.GeoJson;
-import org.roi.itlab.cassandra.Location;
-import org.roi.itlab.cassandra.Poi;
+import org.mongodb.morphia.geo.Point;
 import org.roi.itlab.cassandra.random_attributes.*;
 
 import java.time.LocalTime;
@@ -74,7 +72,5 @@ public class PersonBuilderImpl extends PersonBuilder{
         double[] z = new double[]{0, 0.1, 2.5, 3.0, 3.2};
         NormalGenerator normalGenerator = new NormalGenerator(new MersenneTwister(seed), x, y, z);
         person.setSkill(normalGenerator.getRandomDouble(person.getExperience()+0.01));
-
     }
-
 }

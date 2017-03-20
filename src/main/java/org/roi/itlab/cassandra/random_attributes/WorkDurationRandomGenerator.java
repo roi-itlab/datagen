@@ -14,6 +14,5 @@ public class WorkDurationRandomGenerator extends RandomGeneratorBuilder {
         org.apache.commons.math3.random.RandomGenerator rng = new MersenneTwister(seed);
 
         randomGenerator = new RandomGenerator(rng,x,y);
-
     }
 }
