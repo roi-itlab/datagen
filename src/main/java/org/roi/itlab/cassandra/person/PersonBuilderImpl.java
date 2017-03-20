@@ -9,6 +9,7 @@ import java.util.UUID;
 
 /**
  * Created by Vadim on 02.03.2017.
+ *              Anush
  */
 public class PersonBuilderImpl extends PersonBuilder{
     private RandomGenerator ageGenerator;
@@ -67,9 +68,9 @@ public class PersonBuilderImpl extends PersonBuilder{
     public void buildAttributes()
     {
         person = new Person();
-        setUUID(UUID.randomUUID());
+        person.setId(UUID.randomUUID());
 
-        setAge(ageGenerator.getRandomInt());
+        person.setAge(ageGenerator.getRandomInt());
         //TODO double experience ?
         //experienceGenerator.setMax(person.getAge()- LICENSE_AGE);
         //setExperience(experienceGenerator.getRandomInt());
@@ -81,70 +82,14 @@ public class PersonBuilderImpl extends PersonBuilder{
         //System.out.println(d);
         if(d!= 0)
             setSkill(normalSkillGenerator.getRandomDouble(d));*/
-        setExperience((int)experienceNormalGenerator.getDouble(person.getAge()));
-        setSkill(skillNormalGenerator.getDouble(person.getExperience()));
+        person.setExperience((int)experienceNormalGenerator.getDouble(person.getAge()));
+        person.setSkill(skillNormalGenerator.getDouble(person.getExperience()));
 
-        setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
-        setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
-        setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
-        setHome(homeLocationGenerator.sample());
-        setWork(workLocationGenerator.sample());
-    }
-
-    public PersonBuilder setUUID(UUID uuid)
-    {
-        person.setId(uuid);
-        return this;
+        person.setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
+        person.setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
+        person.setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
+        person.setHome(homeLocationGenerator.sample());
+        person.setWork(workLocationGenerator.sample());
     }
 
-    public PersonBuilder setAge(int age) {
-        person.setAge(age);
-        return this;
-    }
-
-    public PersonBuilder setExperience(int experience) {
-        person.setExperience(experience);
-        return this;
-    }
-
-    public PersonBuilder setWorkDuration(LocalTime workDuration) {
-        person.setWorkDuration(workDuration);
-        return this;
-    }
-
-    public PersonBuilder setWorkStart(LocalTime workStart) {
-        person.setWorkStart(workStart);
-        return this;
-    }
-
-    public PersonBuilder setWorkEnd(LocalTime workEnd) {
-        person.setWorkEnd(workEnd);
-        return this;
-    }
-    public PersonBuilder setHome(Point point)
-    {
-        person.setHome(point);
-        return this;
-    }
-
-    public PersonBuilder setWork(Point point)
-    {
-        person.setWork(point);
-        return this;
-    }
-    public PersonBuilder setSkill(double skill)
-    {
-        person.setSkill(skill);
-        return this;
-    }
-    public PersonBuilder setRushFactor(double rushFactor)
-    {
-        person.setRushFactor(rushFactor);
-        return this;
-    }
-
-    @Override
-    public Person getResult() {
-        return person;
-    }
 }
