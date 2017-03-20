@@ -11,17 +11,25 @@ import java.util.List;
 /**
  * Created by Vadim on 19.03.2017.
  */
-public class LocationGenerate {
+public class HomeLocationGenerator {
     //TODO  refactor list<Local> out
 
     List<Location> locationList;
     LocationGenerator generator;
     org.apache.commons.math3.random.RandomGenerator rng;
 
-    public LocationGenerate()
+    public HomeLocationGenerator()
     {
         locationList = new ArrayList<Location>();
         rng =   new MersenneTwister(1);
+        load();
+        generator = new LocationGenerator(this.rng, this.locationList);
+    }
+
+    public HomeLocationGenerator(org.apache.commons.math3.random.RandomGenerator rng)
+    {
+        locationList = new ArrayList<Location>();
+        this.rng =   rng;
         load();
         generator = new LocationGenerator(this.rng, this.locationList);
     }

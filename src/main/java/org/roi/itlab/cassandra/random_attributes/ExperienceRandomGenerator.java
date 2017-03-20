@@ -21,8 +21,8 @@ public class ExperienceRandomGenerator extends RandomGeneratorBuilder{
 
         int max_exp = age - LICENSE_AGE;
 
-        double[] x = {0.0,5.0,30.0,60.0};
-        double[] y  = {1.0,2.0,4.0,2.0};
+        double[] x = {0.0,5.0,30.0,60.0, 91.0};
+        double[] y  = {1.0,2.0,4.0,2.0, 0.1};
         //LinearInterpolator li = new LinearInterpolator();
         randomGenerator = new RandomGenerator(new MersenneTwister(1),x,y);
         //randomGenerator.setPsf(li.interpolate(x,y));
@@ -31,4 +31,5 @@ public class ExperienceRandomGenerator extends RandomGeneratorBuilder{
         //randomGenerator.setProportionalWeight(4);
 
     }
+
 }

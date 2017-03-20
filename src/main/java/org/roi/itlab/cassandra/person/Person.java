@@ -21,8 +21,8 @@ public class Person {
     private String firstName = "";
     private String lastName = "";
 
-    private int skill;
-    private int rushFactor;
+    private double skill;
+    private double rushFactor;
 
     public Person()
     {}
@@ -79,11 +79,11 @@ public class Person {
         return work;
     }
 
-    public int getSkill() {
+    public double getSkill() {
         return skill;
     }
 
-    public int getRushFactor() {
+    public double getRushFactor() {
         return rushFactor;
     }
 
@@ -115,11 +115,11 @@ public class Person {
         this.work = work;
     }
 
-    public void setSkill(int skill) {
+    public void setSkill(double skill) {
         this.skill = skill;
     }
 
-    public void setRushFactor(int rushFactor) {
+    public void setRushFactor(double rushFactor) {
         this.rushFactor = rushFactor;
     }
 
