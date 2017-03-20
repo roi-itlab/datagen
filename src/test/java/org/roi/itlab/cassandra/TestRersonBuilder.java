@@ -33,7 +33,7 @@ public class TestRersonBuilder {
         PersonBuilder personBuilderImpl = new PersonBuilderImpl();
         personDirector.setPersonBuilder(personBuilderImpl);
 
-        for(int j = 0 ; j < 1000000;++j) {
+        for(int j = 0 ; j < 1000;++j) {
             personDirector.constructPerson(j);
             list.add(personDirector.getPerson());
             age.addValue(list.get(j).getAge());
