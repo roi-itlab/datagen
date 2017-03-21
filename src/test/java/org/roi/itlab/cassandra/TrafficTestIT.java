@@ -64,12 +64,13 @@ public class TrafficTestIT {
         }
 
         //generating drivers
-        PersonBuilder rab = new PersonBuilderImpl();
-        PersonDirector rad = new PersonDirector(rab);
+        PersonDirector personDirector = new PersonDirector();
+        PersonBuilder personBuilderImpl = new PersonBuilderImpl();
+        personDirector.setPersonBuilder(personBuilderImpl);
         drivers = new ArrayList<>(routesFromWork.size());
         for (int i = 0; i < routesFromWork.size(); i++) {
-            Person person = rad.constract();
-            drivers.add(person);
+            personDirector.constructPerson(i);
+            drivers.add(personDirector.getPerson());
         }
         System.out.println(routingFailedCounter);
     }
