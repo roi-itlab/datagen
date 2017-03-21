@@ -1,10 +1,19 @@
 package org.roi.itlab.cassandra;
 
 
+import org.geojson.Feature;
+import org.geojson.FeatureCollection;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Math.log;
+import static java.lang.Math.log10;
 import static java.util.Objects.hash;
 
 class IntensityMap {
@@ -102,5 +111,39 @@ class IntensityMap {
             temp.put(edge, getIntensity(edge, time));
         }
         return temp;
+    }
+
+    void makeGeoJSON(FileOutputStream outputFile)
+    {
+        FeatureCollection georoute = new FeatureCollection();
+        for(int i=1; i<=10; ++i)
+        {
+            Feature loadGroup = new Feature();
+            loadGroup.setProperty("load", i);
+            georoute.add(loadGroup);
+        }
+
+        double maxLoad = 0;
+
+        for (HashMap.Entry pair : map.entrySet()) {
+
+            int timetableIndex = 0;
+            double averageLoad = 0;
+            while (timetableIndex < Timetable.SIZE)
+            {
+                //getting load every 30 minutes and adding it to averageLoad
+                averageLoad += ((Timetable) pair.getValue()).getIntensityByNumber(timetableIndex);
+                timetableIndex += 6;
+            }
+
+            averageLoad /= (Timetable.SIZE / 6);  // actual average load
+            if (averageLoad > maxLoad)
+            {
+                maxLoad = averageLoad;
+            }
+
+            System.out.println(maxLoad);
+
+        }
     }
 }
