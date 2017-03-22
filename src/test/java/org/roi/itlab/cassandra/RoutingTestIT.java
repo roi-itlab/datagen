@@ -5,6 +5,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 
@@ -60,5 +67,26 @@ public class RoutingTestIT {
     public void emptyRouteTest() {
         Route route = Routing.route(59.96226, 30.298873, 59.96226, 30.298873);
         Assert.assertEquals(route.getEdges().length, 0);
+    }
+
+    @Test
+    public void EdgesStorageSavingLoading() throws IOException {
+        Path path = FileSystems.getDefault().getPath("./target/edges_storage");
+        Files.deleteIfExists(path);
+        Files.createFile(path);
+        OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
+        OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
+        for (int i = 0; i < ROUTSCOUNT; i++) {
+
+            try {
+                Routing.route(starts.get(i), ends.get(i));
+            } catch (IllegalStateException e) {
+
+            }
+        }
+        Routing.saveEdgesStorage(writer);
+        System.out.println(Routing.getEdgesStorage().size());
+        Routing.loadEdgesStorage("./target/edges_storage");
+        System.out.println(Routing.getEdgesStorage().size());
     }
 }

@@ -4,6 +4,7 @@ import com.graphhopper.util.DistanceCalc;
 import com.graphhopper.util.DistanceCalcEarth;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.util.Pair;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongodb.morphia.geo.Point;
@@ -27,7 +28,7 @@ public class TrafficTestIT {
     private static final String officePois = "./src/test/resources/org/roi/payg/saint-petersburg_russia_office.csv";
     private static final String target = "./target/intensity.txt";
 
-    private static final int ROUTES_COUNT = 100_000;
+    private static final int ROUTES_COUNT = 1_000;
     private static final int DAYS = 1;
     static List<Route> routesToWork = new ArrayList<>(ROUTES_COUNT);
     static List<Route> routesFromWork = new ArrayList<>(ROUTES_COUNT);
@@ -116,27 +117,26 @@ public class TrafficTestIT {
     }
 
     @Test
-    public void multipleDaysTrafficGeneration() {
-        Random rng = new Random(42);
-        for (int j = 0; j < DAYS; j++) {
-            IntensityMap traffic = new IntensityMap();
-            for (int i = 0; i < routesFromWork.size(); i++) {
-                long startTime = drivers.get(i).getWorkStart().toSecondOfDay() * 1000 + rng.nextInt(1000 * 60 * 20);
-                long endTime = drivers.get(i).getWorkEnd().toSecondOfDay() * 1000 + rng.nextInt(1000 * 60 * 20);
-                traffic.put(startTime, routesToWork.get(i));
-                traffic.put(endTime, routesFromWork.get(i));
-            }
-            long time = 0;
-            for (int i = 0; i < 288; i++) {
-                Map<Integer, Double> intensityDistance = new HashMap<>();
-                Map<Edge, Integer> intensity = traffic.getIntensity(time);
-                time += 300000L;
-                for (Map.Entry<Edge, Integer> entry :
-                        intensity.entrySet()) {
-                    intensityDistance.putIfAbsent(entry.getValue(), 0.0);
-                    intensityDistance.computeIfPresent(entry.getValue(), (key, sum) -> sum + entry.getKey().getDistance());
-                }
-            }
+    public void IntensityMapSerializeTest() throws IOException {
+        IntensityMap traffic = new IntensityMap();
+        for (int i = 0; i < routesFromWork.size(); i++) {
+            long startTime = drivers.get(i).getWorkStart().toSecondOfDay() * 1000;
+            long endTime = drivers.get(i).getWorkEnd().toSecondOfDay() * 1000;
+            traffic.put(startTime, routesToWork.get(i));
+            traffic.put(endTime, routesFromWork.get(i));
         }
+
+        Path path = FileSystems.getDefault().getPath("./target/IntensityMap.csv");
+        Files.deleteIfExists(path);
+        Files.createFile(path);
+        OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
+        OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
+
+        traffic.writeToCSV(writer);
+
+        IntensityMap loadedtraffic = new IntensityMap();
+        loadedtraffic.loadFromCSV("./target/IntensityMap.csv");
+
+        Assert.assertEquals(loadedtraffic.toString(), traffic.toString());
     }
 }
