@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 import static org.junit.Assert.assertTrue;
 
 
-public class GeoJSONGenerationTest {
+public class GeoJSONGenerationTestIT {
 
     //test data, copied from TrafficCalcTestIT
 
