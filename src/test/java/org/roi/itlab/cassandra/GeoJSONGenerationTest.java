@@ -42,8 +42,7 @@ public class GeoJSONGenerationTest {
     private static final String officePois = "./src/test/resources/org/roi/payg/saint-petersburg_russia_office.csv";
     private static final String target = "./target/intensity.txt";
 
-    private static final int ROUTES_COUNT = 10;
-    private static final int DAYS = 1;
+    private static final int ROUTES_COUNT = 100;
     static List<Route> routesToWork = new ArrayList<>(ROUTES_COUNT);
     static List<Route> routesFromWork = new ArrayList<>(ROUTES_COUNT);
     static List<Person> drivers;
@@ -79,14 +78,15 @@ public class GeoJSONGenerationTest {
         }
 
         //generating drivers
-        PersonBuilder rab = new PersonBuilderImpl();
-        PersonDirector rad = new PersonDirector(rab);
+        PersonDirector personDirector = new PersonDirector();
+        PersonBuilder personBuilderImpl = new PersonBuilderImpl();
+        personDirector.setPersonBuilder(personBuilderImpl);
         drivers = new ArrayList<>(routesFromWork.size());
         for (int i = 0; i < routesFromWork.size(); i++) {
-            Person person = rad.constract();
-            drivers.add(person);
+            personDirector.constructPerson(i);
+            drivers.add(personDirector.getPerson());
         }
-        //System.out.println(routingFailedCounter);
+        System.out.println(routingFailedCounter);
     }
 
 
