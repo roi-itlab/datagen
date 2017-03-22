@@ -1,6 +1,5 @@
 package org.roi.itlab.cassandra.random_attributes;
 
-import org.apache.commons.math3.analysis.interpolation.*;
 import org.apache.commons.math3.random.MersenneTwister;
 
 /**
@@ -17,19 +16,14 @@ public class ExperienceRandomGenerator extends RandomGeneratorBuilder{
     }
 
     @Override
-    public void buildGenerator() {
+    public void buildGenerator(int seed) {
 
         int max_exp = age - LICENSE_AGE;
 
         double[] x = {0.0,5.0,30.0,60.0, 91.0};
         double[] y  = {1.0,2.0,4.0,2.0, 0.1};
-        //LinearInterpolator li = new LinearInterpolator();
-        randomGenerator = new RandomGenerator(new MersenneTwister(1),x,y);
-        //randomGenerator.setPsf(li.interpolate(x,y));
-        //randomGenerator.setMin(MIN_EXP);
+        randomGenerator = new RandomGenerator(new MersenneTwister(seed),x,y);
         randomGenerator.setMax(max_exp);
-        //randomGenerator.setProportionalWeight(4);
-
     }
 
 }

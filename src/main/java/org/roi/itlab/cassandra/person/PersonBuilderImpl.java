@@ -8,90 +8,62 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 /**
- * Created by Vadim on 02.03.2017.
- *              Anush
+ * author Vadim
+ * author Anush
  */
 public class PersonBuilderImpl extends PersonBuilder{
-    private RandomGenerator ageGenerator;
-    private RandomGenerator experienceGenerator;
-    private RandomGenerator workDurationGenerator;
-    private RandomGenerator workStartGenerator;
-    private HomeLocationGenerator homeLocationGenerator;
-    private WorkLocationGenerator workLocationGenerator;
-    private ExperienceNormalGenerator experienceNormalGenerator;
-    private SkillNormalGenerator skillNormalGenerator;
-    private RushFactorNormalGenerator rushFactorNormalGenerator;
 
-    private final int LICENSE_AGE = 18;
 
-    public PersonBuilderImpl()
-    {
-        RandomGeneratorDirector director = new RandomGeneratorDirector();
-        director.setRandomGeneratorBuilder(new AgeRandomGenerator());
-        director.constructRandomGenerator();
-        ageGenerator = director.getRandomGenerator();
 
-        director.setRandomGeneratorBuilder(new WorkStartRandomGenerator());
-        director.constructRandomGenerator();
-        workStartGenerator = director.getRandomGenerator();
-
-        director.setRandomGeneratorBuilder(new WorkDurationRandomGenerator());
-        director.constructRandomGenerator();
-        workDurationGenerator = director.getRandomGenerator();
-
-        director.setRandomGeneratorBuilder(new ExperienceRandomGenerator());
-        director.constructRandomGenerator();
-        experienceGenerator = director.getRandomGenerator();
-
-        experienceNormalGenerator = new ExperienceNormalGenerator(new MersenneTwister(1));
-        skillNormalGenerator = new SkillNormalGenerator(new MersenneTwister(1));
-        rushFactorNormalGenerator = new RushFactorNormalGenerator(new MersenneTwister(1));
-        homeLocationGenerator = new HomeLocationGenerator();
-
-        workLocationGenerator = new WorkLocationGenerator();
-
-        //TODO normalRandom   exprience skill etc
-        /*
-        //задаем дискретные значения x-стаж, у-средний Skill, z-среднеквадратическое отклонение, g-стаж для которого ищем Skill
-        double[] x = new double[]{0, 1, 5};
-        double[] y = new double[]{0, 1, 25};
-        double[] z = new double[]{0, 0.1, 2.5};
-        //double g = 4;
-        double[] age = new double[]{18, 25,  30, 60, 90};
-        double[] y_age = new double[]{0, 4, 8, 35, 43};
-        double[] z_age = new double[]{0, 0.2, 0.6, 5.0, 7.0};
-        normalSkillGenerator = new NormalGenerator(new MersenneTwister(1), x, y, z);
-        //normalExperienceGenerator = new NormalGenerator(new MersenneTwister(1), age, y_age, z_age);
-        */
+    public PersonBuilderImpl() {
+        createNewPerson();
     }
 
     @Override
-    public void buildAttributes()
+    public void buildAttributes(int seed)
     {
-        person = new Person();
+        //генерирование возраста
+        RandomGeneratorDirector randomGeneratorDirector = new RandomGeneratorDirector();
+        randomGeneratorDirector.setRandomGeneratorBuilder(new AgeRandomGenerator());
+        randomGeneratorDirector.constructRandomGenerator(seed);
+        RandomGenerator randGen = randomGeneratorDirector.getRandomGenerator();
+        person.setAge(randGen.getRandomInt());
+
+        //генерирование стажа
+        /*ExperienceRandomGenerator experienceRandomGenerator = new ExperienceRandomGenerator();
+        experienceRandomGenerator.setAge(person.getAge());
+        randomGeneratorDirector.setRandomGeneratorBuilder(experienceRandomGenerator);
+        randomGeneratorDirector.constructRandomGenerator(seed);
+        randGen = randomGeneratorDirector.getRandomGenerator();
+        person.setExperience(randGen.getRandomInt());*/
+
+        //генерирование времени начала работы
+        randomGeneratorDirector.setRandomGeneratorBuilder(new WorkStartRandomGenerator());
+        randomGeneratorDirector.constructRandomGenerator(seed);
+        randGen = randomGeneratorDirector.getRandomGenerator();
+        person.setWorkStart(LocalTime.of(randGen.getRandomInt(),0));
+
+        //генерирование продолжительности работы
+        randomGeneratorDirector.setRandomGeneratorBuilder(new WorkDurationRandomGenerator());
+        randomGeneratorDirector.constructRandomGenerator(seed);
+        randGen = randomGeneratorDirector.getRandomGenerator();
+        person.setWorkDuration(LocalTime.of(randGen.getRandomInt(),0));
+
+        person.setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())%24,0));
+
         person.setId(UUID.randomUUID());
 
-        person.setAge(ageGenerator.getRandomInt());
-        //TODO double experience ?
-        //experienceGenerator.setMax(person.getAge()- LICENSE_AGE);
-        //setExperience(experienceGenerator.getRandomInt());
-        //System.out.println(person.getAge());
-       /* if(person.getAge() != 18)
-            setExperience((int)normalExperienceGenerator.getRandomDouble(person.getAge()));*/
-         /*double d = person.getExperience();
-        d = d > 5 ? 5: d;
-        //System.out.println(d);
-        if(d!= 0)
-            setSkill(normalSkillGenerator.getRandomDouble(d));*/
+        ExperienceNormalGenerator experienceNormalGenerator = new ExperienceNormalGenerator(new MersenneTwister(seed));
         person.setExperience((int)experienceNormalGenerator.getDouble(person.getAge()));
+
+        SkillNormalGenerator skillNormalGenerator = new SkillNormalGenerator(new MersenneTwister(seed));
         person.setSkill(skillNormalGenerator.getDouble(person.getExperience()));
+
+        RushFactorNormalGenerator rushFactorNormalGenerator = new RushFactorNormalGenerator(new MersenneTwister(seed));
         person.setRushFactor(rushFactorNormalGenerator.getDouble(person.getAge()));
 
-        person.setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
-        person.setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
-        person.setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
-        person.setHome(homeLocationGenerator.sample());
-        person.setWork(workLocationGenerator.sample());
+        person.setHome((new HomeLocationGenerator()).sample());
+        person.setWork((new WorkLocationGenerator()).sample());
     }
 
 }

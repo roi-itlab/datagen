@@ -15,9 +15,9 @@ public class RandomGeneratorDirector {
 
     }
 
-    public void constructRandomGenerator() {
+    public void constructRandomGenerator(int seed) {
 
-        randomGeneratorBuilder.buildGenerator();
+        randomGeneratorBuilder.buildGenerator(seed);
     }
 }
 
