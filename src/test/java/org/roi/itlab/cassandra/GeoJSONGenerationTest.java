@@ -42,7 +42,7 @@ public class GeoJSONGenerationTest {
     private static final String officePois = "./src/test/resources/org/roi/payg/saint-petersburg_russia_office.csv";
     private static final String target = "./target/intensity.txt";
 
-    private static final int ROUTES_COUNT = 1_000;
+    private static final int ROUTES_COUNT = 10;
     private static final int DAYS = 1;
     static List<Route> routesToWork = new ArrayList<>(ROUTES_COUNT);
     static List<Route> routesFromWork = new ArrayList<>(ROUTES_COUNT);
@@ -86,7 +86,7 @@ public class GeoJSONGenerationTest {
             Person person = rad.constract();
             drivers.add(person);
         }
-        System.out.println(routingFailedCounter);
+        //System.out.println(routingFailedCounter);
     }
 
 
@@ -119,8 +119,8 @@ public class GeoJSONGenerationTest {
                 intensityDistance.putIfAbsent(entry.getValue(), 0.0);
                 intensityDistance.computeIfPresent(entry.getValue(), (key, sum) -> sum + entry.getKey().getDistance());
             }
-            System.out.println(time);
-            System.out.println(intensityDistance);
+            //System.out.println(time);
+            //System.out.println(intensityDistance);
             for (Map.Entry<Integer, Double> e :
                     intensityDistance.entrySet()) {
                 //writer.write(e.getKey() + " " + e.getValue() + '\n');
@@ -136,7 +136,7 @@ public class GeoJSONGenerationTest {
         file.createNewFile();
 
 
-        traffic.makeGeoJSON(new FileOutputStream(new File(location.toUri()), false));
+        traffic.makeGeoJSON(new File(location.toUri()));
         GeoJsonObject object = new ObjectMapper().readValue(new FileInputStream(new File(location.toUri())), GeoJsonObject.class);
 
         assertTrue(object instanceof FeatureCollection);
