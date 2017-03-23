@@ -27,9 +27,12 @@ public class TrafficTestIT {
     private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
     private static final String officePois = "./src/test/resources/org/roi/payg/saint-petersburg_russia_office.csv";
     private static final String target = "./target/intensity.txt";
+    private static final String IntensityMapSaveFile = "./target/traffic/intensity_map";
+    private static final String EdgesStorageSaveFile = "./target/traffic/edges_storage";
+    private static final String EdgesStrorageLoadFile = "./src/test/resources/edges_storage";
+    private static final String IntenstityMapLoadFile = "./src/test/resources/intensity_map";
 
     private static final int ROUTES_COUNT = 1_000;
-    private static final int DAYS = 1;
     static List<Route> routesToWork = new ArrayList<>(ROUTES_COUNT);
     static List<Route> routesFromWork = new ArrayList<>(ROUTES_COUNT);
     static List<Person> drivers;
@@ -117,7 +120,7 @@ public class TrafficTestIT {
     }
 
     @Test
-    public void IntensityMapSerializeTest() throws IOException {
+    public void IntensityMapSaving() throws IOException {
         IntensityMap traffic = new IntensityMap();
         for (int i = 0; i < routesFromWork.size(); i++) {
             long startTime = drivers.get(i).getWorkStart().toSecondOfDay() * 1000;
@@ -126,17 +129,29 @@ public class TrafficTestIT {
             traffic.put(endTime, routesFromWork.get(i));
         }
 
-        Path path = FileSystems.getDefault().getPath("./target/IntensityMap.csv");
+        Path path = FileSystems.getDefault().getPath(IntensityMapSaveFile);
         Files.deleteIfExists(path);
         Files.createFile(path);
         OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
         OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
 
+        Path path2 = FileSystems.getDefault().getPath(EdgesStorageSaveFile);
+        Files.deleteIfExists(path2);
+        Files.createFile(path2);
+        OutputStream out2 = Files.newOutputStream(path2, StandardOpenOption.WRITE);
+        OutputStreamWriter writer2 = new OutputStreamWriter(out2, Charset.defaultCharset());
+
+        Routing.saveEdgesStorage(writer2);
         traffic.writeToCSV(writer);
 
-        IntensityMap loadedtraffic = new IntensityMap();
-        loadedtraffic.loadFromCSV("./target/IntensityMap.csv");
-
-        Assert.assertEquals(loadedtraffic.toString(), traffic.toString());
     }
+
+    @Test
+    public void IntensityMapLoading() throws IOException {
+        IntensityMap loadedtraffic = new IntensityMap();
+
+        Routing.loadEdgesStorage(EdgesStrorageLoadFile);
+        loadedtraffic.loadFromCSV(IntenstityMapLoadFile);
+    }
+
 }
