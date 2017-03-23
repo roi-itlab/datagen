@@ -8,10 +8,13 @@ import org.roi.itlab.cassandra.person.Person;
 public abstract class PersonBuilder {
     protected Person person;
 
-    public abstract void buildAttributes();
+    public abstract void buildAttributes(int seed);
 
-    public Person getResult()
-    {
+    public Person getPerson() {
         return person;
+    }
+
+    public void createNewPerson(){
+        person = new Person();
     }
 }

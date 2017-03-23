@@ -1,6 +1,7 @@
 package org.roi.itlab.cassandra;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.math3.stat.Frequency;
@@ -11,6 +12,7 @@ import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.person.PersonBuilder;
 import org.roi.itlab.cassandra.person.PersonBuilderImpl;
 import org.roi.itlab.cassandra.person.PersonDirector;
+import org.roi.itlab.cassandra.random_attributes.CSVReader;
 import org.roi.itlab.cassandra.random_attributes.RandomGenerator;
 
 
@@ -28,11 +30,13 @@ public class TestRersonBuilder {
     @Before
     public  void init()
     {
-        PersonBuilder rab = new PersonBuilderImpl();
-        PersonDirector rad = new PersonDirector(rab);
+        PersonDirector personDirector = new PersonDirector();
+        PersonBuilder personBuilderImpl = new PersonBuilderImpl();
+        personDirector.setPersonBuilder(personBuilderImpl);
 
-        for(int j = 0 ; j < 1000000;++j) {
-            list.add(rad.constract());
+        for(int j = 0 ; j < 1000;++j) {
+            personDirector.constructPerson(j);
+            list.add(personDirector.getPerson());
             age.addValue(list.get(j).getAge());
             mean_mean += list.get(j).getAge();
             workStartTime.addValue(list.get(j).getWorkStart());
@@ -40,27 +44,38 @@ public class TestRersonBuilder {
         mean_mean = mean_mean / list.size();
 
         mode = age.getMode();
-        /*
-        Iterator<Comparable<?>>  iter = workStartTime.valuesIterator();
+/*
+
+        Iterator<Comparable<?>> iter = age.valuesIterator();
         StringBuilder outBuffer = new StringBuilder();
         while (iter.hasNext())
         {
             Comparable<?> value = iter.next();
             outBuffer.append(value);
             outBuffer.append('\t');
-            outBuffer.append(workStartTime.getCount(value));
+            outBuffer.append(age.getCount(value));
             outBuffer.append('\n');
         }
         System.out.println(outBuffer.toString());
-        */
 
+        for(int i = 0 ; i < 15; ++i){
+            System.out.println(list.get(i));
+        }
+    */
+    /*
+        CSVReader reader = new CSVReader();
+        try{reader.Read();}
+        catch (Exception e){
+            System.out.println(e);
+        }
+        */
     }
 
     @Test
     public void TestBuilder() throws Exception {
         Assert.assertEquals(mean_mean, 30, 15);
-        Assert.assertEquals(age.getUniqueCount(), 73);
-        Assert.assertEquals(mode.get(0).toString(), "30");
+        Assert.assertEquals(age.getUniqueCount(), 72);
+        Assert.assertEquals(mode.get(0).toString(), "32");
         Assert.assertEquals(workStartTime.getUniqueCount(), 13);
     }
 }

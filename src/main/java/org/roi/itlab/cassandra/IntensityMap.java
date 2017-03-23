@@ -5,12 +5,19 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.geojson.*;
+
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static java.util.Objects.hash;
+import static java.lang.Math.log;
+import static java.lang.Math.pow;
+import static java.lang.Math.round;
 
 class IntensityMap {
 
@@ -143,5 +150,83 @@ class IntensityMap {
             map.put(Routing.getEdge(Integer.parseInt(p[0])), new Timetable(timetable));
         };
         Files.lines(Paths.get(filename)).forEach(putEdge);
+    }
+
+    void makeGeoJSON(File outputFile) throws IOException {
+        FileOutputStream output = new FileOutputStream(outputFile, false);
+
+        GeometryCollection[] geometries = new GeometryCollection[10]; // one collection for each level of load
+
+        for (int i =0; i<10; ++i)
+        {
+            geometries[i] = new GeometryCollection();
+        }
+
+        double maxLoad = 0;
+
+        HashMap <Edge, Double> averageLoads = new HashMap<Edge, Double>();
+
+        //looking for maximum load
+        for (HashMap.Entry pair : map.entrySet()) {
+
+            int timetableIndex = 0;
+            double averageLoad = 0;
+            while (timetableIndex < Timetable.SIZE)
+            {
+                //getting load every 30 minutes and adding it to averageLoad
+                averageLoad += ((Timetable) pair.getValue()).getIntensityByNumber(timetableIndex);
+                timetableIndex += 6;
+            }
+
+            averageLoad /= (Timetable.SIZE / 6);  // actual average load
+            averageLoads.put((Edge)pair.getKey(), averageLoad);
+            if (averageLoad > maxLoad)
+            {
+                maxLoad = averageLoad;
+            }
+
+        }
+
+        for (HashMap.Entry pair : averageLoads.entrySet()) {
+
+            //finding suitable level of load to each edge
+            int index = 1;
+            for (double step = maxLoad/10; (step <= maxLoad) && ((double)pair.getValue() - step > 0.00001); step += maxLoad/10)
+            {
+                ++index;
+                if (index > 10)
+                {
+                    System.out.println("Error!");
+                }
+            }
+
+            //converting everything to library format
+            double longtitudeStart = ((Edge)pair.getKey()).getStart().getLon();
+            double latitudeStart = ((Edge)pair.getKey()).getStart().getLat();
+            double longtitudeEnd = ((Edge)pair.getKey()).getEnd().getLon();
+            double latitudeEnd = ((Edge)pair.getKey()).getEnd().getLat();
+
+
+            geometries[index - 1].add(
+                    new LineString(
+                            new LngLatAlt(longtitudeStart, latitudeStart), new LngLatAlt(longtitudeEnd, latitudeEnd)
+                    )
+            );
+        }
+
+        FeatureCollection georoute = new FeatureCollection();
+        for(int i=1; i<=10; ++i)
+        {
+            Feature loadGroup = new Feature();
+            loadGroup.setProperty("load", i);
+            loadGroup.setGeometry(geometries[i-1]);
+            georoute.add(loadGroup);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        mapper.writeValue(output, georoute);
+
+        output.close();
     }
 }

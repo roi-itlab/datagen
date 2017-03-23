@@ -1,10 +1,14 @@
 package org.roi.itlab.cassandra;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.graphhopper.util.DistanceCalc;
 import com.graphhopper.util.DistanceCalcEarth;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.util.Pair;
-import org.junit.Assert;
+import org.geojson.Feature;
+import org.geojson.FeatureCollection;
+import org.geojson.GeoJsonObject;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongodb.morphia.geo.Point;
@@ -14,25 +18,31 @@ import org.roi.itlab.cassandra.person.PersonBuilderImpl;
 import org.roi.itlab.cassandra.person.PersonDirector;
 import org.roi.itlab.cassandra.random_attributes.LocationGenerator;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
-public class TrafficTestIT {
+import static org.junit.Assert.assertTrue;
+
+
+public class GeoJSONGenerationTestIT {
+
+    //test data, copied from TrafficCalcTestIT
+
     private static final DistanceCalc DIST_EARTH = new DistanceCalcEarth();
     private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
     private static final String officePois = "./src/test/resources/org/roi/payg/saint-petersburg_russia_office.csv";
     private static final String target = "./target/intensity.txt";
-    private static final String IntensityMapSaveFile = "./target/traffic/intensity_map";
-    private static final String EdgesStorageSaveFile = "./target/traffic/edges_storage";
-    private static final String EdgesStrorageLoadFile = "./src/test/resources/edges_storage";
-    private static final String IntenstityMapLoadFile = "./src/test/resources/intensity_map";
 
-    private static final int ROUTES_COUNT = 1_000;
+    private static final int ROUTES_COUNT = 100;
     static List<Route> routesToWork = new ArrayList<>(ROUTES_COUNT);
     static List<Route> routesFromWork = new ArrayList<>(ROUTES_COUNT);
     static List<Person> drivers;
@@ -81,7 +91,7 @@ public class TrafficTestIT {
 
 
     @Test
-    public void writeIntensityDistribution() throws IOException {
+    public void geoJSONCreating() throws IOException {
         //filling intensity map
         IntensityMap traffic = new IntensityMap();
         for (int i = 0; i < routesFromWork.size(); i++) {
@@ -95,7 +105,7 @@ public class TrafficTestIT {
         Files.deleteIfExists(path);
         Files.createFile(path);
         OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
-        OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
+        //OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
 
         // lines of:{intensity} {length in meters of road segments with this intensity}
         // for every 5 minutes separated with "_\n"
@@ -109,50 +119,28 @@ public class TrafficTestIT {
                 intensityDistance.putIfAbsent(entry.getValue(), 0.0);
                 intensityDistance.computeIfPresent(entry.getValue(), (key, sum) -> sum + entry.getKey().getDistance());
             }
-            System.out.println(time);
-            System.out.println(intensityDistance);
+            //System.out.println(time);
+            //System.out.println(intensityDistance);
             for (Map.Entry<Integer, Double> e :
                     intensityDistance.entrySet()) {
-                writer.write(e.getKey() + " " + e.getValue() + '\n');
+                //writer.write(e.getKey() + " " + e.getValue() + '\n');
             }
-            writer.write("_\n");
+            //writer.write("_\n");
         }
-        writer.close();
-    }
+        //writer.close();
 
-    @Test
-    public void IntensityMapSaving() throws IOException {
-        IntensityMap traffic = new IntensityMap();
-        for (int i = 0; i < routesFromWork.size(); i++) {
-            long startTime = drivers.get(i).getWorkStart().toSecondOfDay() * 1000;
-            long endTime = drivers.get(i).getWorkEnd().toSecondOfDay() * 1000;
-            traffic.put(startTime, routesToWork.get(i));
-            traffic.put(endTime, routesFromWork.get(i));
-        }
 
-        Path path = FileSystems.getDefault().getPath(IntensityMapSaveFile);
-        Files.deleteIfExists(path);
-        Files.createFile(path);
-        OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
-        OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
+        Path location = FileSystems.getDefault().getPath("src/test/resources/test.geojson");
 
-        Path path2 = FileSystems.getDefault().getPath(EdgesStorageSaveFile);
-        Files.deleteIfExists(path2);
-        Files.createFile(path2);
-        OutputStream out2 = Files.newOutputStream(path2, StandardOpenOption.WRITE);
-        OutputStreamWriter writer2 = new OutputStreamWriter(out2, Charset.defaultCharset());
+        File file = new File(location.toUri());
+        file.createNewFile();
 
-        Routing.saveEdgesStorage(writer2);
-        traffic.writeToCSV(writer);
 
-    }
+        traffic.makeGeoJSON(new File(location.toUri()));
+        GeoJsonObject object = new ObjectMapper().readValue(new FileInputStream(new File(location.toUri())), GeoJsonObject.class);
 
-    @Test
-    public void IntensityMapLoading() throws IOException {
-        IntensityMap loadedtraffic = new IntensityMap();
+        assertTrue(object instanceof FeatureCollection);
 
-        Routing.loadEdgesStorage(EdgesStrorageLoadFile);
-        loadedtraffic.loadFromCSV(IntenstityMapLoadFile);
     }
 
 }
