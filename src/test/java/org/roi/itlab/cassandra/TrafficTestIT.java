@@ -120,7 +120,7 @@ public class TrafficTestIT {
         writer.close();
     }
 
-    @Test
+
     public void IntensityMapSaving() throws IOException {
         IntensityMap traffic = new IntensityMap();
         for (int i = 0; i < routesFromWork.size(); i++) {
