@@ -15,6 +15,6 @@ public abstract class RandomGeneratorBuilder {
         return randomGenerator;
     }
 
-    public abstract void buildGenerator();
+    public abstract void buildGenerator(int seed);
 
 }
