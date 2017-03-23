@@ -4,15 +4,12 @@ import com.graphhopper.util.DistanceCalc;
 import com.graphhopper.util.DistanceCalcEarth;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.util.Pair;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongodb.morphia.geo.Point;
 import org.roi.itlab.cassandra.person.Person;
-import org.roi.itlab.cassandra.person.PersonBuilder;
-import org.roi.itlab.cassandra.person.PersonBuilderImpl;
-import org.roi.itlab.cassandra.person.PersonDirector;
 import org.roi.itlab.cassandra.random_attributes.LocationGenerator;
+import org.roi.itlab.cassandra.random_attributes.PersonGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,6 +24,7 @@ public class TrafficTestIT {
     private static final String testPois = "./src/test/resources/org/roi/payg/saint-petersburg_russia.csv";
     private static final String officePois = "./src/test/resources/org/roi/payg/saint-petersburg_russia_office.csv";
     private static final String target = "./target/intensity.txt";
+    private static final String target2 = "./target/drivers.txt";
     private static final String IntensityMapSaveFile = "./target/traffic/intensity_map";
     private static final String EdgesStorageSaveFile = "./target/traffic/edges_storage";
     private static final String EdgesStrorageLoadFile = "./src/test/resources/edges_storage";
@@ -68,17 +66,29 @@ public class TrafficTestIT {
         }
 
         //generating drivers
-        PersonDirector personDirector = new PersonDirector();
-        PersonBuilder personBuilderImpl = new PersonBuilderImpl();
-        personDirector.setPersonBuilder(personBuilderImpl);
+        PersonGenerator personGenerator = new PersonGenerator();
         drivers = new ArrayList<>(routesFromWork.size());
         for (int i = 0; i < routesFromWork.size(); i++) {
-            personDirector.constructPerson(i);
-            drivers.add(personDirector.getPerson());
+            drivers.add(personGenerator.getResult());
         }
         System.out.println(routingFailedCounter);
     }
 
+    @Test
+    public void saveDrivers() throws IOException {
+        Path path = FileSystems.getDefault().getPath(target2);
+        Files.deleteIfExists(path);
+        Files.createFile(path);
+        OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
+        OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
+
+        writer.write("Age,Experience,Skill,RushFactor,WorkStart,WorkDuration,WorkEnd,HomeLat,HomeLng,WorkLat,WorkLng" + '\n');
+        for (Person person : drivers) {
+            writer.write(person.getAge() + "," + person.getExperience() + "," + String.format("%.3f", person.getSkill()) + "," + String.format("%.3f", person.getRushFactor()) + "," + person.getWorkStart() + "," + person.getWorkDuration() + "," + person.getWorkEnd() + "," + String.format("%.4f", person.getHome().getLatitude()) + "," + String.format("%.4f", person.getHome().getLongitude()) + "," + String.format("%.4f", person.getWork().getLatitude()) + "," + String.format("%.4f", person.getWork().getLongitude()) + '\n');
+        }
+        writer.write("_\n");
+        writer.close();
+    }
 
     @Test
     public void writeIntensityDistribution() throws IOException {
