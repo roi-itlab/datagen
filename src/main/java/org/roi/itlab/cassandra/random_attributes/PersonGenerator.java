@@ -55,13 +55,12 @@ public class PersonGenerator {
         person.setId(UUID.randomUUID());
 
         person.setAge(ageGenerator.getRandomInt());
-        person.setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(), 0));
-        person.setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(), 0));
-        person.setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour()) % 24, 0));
+        person.setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
+        person.setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
+        person.setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
         person.setExperience((int) experienceGenerator.getRandomDouble(person.getAge()));
         person.setSkill(skillGenerator.getRandomDouble(person.getExperience()));
         person.setRushFactor(rushGenerator.getRandomDouble(person.getAge()));
-
         if (homeGenerator != null && workGenerator != null) {
             int distance = distanceGenerator.getRandomInt();
             Point home = homeGenerator.sample();
@@ -79,7 +78,6 @@ public class PersonGenerator {
             person.setHome(home);
             person.setWork(work);
         }
-
         return person;
     }
 }
