@@ -10,7 +10,6 @@ import com.graphhopper.routing.VirtualEdgeIteratorState;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.storage.NodeAccess;
-import com.graphhopper.util.DistanceCalc;
 import com.graphhopper.util.DistanceCalcEarth;
 import com.graphhopper.util.EdgeIteratorState;
 import com.graphhopper.util.PointList;
@@ -32,7 +31,7 @@ public class Routing {
             importOrLoad();
 
     private static final Map<Integer, Edge> EDGES_STORAGE = new HashMap<>();
-    private static final DistanceCalc DIST_EARTH = new DistanceCalcEarth();
+    private static final DistanceCalcEarth DIST_EARTH = new DistanceCalcEarth();
 
     //not sure if it should be an utility class
     // or instanced to initialize graphhopper with custom properties
@@ -46,6 +45,10 @@ public class Routing {
 
     public static Route route(Trip trip) {
         return route(trip.getFrom(), trip.getTo());
+    }
+
+    public static Route route(org.mongodb.morphia.geo.Point from, org.mongodb.morphia.geo.Point to ){
+        return route(from.getLatitude(),from.getLongitude(),to.getLatitude(),to.getLongitude());
     }
 
     public static Route route(double fromLat, double fromLon, double toLat, double toLon) {
