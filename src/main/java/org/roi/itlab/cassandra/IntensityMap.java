@@ -176,10 +176,10 @@ class IntensityMap {
             sumLoads.put(pair.getKey(), sumLoad);
 
         }
-
+        int maxSum = sumLoads.values().stream().max(Integer::compareTo).orElse(1);
         for (HashMap.Entry<Edge, Integer> pair : sumLoads.entrySet()) {
 
-            double sum = Math.log(pair.getValue()) * 10 / 13;
+            double sum = Math.log(pair.getValue()) * 10 / Math.log(maxSum);
             int index = Math.min(Math.max(1, Math.toIntExact(Math.round(sum))), 10);
 
 

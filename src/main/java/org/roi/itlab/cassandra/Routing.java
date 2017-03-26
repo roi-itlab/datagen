@@ -33,6 +33,8 @@ public class Routing {
     private static final Map<Integer, Edge> EDGES_STORAGE = new HashMap<>();
     private static final DistanceCalcEarth DIST_EARTH = new DistanceCalcEarth();
 
+    private static final long MAX_ROUTE_TIME = 1000L * 60 * 60 * 3;
+
     //not sure if it should be an utility class
     // or instanced to initialize graphhopper with custom properties
     private Routing() {
@@ -47,8 +49,8 @@ public class Routing {
         return route(trip.getFrom(), trip.getTo());
     }
 
-    public static Route route(org.mongodb.morphia.geo.Point from, org.mongodb.morphia.geo.Point to ){
-        return route(from.getLatitude(),from.getLongitude(),to.getLatitude(),to.getLongitude());
+    public static Route route(org.mongodb.morphia.geo.Point from, org.mongodb.morphia.geo.Point to) {
+        return route(from.getLatitude(), from.getLongitude(), to.getLatitude(), to.getLongitude());
     }
 
     public static Route route(double fromLat, double fromLon, double toLat, double toLon) {
@@ -100,6 +102,8 @@ public class Routing {
             throw new IllegalStateException("routing failed");
         }
         if (paths.get(0).getDistance() > 5 * DIST_EARTH.calcDist(fromLat, fromLon, toLat, toLon))
+            throw new IllegalStateException("routing failed");
+        if (paths.get(0).getTime() > MAX_ROUTE_TIME)
             throw new IllegalStateException("routing failed");
         return paths.get(0);
     }
