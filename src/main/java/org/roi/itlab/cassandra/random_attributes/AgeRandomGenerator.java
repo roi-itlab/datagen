@@ -1,27 +1,17 @@
 package org.roi.itlab.cassandra.random_attributes;
 
-import org.apache.commons.math3.analysis.interpolation.*;
-import org.apache.commons.math3.random.MersenneTwister;
-
-import java.util.Arrays;
-
 
 /**
  * Created by Anush
  */
 
-public class AgeRandomGenerator extends RandomGeneratorBuilder{
+public class AgeRandomGenerator extends RandomGenerator {
 
-    @Override
-    public void buildGenerator() {
-        double[] x = {18.0,25.0,30.0,60.0,90.0};
-        double[] y  = {1.0,2.0,3.0,1.0, 0.1};
-        randomGenerator = new RandomGenerator(new MersenneTwister(1),x,y);
-        //LinearInterpolator li = new LinearInterpolator();
-        //randomGenerator.setPsf(li.interpolate(x,y));
-        //randomGenerator.setProportionalWeight(getMaxValue(y));
+    static double[] x = {18.0,25.0,30.0,60.0,90.0};
+    static double[] y  = {1.0,2.0,3.0,1.0, 0.1};
 
-
+    public AgeRandomGenerator(org.apache.commons.math3.random.RandomGenerator rng) {
+        super(rng, x,y);
     }
 
 }

@@ -52,10 +52,9 @@ public class RandomGenerator{
         int controlPoint;
         while (rand < 0) {
             try{
-                controlPoint = (int)(rng.nextInt((int)(max+min+1))-min);
-                //controlPoint = ThreadLocalRandom.current().nextInt((int)min, (int)max+1);
+                controlPoint = (int)(rng.nextInt((int)(max-min+1))+min);
             }catch (IllegalArgumentException ex){ controlPoint = 0;}
-            double controlValue = proportionalWeight * rng.nextDouble();//ThreadLocalRandom.current().nextDouble();
+            double controlValue = proportionalWeight * rng.nextDouble();
             try {
                 if (controlPoint >= psf.getKnots()[0] && controlValue < psf.value(controlPoint))
                     rand = controlPoint;
@@ -69,10 +68,9 @@ public class RandomGenerator{
         double controlPoint;
         while (rand < 0) {
             try{
-                controlPoint = (max+min)*rng.nextDouble() - min;
-                //controlPoint = ThreadLocalRandom.current().nextDouble(min, max+1.0);
+                controlPoint = (max-min+1)*rng.nextDouble() + min;
             }catch (IllegalArgumentException ex){ controlPoint = 0;}
-            double controlValue = proportionalWeight * rng.nextDouble();// ThreadLocalRandom.current().nextDouble();
+            double controlValue = proportionalWeight * rng.nextDouble();
             try {
                 if (controlPoint >= psf.getKnots()[0] && controlValue < psf.value(controlPoint))
                     rand = controlPoint;
