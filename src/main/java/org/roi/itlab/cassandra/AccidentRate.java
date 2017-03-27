@@ -23,7 +23,7 @@ public class AccidentRate {
         accidentRate = 0;
     }
 
-    public void setAccidentRate(long time, int someLength, double epselon) {
+    public void setAccidentRate(long time, int someLength) {
         int maxIntensity = 0;
         //search the maximum of intensity among all edges in routeToHome and routeToWork
         for (Edge e : routeToHome.getEdges()) {

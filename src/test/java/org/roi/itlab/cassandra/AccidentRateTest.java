@@ -40,7 +40,7 @@ public class AccidentRateTest {
 
     @Test
     public void accidentRateTest() {
-        accidentRate.setAccidentRate(300L, 100, 3000);
+        accidentRate.setAccidentRate(300L, 100);
         assertNotEquals(0, person.getAccidentRate());
         System.out.println("Accident rate: " + person.getAccidentRate());
     }
