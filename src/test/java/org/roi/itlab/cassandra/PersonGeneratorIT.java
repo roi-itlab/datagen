@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Vadim on 26.02.2017.
  */
-public class TestRersonBuilder {
+public class PersonGeneratorIT {
     List<Person> list = new ArrayList<>();
     int mean_mean = 0;
 
