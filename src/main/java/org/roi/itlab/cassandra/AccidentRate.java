@@ -24,21 +24,15 @@ public class AccidentRate {
     }
 
     public void setAccidentRate(long time, int someLength) {
-        int maxIntensity = 0;
-        //search the maximum of intensity among all edges in routeToHome and routeToWork
-        for (Edge e : routeToHome.getEdges()) {
-            // System.out.println(iMap.getIntensity(e, time));
-            if (iMap.getIntensity(e, time) > maxIntensity) {
-                maxIntensity = iMap.getIntensity(e, time);
+        //find max intensity
+        final int[] maxIntensity = {0};
+        iMap.getIntensity(time).forEach((k, v) -> {
+            if (v.compareTo(maxIntensity[0]) > 0) {
+                maxIntensity[0] = v;
             }
-        }
-        for (Edge e : routeToWork.getEdges()) {
-            // System.out.println(iMap.getIntensity(e, time));
-            if (iMap.getIntensity(e, time) > maxIntensity) {
-                maxIntensity = iMap.getIntensity(e, time);
-            }
-        }
-        double[] x = new double[]{0, maxIntensity / 4, maxIntensity / 3, maxIntensity / 2, maxIntensity};//0, несколько средних значений, max intensity из всех возможных
+        });
+
+        double[] x = new double[]{0, maxIntensity[0]/ 4, maxIntensity[0]/ 3, maxIntensity[0] / 2, maxIntensity[0]};//0, несколько средних значений, max intensity из всех возможных
         double[] y = new double[]{0, 1, 2, 2.5, 3};// 0, некий коэффициент, характеризующий количество аварий (например, поставили 3, аварийность увеличилась в 3 раза)
         //standard deviation
         double[] z = new double[]{0.01, 0.1, 0.2, 2.1, 2.5};
@@ -55,7 +49,7 @@ public class AccidentRate {
      */
 
     public void calculateAccidentRate(long time, int someLength, Route route, NormalGenerator normalGenerator) {
-        double averageAccidentProbability = 1.0/36500.0;
+        double averageAccidentProbability = 1.0 / 36500.0;
         //System.out.println("averageAccidentProbability " + averageAccidentProbability);
         int routeLengthFactor = 0;
         //calculate summary distance

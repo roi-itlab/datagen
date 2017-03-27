@@ -31,16 +31,16 @@ public class AccidentRateTest {
             intensityMap.put(endTime, TrafficTestIT.routesFromWork.get(i));
         }
 
-        person = TrafficTestIT.drivers.get(20);
-        routeToWork = TrafficTestIT.routesToWork.get(20);
-        routeToHome = TrafficTestIT.routesFromWork.get(20);
+        person = TrafficTestIT.drivers.get(19);
+        routeToWork = TrafficTestIT.routesToWork.get(19);
+        routeToHome = TrafficTestIT.routesFromWork.get(19);
 
         accidentRate = new AccidentRate(intensityMap, person, routeToHome,routeToWork);
     }
 
     @Test
     public void accidentRateTest() {
-        accidentRate.setAccidentRate(300L, 100);
+        accidentRate.setAccidentRate(1500L, 100);
         assertNotEquals(0, person.getAccidentRate());
         System.out.println("Accident rate: " + person.getAccidentRate());
     }
