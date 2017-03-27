@@ -3,6 +3,8 @@ package org.roi.itlab.cassandra.random_attributes;
 
 import org.apache.commons.math3.random.MersenneTwister;
 import org.mongodb.morphia.geo.Point;
+import org.roi.itlab.cassandra.Route;
+import org.roi.itlab.cassandra.Routing;
 import org.roi.itlab.cassandra.person.Person;
 import com.graphhopper.util.DistanceCalcEarth;
 
@@ -16,6 +18,8 @@ import java.util.UUID;
  */
 public class PersonGenerator {
     public static final int SEED = 1;
+    private static final double DISTANCE_LIMIT = 3;
+    private static final double DISTANCE_NEAR = 1000;
 
     private RandomGenerator ageGenerator;
     private RandomGenerator workDurationGenerator;
@@ -65,19 +69,29 @@ public class PersonGenerator {
             int distance = distanceGenerator.getRandomInt();
             Point home = homeGenerator.sample();
             Point work = workGenerator.sample();
-            boolean notFound = true;
-            while (notFound) {
+            while (true) {
                 double actualDistance = distanceEarth.calcDist(home.getLatitude(), home.getLongitude(), work.getLatitude(), work.getLongitude());
-                if (Math.abs(actualDistance - distance) < 1000) {
-                    notFound = false;
-                } else {
-                    home = homeGenerator.sample();
-                    work = workGenerator.sample();
+                if (Math.abs(actualDistance - distance) < DISTANCE_NEAR) {
+                    try {
+                        Route routeToWork = Routing.route(home, work);
+                        Route routeFromWork = Routing.route(work, home);
+                        if (routeFromWork.getDistance() < actualDistance * DISTANCE_LIMIT && routeToWork.getDistance() < actualDistance * DISTANCE_LIMIT) {
+                            person.setHome(home);
+                            person.setWork(work);
+                            person.setToHome(routeFromWork);
+                            person.setToWork(routeToWork);
+                            break;
+                        }
+                    }
+                    catch (Exception e) {
+
+                    }
                 }
+                home = homeGenerator.sample();
+                work = workGenerator.sample();
             }
-            person.setHome(home);
-            person.setWork(work);
         }
+
         return person;
     }
 }
