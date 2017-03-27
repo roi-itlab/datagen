@@ -12,7 +12,7 @@ import static org.roi.itlab.cassandra.TrafficTestIT.drivers;
 /**
  * Created by Аня on 22.03.2017.
  */
-public class AccidentRateTest {
+public class AccidentRateIT {
 
     private IntensityMap intensityMap;
     private Person person;
