@@ -24,6 +24,16 @@ public class Person {
     private double skill;
     private double rushFactor;
 
+    private long accidentRate;
+
+    public long getAccidentRate() {
+        return accidentRate;
+    }
+
+    public void setAccidentRate(long accidentRate) {
+        this.accidentRate = accidentRate;
+    }
+
     public Person()
     {}
 
