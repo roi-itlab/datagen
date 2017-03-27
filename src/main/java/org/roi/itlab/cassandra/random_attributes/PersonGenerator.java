@@ -3,6 +3,8 @@ package org.roi.itlab.cassandra.random_attributes;
 
 import org.apache.commons.math3.random.MersenneTwister;
 import org.mongodb.morphia.geo.Point;
+import org.roi.itlab.cassandra.Route;
+import org.roi.itlab.cassandra.Routing;
 import org.roi.itlab.cassandra.person.Person;
 import com.graphhopper.util.DistanceCalcEarth;
 
@@ -65,19 +67,29 @@ public class PersonGenerator {
             int distance = distanceGenerator.getRandomInt();
             Point home = homeGenerator.sample();
             Point work = workGenerator.sample();
-            boolean notFound = true;
-            while (notFound) {
+            while (true) {
                 double actualDistance = distanceEarth.calcDist(home.getLatitude(), home.getLongitude(), work.getLatitude(), work.getLongitude());
                 if (Math.abs(actualDistance - distance) < 1000) {
-                    notFound = false;
-                } else {
-                    home = homeGenerator.sample();
-                    work = workGenerator.sample();
+                    try {
+                        Route routeToWork = Routing.route(home, work);
+                        Route routeFromWork = Routing.route(work, home);
+                        if (routeFromWork.getDistance() < actualDistance * 3 && routeToWork.getDistance() < actualDistance * 3) {
+                            person.setHome(home);
+                            person.setWork(work);
+                            person.setToHome(routeFromWork);
+                            person.setToWork(routeToWork);
+                            break;
+                        }
+                    }
+                    catch (Exception e) {
+
+                    }
                 }
+                home = homeGenerator.sample();
+                work = workGenerator.sample();
             }
-            person.setHome(home);
-            person.setWork(work);
         }
+
         return person;
     }
 }

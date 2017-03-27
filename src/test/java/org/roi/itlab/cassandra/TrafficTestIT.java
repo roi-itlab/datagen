@@ -1,5 +1,6 @@
 package org.roi.itlab.cassandra;
 
+import com.graphhopper.util.DistanceCalcEarth;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -46,7 +47,6 @@ public class TrafficTestIT {
         for (Person person : drivers) {
             writer.write(person.getAge() + "," + person.getExperience() + "," + String.format("%.3f", person.getSkill()) + "," + String.format("%.3f", person.getRushFactor()) + "," + person.getWorkStart() + "," + person.getWorkDuration() + "," + person.getWorkEnd() + "," + String.format("%.4f", person.getHome().getLatitude()) + "," + String.format("%.4f", person.getHome().getLongitude()) + "," + String.format("%.4f", person.getWork().getLatitude()) + "," + String.format("%.4f", person.getWork().getLongitude()) + '\n');
         }
-        writer.write("_\n");
         writer.close();
     }
 

@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.geojson.*;
+import org.roi.itlab.cassandra.person.Person;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -64,6 +65,11 @@ class IntensityMap {
     public IntensityMap(int capacity) {
         map = new HashMap<>(capacity);
     }
+
+    public IntensityMap(List<Person> drivers) {
+
+    }
+
 
     public void put(long starttime, Route route) {
         long time = starttime;
