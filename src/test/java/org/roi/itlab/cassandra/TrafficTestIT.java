@@ -71,7 +71,7 @@ public class TrafficTestIT {
         for (int i = 0; i < routesFromWork.size(); i++) {
             drivers.add(personGenerator.getResult());
         }
-        System.out.println(routingFailedCounter);
+       // System.out.println(routingFailedCounter);
     }
 
     @Test
