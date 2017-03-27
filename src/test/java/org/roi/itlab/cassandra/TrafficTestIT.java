@@ -1,10 +1,12 @@
 package org.roi.itlab.cassandra;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.random_attributes.PersonGenerator;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -19,7 +21,7 @@ public class TrafficTestIT {
     private static final String EdgesStrorageLoadFile = "./src/test/resources/edges_storage";
     private static final String IntenstityMapLoadFile = "./src/test/resources/intensity_map";
 
-    private static final int DRIVERS_COUNT = 1_000_000;
+    private static final int DRIVERS_COUNT = 100_000;
     static List<Person> drivers;
 
     @BeforeClass
@@ -48,7 +50,8 @@ public class TrafficTestIT {
         writer.close();
     }
 
-
+    @Ignore
+    @Test
     public void IntensityMapSaving() throws IOException {
         IntensityMap traffic = new IntensityMap();
         int routingFailedCounter = 0;
@@ -91,6 +94,10 @@ public class TrafficTestIT {
         IntensityMap loadedtraffic = new IntensityMap();
         Routing.loadEdgesStorage(EdgesStrorageLoadFile);
         loadedtraffic.loadFromCSV(IntenstityMapLoadFile);
+        Path location = FileSystems.getDefault().getPath("src/test/resources/test.geojson");
+
+        loadedtraffic.makeGeoJSON(new File(location.toUri()));
+
     }
 
 }
