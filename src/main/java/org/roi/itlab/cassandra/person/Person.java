@@ -27,15 +27,8 @@ public class Person {
     private double skill;
     private double rushFactor;
 
-    private long accidentRate;
-
-    public long getAccidentRate() {
-        return accidentRate;
-    }
-
-    public void setAccidentRate(long accidentRate) {
-        this.accidentRate = accidentRate;
-    }
+    private int accidents;
+    private int previousAccidents;
 
     public Person()
     {}
@@ -168,5 +161,21 @@ public class Person {
 
     public void setToHome(Route toHome) {
         this.toHome = toHome;
+    }
+
+    public int getAccidents() {
+        return accidents;
+    }
+
+    public void setAccidents(int accidents) {
+        this.accidents = accidents;
+    }
+
+    public int getPreviousAccidents() {
+        return previousAccidents;
+    }
+
+    public void setPreviousAccidents(int previousAccidents) {
+        this.previousAccidents = previousAccidents;
     }
 }

@@ -18,6 +18,8 @@ import java.util.UUID;
  */
 public class PersonGenerator {
     public static final int SEED = 1;
+    private static final double DISTANCE_LIMIT = 3;
+    private static final double DISTANCE_NEAR = 1000;
 
     private RandomGenerator ageGenerator;
     private RandomGenerator workDurationGenerator;
@@ -69,11 +71,11 @@ public class PersonGenerator {
             Point work = workGenerator.sample();
             while (true) {
                 double actualDistance = distanceEarth.calcDist(home.getLatitude(), home.getLongitude(), work.getLatitude(), work.getLongitude());
-                if (Math.abs(actualDistance - distance) < 1000) {
+                if (Math.abs(actualDistance - distance) < DISTANCE_NEAR) {
                     try {
                         Route routeToWork = Routing.route(home, work);
                         Route routeFromWork = Routing.route(work, home);
-                        if (routeFromWork.getDistance() < actualDistance * 3 && routeToWork.getDistance() < actualDistance * 3) {
+                        if (routeFromWork.getDistance() < actualDistance * DISTANCE_LIMIT && routeToWork.getDistance() < actualDistance * DISTANCE_LIMIT) {
                             person.setHome(home);
                             person.setWork(work);
                             person.setToHome(routeFromWork);

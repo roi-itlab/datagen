@@ -1,47 +1,51 @@
 package org.roi.itlab.cassandra;
 
+import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.random.RandomGenerator;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.roi.itlab.cassandra.person.Person;
+import org.roi.itlab.cassandra.random_attributes.IntensityNormalGenerator;
+import org.roi.itlab.cassandra.random_attributes.NormalGenerator;
+import org.roi.itlab.cassandra.random_attributes.PersonGenerator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertNotEquals;
-import static org.roi.itlab.cassandra.TrafficTestIT.drivers;
 
 /**
  * Created by Аня on 22.03.2017.
  */
 public class AccidentRateIT {
 
-    private IntensityMap intensityMap;
-    private Person person;
-    private Route routeToWork, routeToHome;
+    private static final int ALL_DRIVERS_COUNT = 10_000;
+    private static final int DRIVERS_COUNT = 1_000;
     private AccidentRate accidentRate;
+    private ArrayList<Person> drivers;
+    private RandomGenerator rng = new MersenneTwister(1);
 
     @Before
     public void setUp() throws IOException {
-        //IntensityMap filing
-        intensityMap = new IntensityMap();
-        TrafficTestIT.init();
-        for (int i = 0; i < TrafficTestIT.routesFromWork.size(); i++) {
-            long startTime = drivers.get(i).getWorkStart().toSecondOfDay() * 1000;
-            long endTime = drivers.get(i).getWorkEnd().toSecondOfDay() * 1000;
-            intensityMap.put(startTime, TrafficTestIT.routesToWork.get(i));
-            intensityMap.put(endTime, TrafficTestIT.routesFromWork.get(i));
+        PersonGenerator personGenerator = new PersonGenerator(rng);
+        drivers = new ArrayList<>(ALL_DRIVERS_COUNT);
+        for (int i = 0; i < ALL_DRIVERS_COUNT; i++) {
+            drivers.add(personGenerator.getResult());
         }
 
-        person = TrafficTestIT.drivers.get(19);
-        routeToWork = TrafficTestIT.routesToWork.get(19);
-        routeToHome = TrafficTestIT.routesFromWork.get(19);
-
-        accidentRate = new AccidentRate(intensityMap, person, routeToHome,routeToWork);
+        IntensityMap intensityMap = new IntensityMap(drivers);
+        int maxIntensity = intensityMap.getMaxIntensity();
+        accidentRate = new AccidentRate(intensityMap, new IntensityNormalGenerator(maxIntensity, rng), rng);
     }
 
     @Test
     public void accidentRateTest() {
-        accidentRate.setAccidentRate(1500L, 100);
-        assertNotEquals(0, person.getAccidentRate());
-        System.out.println("Accident rate: " + person.getAccidentRate());
+        int accidents = 0;
+        for (Person person : drivers.subList(0, DRIVERS_COUNT)) {
+            accidents += accidentRate.getAccidents(person, 365);
+        }
+        Assert.assertEquals((double) accidents / DRIVERS_COUNT, 0.5, 0.1);
+        System.out.println("Accidents: " + accidents);
     }
 }

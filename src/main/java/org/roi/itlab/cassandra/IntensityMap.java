@@ -11,10 +11,7 @@ import org.geojson.*;
 import org.roi.itlab.cassandra.person.Person;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static java.lang.Math.log;
@@ -47,6 +44,10 @@ class IntensityMap {
             ++timetable[getMinutes(time) / 5];
         }
 
+        int getMaxIntensity() {
+            return Arrays.stream(timetable).max().orElse(0);
+        }
+
         String toCSV() {
             StringBuilder sb = new StringBuilder(500);
             for (int i = 0; i < SIZE; i++) {
@@ -62,14 +63,15 @@ class IntensityMap {
         map = new HashMap<>();
     }
 
-    public IntensityMap(int capacity) {
-        map = new HashMap<>(capacity);
-    }
-
     public IntensityMap(List<Person> drivers) {
-
+        this();
+        for (Person driver : drivers) {
+            long startTime = driver.getWorkStart().toSecondOfDay() * 1000;
+            long endTime = driver.getWorkEnd().toSecondOfDay() * 1000;
+            put(startTime, driver.getToWork());
+            put(endTime, driver.getToHome());
+        }
     }
-
 
     public void put(long starttime, Route route) {
         long time = starttime;
@@ -91,6 +93,14 @@ class IntensityMap {
             this.put(timeList.get(i), routes.get(i));
 
         }
+    }
+
+    public int getMaxIntensity() {
+        int result = 0;
+        for (Timetable timetable : map.values()) {
+            result = Math.max(result, timetable.getMaxIntensity());
+        }
+        return result;
     }
 
     //translates the miliseconds from 1970-01-01 @ 00:00:00 to minutes from the beginning of the current day
@@ -157,6 +167,7 @@ class IntensityMap {
             map.put(Routing.getEdge(Integer.parseInt(p[0])), new Timetable(timetable));
         };
         Files.lines(Paths.get(filename)).forEach(putEdge);
+        System.out.println("Loaded IntensityMap, max = " + getMaxIntensity());
     }
 
     void makeGeoJSON(File outputFile) throws IOException {
