@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.geojson.*;
+import org.roi.itlab.cassandra.person.Person;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static java.lang.Math.log;
@@ -45,6 +44,10 @@ class IntensityMap {
             ++timetable[getMinutes(time) / 5];
         }
 
+        int getMaxIntensity() {
+            return Arrays.stream(timetable).max().orElse(0);
+        }
+
         String toCSV() {
             StringBuilder sb = new StringBuilder(500);
             for (int i = 0; i < SIZE; i++) {
@@ -60,8 +63,14 @@ class IntensityMap {
         map = new HashMap<>();
     }
 
-    public IntensityMap(int capacity) {
-        map = new HashMap<>(capacity);
+    public IntensityMap(List<Person> drivers) {
+        this();
+        for (Person driver : drivers) {
+            long startTime = driver.getWorkStart().toSecondOfDay() * 1000;
+            long endTime = driver.getWorkEnd().toSecondOfDay() * 1000;
+            put(startTime, driver.getToWork());
+            put(endTime, driver.getToHome());
+        }
     }
 
     public void put(long starttime, Route route) {
@@ -84,6 +93,14 @@ class IntensityMap {
             this.put(timeList.get(i), routes.get(i));
 
         }
+    }
+
+    public int getMaxIntensity() {
+        int result = 0;
+        for (Timetable timetable : map.values()) {
+            result = Math.max(result, timetable.getMaxIntensity());
+        }
+        return result;
     }
 
     //translates the miliseconds from 1970-01-01 @ 00:00:00 to minutes from the beginning of the current day
@@ -150,6 +167,7 @@ class IntensityMap {
             map.put(Routing.getEdge(Integer.parseInt(p[0])), new Timetable(timetable));
         };
         Files.lines(Paths.get(filename)).forEach(putEdge);
+        System.out.println("Loaded IntensityMap, max = " + getMaxIntensity());
     }
 
     void makeGeoJSON(File outputFile) throws IOException {
@@ -157,54 +175,36 @@ class IntensityMap {
 
         GeometryCollection[] geometries = new GeometryCollection[10]; // one collection for each level of load
 
-        for (int i =0; i<10; ++i)
-        {
+        for (int i = 0; i < 10; ++i) {
             geometries[i] = new GeometryCollection();
         }
 
-        double maxLoad = 0;
 
-        HashMap <Edge, Double> averageLoads = new HashMap<Edge, Double>();
+        Map<Edge, Integer> sumLoads = new HashMap<>();
 
-        //looking for maximum load
-        for (HashMap.Entry pair : map.entrySet()) {
+        for (Map.Entry<Edge, Timetable> pair : map.entrySet()) {
 
-            int timetableIndex = 0;
-            double averageLoad = 0;
-            while (timetableIndex < Timetable.SIZE)
-            {
-                //getting load every 30 minutes and adding it to averageLoad
-                averageLoad += ((Timetable) pair.getValue()).getIntensityByNumber(timetableIndex);
-                timetableIndex += 6;
+            int sumLoad = 0;
+            for (int i :
+                    pair.getValue().timetable) {
+                sumLoad += i;
             }
 
-            averageLoad /= (Timetable.SIZE / 6);  // actual average load
-            averageLoads.put((Edge)pair.getKey(), averageLoad);
-            if (averageLoad > maxLoad)
-            {
-                maxLoad = averageLoad;
-            }
+            sumLoads.put(pair.getKey(), sumLoad);
 
         }
+        int maxSum = sumLoads.values().stream().max(Integer::compareTo).orElse(1);
+        for (HashMap.Entry<Edge, Integer> pair : sumLoads.entrySet()) {
 
-        for (HashMap.Entry pair : averageLoads.entrySet()) {
+            double sum = Math.log(pair.getValue()) * 10 / Math.log(maxSum);
+            int index = Math.min(Math.max(1, Math.toIntExact(Math.round(sum))), 10);
 
-            //finding suitable level of load to each edge
-            int index = 1;
-            for (double step = maxLoad/10; (step <= maxLoad) && ((double)pair.getValue() - step > 0.00001); step += maxLoad/10)
-            {
-                ++index;
-                if (index > 10)
-                {
-                    System.out.println("Error!");
-                }
-            }
 
             //converting everything to library format
-            double longtitudeStart = ((Edge)pair.getKey()).getStart().getLon();
-            double latitudeStart = ((Edge)pair.getKey()).getStart().getLat();
-            double longtitudeEnd = ((Edge)pair.getKey()).getEnd().getLon();
-            double latitudeEnd = ((Edge)pair.getKey()).getEnd().getLat();
+            double longtitudeStart = (pair.getKey()).getStart().getLon();
+            double latitudeStart = (pair.getKey()).getStart().getLat();
+            double longtitudeEnd = (pair.getKey()).getEnd().getLon();
+            double latitudeEnd = (pair.getKey()).getEnd().getLat();
 
 
             geometries[index - 1].add(
@@ -214,12 +214,16 @@ class IntensityMap {
             );
         }
 
+
         FeatureCollection georoute = new FeatureCollection();
-        for(int i=1; i<=10; ++i)
+        for (
+                int i = 1;
+                i <= 10; ++i)
+
         {
             Feature loadGroup = new Feature();
             loadGroup.setProperty("load", i);
-            loadGroup.setGeometry(geometries[i-1]);
+            loadGroup.setGeometry(geometries[i - 1]);
             georoute.add(loadGroup);
         }
 
@@ -228,5 +232,6 @@ class IntensityMap {
         mapper.writeValue(output, georoute);
 
         output.close();
+
     }
 }
