@@ -10,10 +10,8 @@ import org.roi.itlab.cassandra.random_attributes.PersonGenerator;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
@@ -21,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class TrafficTestIT {
     private static final String INTENSITY_FILENAME = "./target/intensity_map";
     private static final String EDGES_FILENAME = "./target/edges_storage";
-    private static final String GEO_JSON_FILENAME = "./target/geo.json";
+    private static final String GEO_JSON_FILENAME_PREFIX = "./target/";
 
     private static final String EdgesStrorageLoadFile = "./src/test/resources/edges_storage";
     private static final String IntenstityMapLoadFile = "./src/test/resources/intensity_map";
@@ -58,15 +56,32 @@ public class TrafficTestIT {
         traffic.writeToCSV(writer);
     }
 
+    @Ignore
+    @Test
+    public void IntensityMapConvert() throws IOException {
+        IntensityMap traffic = new IntensityMap();
+        Routing.loadEdgesStorage(EDGES_FILENAME);
+        traffic.loadFromCSV(INTENSITY_FILENAME);
+
+        makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "map", 7, 0);
+        makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "map", 9, 0);
+        makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "map", 11, 0);
+        makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "map", 18, 0);
+        makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "map", 23, 0);
+    }
+
+    private void makeGeoJSON(IntensityMap traffic, String filenamePrefix, int hour, int minute) throws IOException {
+        File outputFile = Paths.get(filenamePrefix + "_" + hour + "_" + minute + ".geojson").toFile();
+        traffic.makeGeoJSON(outputFile, LocalTime.of(hour, minute).toSecondOfDay() * 1000);
+    }
+
     @Test
     public void IntensityMapLoading() throws IOException {
         IntensityMap traffic = new IntensityMap();
         Routing.loadEdgesStorage(EdgesStrorageLoadFile);
         traffic.loadFromCSV(IntenstityMapLoadFile);
-        Path location = FileSystems.getDefault().getPath(GEO_JSON_FILENAME);
-
-        traffic.makeGeoJSON(new File(location.toUri()));
-        GeoJsonObject object = new ObjectMapper().readValue(new FileInputStream(new File(location.toUri())), GeoJsonObject.class);
+        makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "test", 9, 0);
+        GeoJsonObject object = new ObjectMapper().readValue(new FileInputStream(GEO_JSON_FILENAME_PREFIX + "test_9_0.geojson"), GeoJsonObject.class);
         assertTrue(object instanceof FeatureCollection);
     }
 }
