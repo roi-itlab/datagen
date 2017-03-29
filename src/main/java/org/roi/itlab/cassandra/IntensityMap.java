@@ -1,22 +1,24 @@
 package org.roi.itlab.cassandra;
 
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.geojson.*;
 import org.roi.itlab.cassandra.person.Person;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-
-import static java.lang.Math.log;
-import static java.lang.Math.pow;
-import static java.lang.Math.round;
 
 class IntensityMap {
 
@@ -71,6 +73,10 @@ class IntensityMap {
             put(startTime, driver.getToWork());
             put(endTime, driver.getToHome());
         }
+    }
+
+    public int getSize() {
+        return map.size();
     }
 
     public void put(long starttime, Route route) {
@@ -167,10 +173,11 @@ class IntensityMap {
             map.put(Routing.getEdge(Integer.parseInt(p[0])), new Timetable(timetable));
         };
         Files.lines(Paths.get(filename)).forEach(putEdge);
-        System.out.println("Loaded IntensityMap, max = " + getMaxIntensity());
+        System.out.printf("Loaded IntensityMap, %d edges, max intensity = %d\n", getSize(), getMaxIntensity());
     }
 
-    void makeGeoJSON(File outputFile) throws IOException {
+    void makeGeoJSON(File outputFile, long time) throws IOException {
+        System.out.printf("Convert to %s\n", outputFile);
         FileOutputStream output = new FileOutputStream(outputFile, false);
 
         GeometryCollection[] geometries = new GeometryCollection[10]; // one collection for each level of load
@@ -179,33 +186,22 @@ class IntensityMap {
             geometries[i] = new GeometryCollection();
         }
 
+        int maxSum = getMaxIntensity();
+        for (Map.Entry<Edge, Timetable> entry : map.entrySet()) {
 
-        Map<Edge, Integer> sumLoads = new HashMap<>();
+            Edge edge = entry.getKey();
+            int load = entry.getValue().getIntensity(time);
+            if (load == 0)
+                continue;
 
-        for (Map.Entry<Edge, Timetable> pair : map.entrySet()) {
-
-            int sumLoad = 0;
-            for (int i :
-                    pair.getValue().timetable) {
-                sumLoad += i;
-            }
-
-            sumLoads.put(pair.getKey(), sumLoad);
-
-        }
-        int maxSum = sumLoads.values().stream().max(Integer::compareTo).orElse(1);
-        for (HashMap.Entry<Edge, Integer> pair : sumLoads.entrySet()) {
-
-            double sum = Math.log(pair.getValue()) * 10 / Math.log(maxSum);
-            int index = Math.min(Math.max(1, Math.toIntExact(Math.round(sum))), 10);
-
+            double sum = Math.log(load) * 10 / Math.log(maxSum);
+            int index = Math.min((int) sum + 1, 10);
 
             //converting everything to library format
-            double longtitudeStart = (pair.getKey()).getStart().getLon();
-            double latitudeStart = (pair.getKey()).getStart().getLat();
-            double longtitudeEnd = (pair.getKey()).getEnd().getLon();
-            double latitudeEnd = (pair.getKey()).getEnd().getLat();
-
+            double longtitudeStart = new BigDecimal(edge.getStart().getLon()).setScale(6, RoundingMode.FLOOR).doubleValue();
+            double latitudeStart = new BigDecimal(edge.getStart().getLat()).setScale(6, RoundingMode.FLOOR).doubleValue();
+            double longtitudeEnd = new BigDecimal(edge.getEnd().getLon()).setScale(6, RoundingMode.FLOOR).doubleValue();
+            double latitudeEnd = new BigDecimal(edge.getEnd().getLat()).setScale(6, RoundingMode.FLOOR).doubleValue();
 
             geometries[index - 1].add(
                     new LineString(
@@ -216,19 +212,16 @@ class IntensityMap {
 
 
         FeatureCollection georoute = new FeatureCollection();
-        for (
-                int i = 1;
-                i <= 10; ++i)
-
-        {
+        for (int i = 1; i <= 10; ++i) {
             Feature loadGroup = new Feature();
             loadGroup.setProperty("load", i);
             loadGroup.setGeometry(geometries[i - 1]);
             georoute.add(loadGroup);
+            System.out.printf("Group %d contains %d geometries\n", i, geometries[i - 1].getGeometries().size());
         }
 
         ObjectMapper mapper = new ObjectMapper();
-
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.writeValue(output, georoute);
 
         output.close();
