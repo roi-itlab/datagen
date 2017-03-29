@@ -1,23 +1,25 @@
 package org.roi.itlab.cassandra.random_attributes;
 
-import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
-
 /**
  * Created by mkuperman on 3/19/2017.
  */
 public class IntensityNormalGenerator extends NormalGenerator {
 
+    private final int maxIntensity;
+    private final static double[] x = new double[]{0, 1, 2, 5, 10};
+    private final static double[] y = new double[]{1, 1, 1.1, 2.0, 5};
+    private final static double[] z = new double[]{0.01, 0.1, 0.1, 0.2, 0.2};
+
     public IntensityNormalGenerator(int maxIntensity, org.apache.commons.math3.random.RandomGenerator rng) {
-        super(rng);
-        double[] x = new double[]{0, maxIntensity/10, maxIntensity/5, maxIntensity/2, maxIntensity};//0, несколько средних значений, max intensity из всех возможных
-        double[] y = new double[]{1, 1, 1.5, 2.5, 3};// 0, некий коэффициент, характеризующий количество аварий (например, поставили 3, аварийность увеличилась в 3 раза)
-        double[] z = new double[]{0.01, 0.1, 0.2, 0.2, 0.2};
+        super(rng, x, y, z);
+        this.maxIntensity = maxIntensity;
+    }
 
-        LinearInterpolator li = new LinearInterpolator();
-        setMeanPsf(li.interpolate(x,y));
-        setDevPsf(li.interpolate(x,z));
+    @Override
+    public double getRandomDouble(double value) {
+        double sum = Math.log(value) * 10 / Math.log(maxIntensity);
+        int index = Math.min((int) sum + 1, 10);
 
-        setMin(getMeanPsf().getKnots()[0]);
-        setMax(getMeanPsf().getKnots()[getMeanPsf().getKnots().length-1]);
+        return super.getRandomDouble(index);
     }
 }

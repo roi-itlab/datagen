@@ -7,13 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.random_attributes.IntensityNormalGenerator;
-import org.roi.itlab.cassandra.random_attributes.NormalGenerator;
 import org.roi.itlab.cassandra.random_attributes.PersonGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by Аня on 22.03.2017.
@@ -45,7 +42,7 @@ public class AccidentRateIT {
         for (Person person : drivers.subList(0, DRIVERS_COUNT)) {
             accidents += accidentRate.getAccidents(person, 365);
         }
-        Assert.assertEquals((double) accidents / DRIVERS_COUNT, 0.25, 0.1);
+        Assert.assertEquals((double) accidents / DRIVERS_COUNT, 0.5, 0.1);
         System.out.println("Accidents: " + accidents);
     }
 }
