@@ -45,7 +45,7 @@ public class AccidentRateIT {
         for (Person person : drivers.subList(0, DRIVERS_COUNT)) {
             accidents += accidentRate.getAccidents(person, 365);
         }
-        Assert.assertEquals((double) accidents / DRIVERS_COUNT, 0.5, 0.1);
+        Assert.assertEquals((double) accidents / DRIVERS_COUNT, 0.25, 0.1);
         System.out.println("Accidents: " + accidents);
     }
 }
