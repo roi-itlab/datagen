@@ -71,7 +71,7 @@ public class PersonGenerator {
             Point work = workGenerator.sample();
             while (true) {
                 double actualDistance = distanceEarth.calcDist(home.getLatitude(), home.getLongitude(), work.getLatitude(), work.getLongitude());
-                if (Math.abs(actualDistance - distance) < DISTANCE_NEAR) {
+                if (actualDistance < distance) {
                     try {
                         Route routeToWork = Routing.route(home, work);
                         Route routeFromWork = Routing.route(work, home);
