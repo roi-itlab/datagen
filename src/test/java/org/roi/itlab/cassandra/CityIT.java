@@ -18,6 +18,8 @@ import static org.junit.Assert.assertNotEquals;
  */
 public class CityIT {
 
+    private static final String DRIVERS_FILENAME_PREFIX = "./target/drivers";
+
     private static final int DRIVERS_COUNT = 5_000;
     private RandomGenerator rng = new MersenneTwister(1);
 
@@ -26,6 +28,6 @@ public class CityIT {
     public void citySimulationTest() throws IOException {
         City city = new City(DRIVERS_COUNT, rng);
         city.simulate();
-        city.save();
+        city.save(DRIVERS_FILENAME_PREFIX + "_" + DRIVERS_COUNT + ".csv");
     }
 }
