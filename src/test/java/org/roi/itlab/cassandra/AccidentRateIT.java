@@ -7,13 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.random_attributes.IntensityNormalGenerator;
-import org.roi.itlab.cassandra.random_attributes.NormalGenerator;
 import org.roi.itlab.cassandra.random_attributes.PersonGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by Аня on 22.03.2017.
