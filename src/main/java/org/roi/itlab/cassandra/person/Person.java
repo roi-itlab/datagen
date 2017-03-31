@@ -14,7 +14,7 @@ public class Person {
     private int age;
     private LocalTime workStart;
     private LocalTime workDuration;
-    private int experience;
+    private double experience;
     private LocalTime workEnd;
     private Point home;
     private Point work;
@@ -69,7 +69,7 @@ public class Person {
         return workDuration;
     }
 
-    public int getExperience() {
+    public double getExperience() {
         return experience;
     }
 
@@ -105,7 +105,7 @@ public class Person {
         this.workDuration = workDuration;
     }
 
-    public void setExperience(int experience) {
+    public void setExperience(double experience) {
         this.experience = experience;
     }
 
