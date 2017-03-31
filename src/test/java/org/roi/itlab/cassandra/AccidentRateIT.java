@@ -21,7 +21,7 @@ public class AccidentRateIT {
     private static final int DRIVERS_COUNT = 1_000;
     private AccidentRate accidentRate;
     private ArrayList<Person> drivers;
-    private RandomGenerator rng = new MersenneTwister(1);
+    private RandomGenerator rng = new MersenneTwister(2);
 
     @Before
     public void setUp() throws IOException {
@@ -42,7 +42,7 @@ public class AccidentRateIT {
         for (Person person : drivers.subList(0, DRIVERS_COUNT)) {
             accidents += accidentRate.getAccidents(person, 365);
         }
-        Assert.assertEquals((double) accidents / DRIVERS_COUNT, 0.5, 0.1);
+        Assert.assertEquals((double) accidents / DRIVERS_COUNT, 0.35, 0.2);
         System.out.println("Accidents: " + accidents);
     }
 }

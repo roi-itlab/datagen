@@ -18,8 +18,9 @@ import java.util.UUID;
  */
 public class PersonGenerator {
     public static final int SEED = 1;
-    private static final double DISTANCE_LIMIT = 3;
-    private static final double DISTANCE_NEAR = 1000;
+    private static final double MAX_DISTANCE_OVERRUN = 3;
+    private static final double MIN_DISTANCE = 1000;
+    private static final double MIN_SKILL = 0.1;
 
     private RandomGenerator ageGenerator;
     private RandomGenerator workDurationGenerator;
@@ -62,8 +63,8 @@ public class PersonGenerator {
         person.setWorkStart(LocalTime.of(workStartGenerator.getRandomInt(),0));
         person.setWorkDuration(LocalTime.of(workDurationGenerator.getRandomInt(),0));
         person.setWorkEnd(LocalTime.of((person.getWorkStart().getHour() + person.getWorkDuration().getHour())% 24,0));
-        person.setExperience((int) experienceGenerator.getRandomDouble(person.getAge()));
-        person.setSkill(skillGenerator.getRandomDouble(person.getExperience()));
+        person.setExperience(Math.max(0, experienceGenerator.getRandomDouble(person.getAge())));
+        person.setSkill(Math.max(MIN_SKILL, skillGenerator.getRandomDouble(person.getExperience())));
         person.setRushFactor(rushGenerator.getRandomDouble(person.getAge()));
         if (homeGenerator != null && workGenerator != null) {
             int distance = distanceGenerator.getRandomInt();
@@ -71,11 +72,11 @@ public class PersonGenerator {
             Point work = workGenerator.sample();
             while (true) {
                 double actualDistance = distanceEarth.calcDist(home.getLatitude(), home.getLongitude(), work.getLatitude(), work.getLongitude());
-                if (actualDistance < distance) {
+                if (actualDistance < distance && actualDistance > MIN_DISTANCE) {
                     try {
                         Route routeToWork = Routing.route(home, work);
                         Route routeFromWork = Routing.route(work, home);
-                        if (routeFromWork.getDistance() < actualDistance * DISTANCE_LIMIT && routeToWork.getDistance() < actualDistance * DISTANCE_LIMIT) {
+                        if (routeFromWork.getDistance() < actualDistance * MAX_DISTANCE_OVERRUN && routeToWork.getDistance() < actualDistance * MAX_DISTANCE_OVERRUN) {
                             person.setHome(home);
                             person.setWork(work);
                             person.setToHome(routeFromWork);
