@@ -3,6 +3,7 @@ package org.roi.itlab.cassandra;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.geojson.FeatureCollection;
 import org.geojson.GeoJsonObject;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.roi.itlab.cassandra.person.Person;
@@ -21,13 +22,9 @@ public class TrafficTestIT {
     private static final String EDGES_FILENAME = "./target/edges_storage";
     private static final String GEO_JSON_FILENAME_PREFIX = "./target/";
 
-    private static final String EdgesStrorageLoadFile = "./src/test/resources/edges_storage";
-    private static final String IntenstityMapLoadFile = "./src/test/resources/intensity_map";
+    private static final int DRIVERS_COUNT = 10_000;
 
-    private static final int DRIVERS_COUNT = 100_000;
-
-    @Ignore
-    @Test
+    @Before
     public void IntensityMapSaving() throws IOException {
         PersonGenerator personGenerator = new PersonGenerator();
         ArrayList<Person> drivers = new ArrayList<>(DRIVERS_COUNT);
@@ -41,15 +38,11 @@ public class TrafficTestIT {
         System.out.println("Max intensity: " + traffic.getMaxIntensity());
 
         Path path = FileSystems.getDefault().getPath(INTENSITY_FILENAME);
-        Files.deleteIfExists(path);
-        Files.createFile(path);
-        OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
+        OutputStream out = Files.newOutputStream(path);
         OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
 
         Path path2 = FileSystems.getDefault().getPath(EDGES_FILENAME);
-        Files.deleteIfExists(path2);
-        Files.createFile(path2);
-        OutputStream out2 = Files.newOutputStream(path2, StandardOpenOption.WRITE);
+        OutputStream out2 = Files.newOutputStream(path2);
         OutputStreamWriter writer2 = new OutputStreamWriter(out2, Charset.defaultCharset());
 
         Routing.saveEdgesStorage(writer2);
@@ -78,8 +71,9 @@ public class TrafficTestIT {
     @Test
     public void IntensityMapLoading() throws IOException {
         IntensityMap traffic = new IntensityMap();
-        Routing.loadEdgesStorage(EdgesStrorageLoadFile);
-        traffic.loadFromCSV(IntenstityMapLoadFile);
+        Routing.loadEdgesStorage(EDGES_FILENAME);
+        traffic.loadFromCSV(INTENSITY_FILENAME);
+
         makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "test", 9, 0);
         GeoJsonObject object = new ObjectMapper().readValue(new FileInputStream(GEO_JSON_FILENAME_PREFIX + "test_9_0.geojson"), GeoJsonObject.class);
         assertTrue(object instanceof FeatureCollection);
