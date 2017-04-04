@@ -75,10 +75,10 @@ public class Routing {
                     FlagEncoder encoder = hopper.getEncodingManager().getEncoder("car");
                     long flags = edgeIteratorState.getFlags();
                     double speed = encoder.getSpeed(flags);
-                    boolean backward = encoder.isBackward(flags);
+                    boolean oneWay = encoder.isBackward(flags) ^ encoder.isForward(flags);
                     PointList geometry = edgeIteratorState.fetchWayGeometry(3);
                     int time = (int) (distance * 3600 / (speed));
-                    Edge tempedge = new Edge(id, new Point(x4, x2), new Point(x3, x1), geometry, distance, time, speed, backward);
+                    Edge tempedge = new Edge(id, new Point(x4, x2), new Point(x3, x1), geometry, distance, time, speed, oneWay);
                     EDGES_STORAGE.put(id, tempedge);
                     edges.add(tempedge);
                 }

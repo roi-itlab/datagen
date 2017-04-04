@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by Mikhail Kuperman on 28.03.2017.
@@ -62,7 +63,7 @@ public class City {
         DistanceCalcEarth earth = new DistanceCalcEarth();
         for (Person person : drivers) {
             double distance = earth.calcDist(person.getHome().getLatitude(), person.getHome().getLongitude(), person.getWork().getLatitude(), person.getWork().getLongitude());
-            writer.write(person.getAge() + "," + String.format("%.1f", person.getExperience()) + "," + String.format("%.3f", person.getSkill()) + "," + String.format("%.3f", person.getRushFactor()) + "," + person.getWorkStart().getHour() + "," + person.getWorkDuration().getHour() + "," + person.getWorkEnd().getHour() + "," + String.format("%.4f", person.getHome().getLatitude()) + "," + String.format("%.4f", person.getHome().getLongitude()) + "," + String.format("%.4f", person.getWork().getLatitude()) + "," + String.format("%.4f", person.getWork().getLongitude()) + "," + String.format("%.3f", distance) + "," + String.format("%.3f", person.getToWork().getDistance() + person.getToHome().getDistance()) + "," + person.getPreviousAccidents() + "," + person.getAccidents() + '\n');
+            writer.write(person.getAge() + "," + String.format(Locale.ROOT,"%.1f", person.getExperience()) + "," + String.format(Locale.ROOT,"%.3f", person.getSkill()) + "," + String.format(Locale.ROOT,"%.3f", person.getRushFactor()) + "," + person.getWorkStart().getHour() + "," + person.getWorkDuration().getHour() + "," + person.getWorkEnd().getHour() + "," + String.format(Locale.ROOT,"%.4f", person.getHome().getLatitude()) + "," + String.format(Locale.ROOT,"%.4f", person.getHome().getLongitude()) + "," + String.format(Locale.ROOT,"%.4f", person.getWork().getLatitude()) + "," + String.format(Locale.ROOT,"%.4f", person.getWork().getLongitude()) + "," + String.format(Locale.ROOT,"%.3f", distance) + "," + String.format(Locale.ROOT,"%.3f", (person.getToWork().getDistance() + person.getToHome().getDistance())/2) + "," + person.getPreviousAccidents() + "," + person.getAccidents() + '\n');
         }
         writer.close();
     }
