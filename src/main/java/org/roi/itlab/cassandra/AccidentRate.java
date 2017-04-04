@@ -37,7 +37,11 @@ public class AccidentRate {
         long time =  startTime.toSecondOfDay() * 1000;
         double result = 0;
         for (Edge e : route.getEdges()) {
-            result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time)) * (e.isBackward() ? 1.0 : onewwayFactor);
+            if (e.isOneWay()) {
+                result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time)) * onewwayFactor;
+            } else {
+                result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e,time) / 2 );
+            }
             time += e.getTime();
         }
         return result;
