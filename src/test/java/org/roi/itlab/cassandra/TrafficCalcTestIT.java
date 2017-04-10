@@ -1,6 +1,5 @@
 package org.roi.itlab.cassandra;
 
-import com.graphhopper.json.geo.Point;
 import org.junit.Assert;
 
 import org.junit.Before;
@@ -42,13 +41,13 @@ public class TrafficCalcTestIT {
         intensityMap.put(startTimes, routes);
 //        System.out.println("\n" + intensityMap);
         assertEquals(intensityMap.getIntensity(Routing.getEdge(12205),
-                1488186250000L),
+                1488186250000L, ),
                 3);
         assertEquals(intensityMap.getIntensity(Routing.getEdge(426664),
-                1488186250000L),
+                1488186250000L, ),
                 1);
         Assert.assertNotEquals(intensityMap.getIntensity(Routing.getEdge(426664),
-                1488185900000L),
+                1488185900000L, ),
                 1);
     }
 
