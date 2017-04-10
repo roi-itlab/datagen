@@ -34,6 +34,7 @@ public class AccidentRateIT {
         IntensityMap intensityMap = new IntensityMap(drivers);
         int maxIntensity = intensityMap.getMaxIntensity();
         accidentRate = new AccidentRate(intensityMap, new IntensityNormalGenerator(maxIntensity, rng), rng);
+        System.out.println(maxIntensity);
     }
 
     @Test

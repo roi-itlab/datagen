@@ -44,7 +44,6 @@ public class AccidentRate {
             result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time, direction));
             if (e.isOneWay())
                 result *= onewwayFactor;
-
             time += e.getTime();
         }
         return result;

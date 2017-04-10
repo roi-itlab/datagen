@@ -24,6 +24,7 @@ public class TrafficTestIT {
 
     private static final int DRIVERS_COUNT = 10_000;
 
+    @Ignore
     @Before
     public void IntensityMapSaving() throws IOException {
         PersonGenerator personGenerator = new PersonGenerator();
@@ -49,6 +50,27 @@ public class TrafficTestIT {
         traffic.writeToCSV(writer);
     }
 
+    @Before
+    public void intensityMapNewSaving() throws IOException {
+        PersonGenerator personGenerator = new PersonGenerator();
+        ArrayList<Person> drivers = new ArrayList<>(DRIVERS_COUNT);
+        for (int i = 0; i < DRIVERS_COUNT; i++) {
+            drivers.add(personGenerator.getResult());
+            if (i % 10000 == 0)
+                System.out.println(i + " drivers");
+        }
+        IntensityMap traffic = new IntensityMap(drivers);
+
+        System.out.println("Max intensity: " + traffic.getMaxIntensity());
+
+        Path path2 = FileSystems.getDefault().getPath(EDGES_FILENAME);
+        OutputStream out2 = Files.newOutputStream(path2);
+        OutputStreamWriter writer2 = new OutputStreamWriter(out2, Charset.defaultCharset());
+
+        Routing.saveEdgesStorage(writer2);
+        traffic.save(INTENSITY_FILENAME);
+    }
+
     @Ignore
     @Test
     public void IntensityMapConvert() throws IOException {
@@ -68,12 +90,23 @@ public class TrafficTestIT {
         traffic.makeGeoJSON(outputFile, LocalTime.of(hour, minute).toSecondOfDay() * 1000);
     }
 
+    @Ignore
     @Test
     public void IntensityMapLoading() throws IOException {
         IntensityMap traffic = new IntensityMap();
         Routing.loadEdgesStorage(EDGES_FILENAME);
         traffic.loadFromCSV(INTENSITY_FILENAME);
 
+        makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "test", 9, 0);
+        GeoJsonObject object = new ObjectMapper().readValue(new FileInputStream(GEO_JSON_FILENAME_PREFIX + "test_9_0.geojson"), GeoJsonObject.class);
+        assertTrue(object instanceof FeatureCollection);
+    }
+
+    @Test
+    public void IntensityMapNewLoading() throws IOException, ClassNotFoundException {
+        IntensityMap traffic = new IntensityMap();
+        Routing.loadEdgesStorage(EDGES_FILENAME);
+        traffic.load(INTENSITY_FILENAME);
         makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "test", 9, 0);
         GeoJsonObject object = new ObjectMapper().readValue(new FileInputStream(GEO_JSON_FILENAME_PREFIX + "test_9_0.geojson"), GeoJsonObject.class);
         assertTrue(object instanceof FeatureCollection);

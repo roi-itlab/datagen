@@ -155,7 +155,7 @@ class IntensityMap {
     }
 
 
-    private class forSerialize implements Serializable {
+    private static class forSerialize implements Serializable {
         private int edgeId;
         private Timetable forward;
         private Timetable backward;
