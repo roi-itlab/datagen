@@ -73,10 +73,10 @@ public class TrafficTestIT {
 
     @Ignore
     @Test
-    public void IntensityMapConvert() throws IOException {
+    public void IntensityMapConvert() throws IOException, ClassNotFoundException {
         IntensityMap traffic = new IntensityMap();
         Routing.loadEdgesStorage(EDGES_FILENAME);
-        traffic.loadFromCSV(INTENSITY_FILENAME);
+        traffic.load(INTENSITY_FILENAME);
 
         makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "map", 7, 0);
         makeGeoJSON(traffic, GEO_JSON_FILENAME_PREFIX + "map", 9, 0);

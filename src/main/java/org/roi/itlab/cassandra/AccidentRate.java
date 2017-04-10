@@ -13,7 +13,7 @@ public class AccidentRate {
 
     private IntensityMap intensityMap;
     private NormalGenerator normalGenerator;
-    private final static double averageAccidentProbability = 1.0 / 36_500_000;
+    private final static double averageAccidentProbability = 1.0 / 100_000_000;
     private final static double onewwayFactor = 0.75;
     private RandomGenerator rng;
 
@@ -41,9 +41,11 @@ public class AccidentRate {
         for (int i = 0; i < edges.length; i++) {
             boolean direction = directions[i];
             Edge e = edges[i];
-            result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time, direction));
-            if (e.isOneWay())
-                result *= onewwayFactor;
+            if (e.isOneWay()) {
+                result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time, direction)) * onewwayFactor;
+            } else {
+                result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time, direction));
+            }
             time += e.getTime();
         }
         return result;
