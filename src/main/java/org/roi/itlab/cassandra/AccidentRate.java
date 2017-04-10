@@ -13,7 +13,7 @@ public class AccidentRate {
 
     private IntensityMap intensityMap;
     private NormalGenerator normalGenerator;
-    private final static double averageAccidentProbability = 1.0 / 100_000_000;
+    private final static double averageAccidentProbability = 1.0 / 36_500_000;
     private final static double onewwayFactor = 0.75;
     private RandomGenerator rng;
 

@@ -79,13 +79,10 @@ public class RoutingTestIT {
     public void directionsOnTwoWayRoads(){
         Route route1 = Routing.route(59.939356,30.265628, 59.937819,30.260237);
         Route route2 = Routing.route(59.937819,30.260237, 59.939356,30.265628);
-        for (boolean forward :
-                route1.getDirections()) {
-            Assert.assertTrue(forward);
+        boolean[] directions = route1.getDirections();
+        boolean[] directions2 = route2.getDirections();
+        for (int i = 0; i < directions.length; i++) {
+            Assert.assertFalse(directions[i]==directions2[i]);
         }
-        for (boolean forward :
-                route2.getDirections()) {
-            Assert.assertFalse(forward);
-        }
-    }
+         }
 }
