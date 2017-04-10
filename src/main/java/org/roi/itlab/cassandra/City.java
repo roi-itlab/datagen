@@ -29,7 +29,7 @@ public class City {
     private AccidentRate accidentRate;
     private ArrayList<Person> drivers;
 
-    public City(int size, RandomGenerator rng) throws IOException {
+    public City(int size, RandomGenerator rng) throws IOException, ClassNotFoundException {
         PersonGenerator personGenerator = new PersonGenerator(rng);
         drivers = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
@@ -38,7 +38,7 @@ public class City {
 
         IntensityMap intensityMap = new IntensityMap();
         Routing.loadEdgesStorage(EDGES_FILENAME);
-        intensityMap.loadFromCSV(INTENSITY_FILENAME);
+        intensityMap.load(INTENSITY_FILENAME);
 
         int maxIntensity = intensityMap.getMaxIntensity();
         accidentRate = new AccidentRate(intensityMap, new IntensityNormalGenerator(maxIntensity, rng), rng);
@@ -57,14 +57,15 @@ public class City {
         Path path = FileSystems.getDefault().getPath(filename);
         Files.deleteIfExists(path);
         Files.createFile(path);
-        OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
-        OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());
-        writer.write("Age,Experience,Skill,RushFactor,WorkStart,WorkDuration,WorkEnd,HomeLat,HomeLng,WorkLat,WorkLng,Distance,RouteDistance,PreviousAccidents,Accidents" + '\n');
-        DistanceCalcEarth earth = new DistanceCalcEarth();
-        for (Person person : drivers) {
-            double distance = earth.calcDist(person.getHome().getLatitude(), person.getHome().getLongitude(), person.getWork().getLatitude(), person.getWork().getLongitude());
-            writer.write(person.getAge() + "," + String.format(Locale.ROOT,"%.1f", person.getExperience()) + "," + String.format(Locale.ROOT,"%.3f", person.getSkill()) + "," + String.format(Locale.ROOT,"%.3f", person.getRushFactor()) + "," + person.getWorkStart().getHour() + "," + person.getWorkDuration().getHour() + "," + person.getWorkEnd().getHour() + "," + String.format(Locale.ROOT,"%.4f", person.getHome().getLatitude()) + "," + String.format(Locale.ROOT,"%.4f", person.getHome().getLongitude()) + "," + String.format(Locale.ROOT,"%.4f", person.getWork().getLatitude()) + "," + String.format(Locale.ROOT,"%.4f", person.getWork().getLongitude()) + "," + String.format(Locale.ROOT,"%.3f", distance) + "," + String.format(Locale.ROOT,"%.3f", person.getToWork().getDistance() + person.getToHome().getDistance()) + "," + person.getPreviousAccidents() + "," + person.getAccidents() + '\n');
+        try (
+                OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
+                OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());) {
+            writer.write("Age,Experience,Skill,RushFactor,WorkStart,WorkDuration,WorkEnd,HomeLat,HomeLng,WorkLat,WorkLng,Distance,RouteDistance,PreviousAccidents,Accidents" + '\n');
+            DistanceCalcEarth earth = new DistanceCalcEarth();
+            for (Person person : drivers) {
+                double distance = earth.calcDist(person.getHome().getLatitude(), person.getHome().getLongitude(), person.getWork().getLatitude(), person.getWork().getLongitude());
+                writer.write(person.getAge() + "," + String.format(Locale.ROOT, "%.1f", person.getExperience()) + "," + String.format(Locale.ROOT, "%.3f", person.getSkill()) + "," + String.format(Locale.ROOT, "%.3f", person.getRushFactor()) + "," + person.getWorkStart().getHour() + "," + person.getWorkDuration().getHour() + "," + person.getWorkEnd().getHour() + "," + String.format(Locale.ROOT, "%.4f", person.getHome().getLatitude()) + "," + String.format(Locale.ROOT, "%.4f", person.getHome().getLongitude()) + "," + String.format(Locale.ROOT, "%.4f", person.getWork().getLatitude()) + "," + String.format(Locale.ROOT, "%.4f", person.getWork().getLongitude()) + "," + String.format(Locale.ROOT, "%.3f", distance) + "," + String.format(Locale.ROOT, "%.3f", person.getToWork().getDistance() + person.getToHome().getDistance()) + "," + person.getPreviousAccidents() + "," + person.getAccidents() + '\n');
+            }
         }
-        writer.close();
     }
 }

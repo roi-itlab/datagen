@@ -34,13 +34,17 @@ public class AccidentRate {
     }
 
     private double getNormalizedDistance(Route route, LocalTime startTime) {
-        long time =  startTime.toSecondOfDay() * 1000;
+        long time = startTime.toSecondOfDay() * 1000;
         double result = 0;
-        for (Edge e : route.getEdges()) {
+        Edge[] edges = route.getEdges();
+        boolean[] directions = route.getDirections();
+        for (int i = 0; i < edges.length; i++) {
+            boolean direction = directions[i];
+            Edge e = edges[i];
             if (e.isOneWay()) {
-                result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time)) * onewwayFactor;
+                result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time, direction)) * onewwayFactor;
             } else {
-                result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e,time) / 2 );
+                result += e.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(e, time, direction));
             }
             time += e.getTime();
         }
