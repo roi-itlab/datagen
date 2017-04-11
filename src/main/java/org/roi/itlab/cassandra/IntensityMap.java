@@ -196,31 +196,6 @@ class IntensityMap {
         System.out.printf("Loaded IntensityMap, %d edges, max intensity = %d\n", getSize(), getMaxIntensity());
     }
 
-    //edgeID|intensity at 00:00|intensity at 00:05|...|intensity at 23:55
-    public void writeToCSV(OutputStreamWriter writer) throws IOException {
-        for (Map.Entry<Edge, Timetable> entry :
-                mapForward.entrySet()) {
-            writer.write(Integer.toString(entry.getKey().id));
-            writer.write('|');
-            writer.write(entry.getValue().toCSV());
-            writer.write('\n');
-        }
-        writer.close();
-    }
-
-    public void loadFromCSV(String filename) throws IOException {
-        Consumer<String> putEdge = s -> {
-            String[] p = s.split("\\|");
-            int[] timetable = new int[p.length - 1];
-            for (int i = 1; i < p.length; i++) {
-                timetable[i - 1] = Integer.parseInt(p[i]);
-            }
-            mapForward.put(Routing.getEdge(Integer.parseInt(p[0])), new Timetable(timetable));
-        };
-        Files.lines(Paths.get(filename)).forEach(putEdge);
-        System.out.printf("Loaded IntensityMap, %d edges, max intensity = %d\n", getSize(), getMaxIntensity());
-    }
-
     void makeGeoJSON(File outputFile, long time) throws IOException {
         System.out.printf("Convert to %s\n", outputFile);
         FileOutputStream output = new FileOutputStream(outputFile, false);
