@@ -25,7 +25,7 @@ public class CityIT {
 
     @Test
     @Ignore
-    public void citySimulationTest() throws IOException {
+    public void citySimulationTest() throws IOException, ClassNotFoundException {
         City city = new City(DRIVERS_COUNT, rng);
         city.simulate();
         city.save(DRIVERS_FILENAME_PREFIX + "_" + DRIVERS_COUNT + ".csv");
