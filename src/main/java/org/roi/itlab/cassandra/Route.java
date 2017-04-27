@@ -38,6 +38,16 @@ public class Route {
         return sb.toString();
     }
 
+    public String edgeIds() {
+        StringBuilder sb = new StringBuilder();
+        for (Edge e :
+                edges) {
+            sb.append(e.id).append(';');
+        }
+        sb.deleteCharAt(sb.length()-1);
+        return sb.toString();
+    }
+
     public boolean[] getDirections() {
         return directions;
     }
