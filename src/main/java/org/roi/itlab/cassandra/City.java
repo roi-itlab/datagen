@@ -68,4 +68,18 @@ public class City {
             }
         }
     }
+
+    public void saveRoutes(String filename, int size) throws IOException {
+        Path path = FileSystems.getDefault().getPath(filename);
+        Files.deleteIfExists(path);
+        Files.createFile(path);
+        try (
+                OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
+                OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());) {
+            for (int i = 0; i < size; i++) {
+                Person person = drivers.get(i);
+                writer.write(person.getToWork().edgeIds() + ',' + person.getToHome().edgeIds() + '\n');
+            }
+        }
+    }
 }
