@@ -56,4 +56,26 @@ public class AccidentRate {
         }
         return result;
     }
+
+    public int calculateAccidentsAlter(Person person, int days) {
+        int accidents = 0;
+        double probability = getProbability(person);
+        for (int i = 0; i < days; i++) {
+            if(rng.nextDouble() < probability){
+                person.setEdgeWithAccidentc(getEdgewithAccident(person));
+                accidents++;
+            }
+            //accidents += rng.nextDouble() < probability ? 1 : 0;
+        }
+        person.setProbability(1 - Math.pow(1 - probability, days));
+        return accidents;
+    }
+
+    private Edge getEdgewithAccident(Person person){
+        Edge[] edges = person.getToHome().getEdges();;
+        if(rng.nextDouble() > 0.5){
+            edges = person.getToWork().getEdges();
+        }
+        return edges[rng.nextInt(edges.length)];
+    }
 }

@@ -25,13 +25,13 @@ public class CityIT {
     private RandomGenerator rng = new MersenneTwister(2);
 
     @Test
-    @Ignore
+    //@Ignore
     public void citySimulationTest() throws IOException, ClassNotFoundException {
         City city = new City(DRIVERS_COUNT[DRIVERS_COUNT.length - 1], rng);
-        city.simulate();
+        city.simulateAlter();
         for (int drivers : DRIVERS_COUNT) {
-            city.save(DRIVERS_FILENAME_PREFIX + "_" + drivers + ".csv", drivers);
-            city.saveRoutes(ROUTES_FILENAME_PREFIX + "_" + drivers + ".csv", drivers);
+            city.saveAlter(DRIVERS_FILENAME_PREFIX + "_" + drivers + "_alter.csv", drivers);
+            //city.saveRoutes(ROUTES_FILENAME_PREFIX + "_" + drivers + ".csv", drivers);
         }
     }
 }

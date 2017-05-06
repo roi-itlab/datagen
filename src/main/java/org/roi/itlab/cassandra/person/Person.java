@@ -1,6 +1,7 @@
 package org.roi.itlab.cassandra.person;
 
 import org.mongodb.morphia.geo.Point;
+import org.roi.itlab.cassandra.Edge;
 import org.roi.itlab.cassandra.Poi;
 import org.roi.itlab.cassandra.Route;
 
@@ -30,6 +31,7 @@ public class Person {
     private double probability;
     private int accidents;
     private int previousAccidents;
+    private Map<Edge, Integer> edgeWithAccidentc = new HashMap<Edge, Integer>();
 
     public Person()
     {}
@@ -186,5 +188,28 @@ public class Person {
 
     public void setProbability(double probability) {
         this.probability = probability;
+    }
+
+    public boolean isAccidentOnEdge(Edge e)
+    {
+        if(edgeWithAccidentc.containsKey(e)){
+            if(edgeWithAccidentc.get(e)  < 2)
+                edgeWithAccidentc.remove(e);
+            else
+                edgeWithAccidentc.put(e, edgeWithAccidentc.get(e)-1);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public void setEdgeWithAccidentc(Edge e){
+        if(edgeWithAccidentc.containsKey(e)){
+            edgeWithAccidentc.put(e, edgeWithAccidentc.get(e)+1);
+        }
+        else{
+            edgeWithAccidentc.put(e, new Integer(1));
+        }
     }
 }

@@ -34,8 +34,8 @@ public class City {
 
     public City(int size, RandomGenerator rng) throws IOException, ClassNotFoundException {
         PersonGenerator personGenerator = new PersonGenerator(rng);
-        drivers = IntStream.range(0, size).parallel().mapToObj(i -> personGenerator.getResult()).collect(Collectors.toList());
-
+        //drivers = IntStream.range(0, size).parallel().mapToObj(i -> personGenerator.getResult()).collect(Collectors.toList());
+        drivers = IntStream.range(0, size).mapToObj(i -> personGenerator.getResult()).collect(Collectors.toList());
         IntensityMap intensityMap = new IntensityMap();
         Routing.loadEdgesStorage(EDGES_FILENAME);
         intensityMap.load(INTENSITY_FILENAME);
@@ -80,6 +80,74 @@ public class City {
                 Person person = drivers.get(i);
                 writer.write(person.getToWork().edgeIds() + ',' + person.getToHome().edgeIds() + '\n');
             }
+        }
+    }
+
+
+    public void simulateAlter() {
+        drivers.stream().forEach(person -> {
+            int previousAccidents = accidentRate.calculateAccidentsAlter(person, PREVIOUS_YEARS * 365);
+            int accidents = accidentRate.calculateAccidents(person, 365);
+            person.setAccidents(accidents);
+            person.setPreviousAccidents(previousAccidents);
+        });
+    }
+
+    public void saveAlter(String filename, int size) throws IOException {
+        Path path = FileSystems.getDefault().getPath(filename);
+        Files.deleteIfExists(path);
+        Files.createFile(path);
+        try (
+                OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
+                OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());) {
+            writer.write("Age,Experience,Skill,RushFactor,TimeEdge,StartLat,StartLng,EndLat,EndLng," +
+                    "Distance,Accidents,PreviousAccidents" + '\n');
+            DistanceCalcEarth earth = new DistanceCalcEarth();
+            for (int i = 0; i < size; i++) {
+                Person person = drivers.get(i);
+
+                printEdges(person, person.getToWork(), writer);
+                printEdges(person, person.getToHome(), writer);
+//                Edge[] edges =  person.getToWork().getEdges();
+//                for(Edge edge: edges){
+//
+//                }
+//                //Edge[] edges = route.getEdges();
+//                double distance = earth.calcDist(person.getHome().getLatitude(), person.getHome().getLongitude(), person.getWork().getLatitude(), person.getWork().getLongitude());
+//                writer.write(person.getAge() + "," + String.format(Locale.ROOT, "%.1f", person.getExperience()) + "," + String.format(Locale.ROOT, "%.3f", person.getSkill()) + "," + String.format(Locale.ROOT, "%.3f", person.getRushFactor()) + "," + person.getWorkStart().getHour() + "," + person.getWorkDuration().getHour() + "," + person.getWorkEnd().getHour() + "," + String.format(Locale.ROOT, "%.4f", person.getHome().getLatitude()) + "," + String.format(Locale.ROOT, "%.4f", person.getHome().getLongitude()) + "," + String.format(Locale.ROOT, "%.4f", person.getWork().getLatitude()) + "," + String.format(Locale.ROOT, "%.4f", person.getWork().getLongitude()) + "," + String.format(Locale.ROOT, "%.3f", distance) + "," + String.format(Locale.ROOT, "%.3f", person.getToWork().getDistance() + person.getToHome().getDistance()) + "," + person.getPreviousAccidents() + "," + String.format(Locale.ROOT, "%.6f", person.getProbability()) + "," + person.getAccidents() + '\n');
+            }
+        }
+    }
+
+    private void printEdges(Person person, Route route,  OutputStreamWriter writer) throws IOException{
+        Edge[] edges =  person.getToWork().getEdges();
+        for(Edge edge: edges){
+            //double distance = earth.calcDist(person.getHome().getLatitude(), person.getHome().getLongitude(), person.getWork().getLatitude(), person.getWork().getLongitude());
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(person.getAge()).append(",").
+//                    append()
+            int accident = 0;
+            if(person.isAccidentOnEdge(edge))
+                accident = 1;
+            writer.write(person.getAge() + "," + String.format(Locale.ROOT, "%.1f", person.getExperience()) + "," +
+                    String.format(Locale.ROOT, "%.3f", person.getSkill()) + "," +
+                    String.format(Locale.ROOT, "%.3f", person.getRushFactor()) + "," +
+                    edge.getTime() + "," +
+                    String.format(Locale.ROOT, "%.4f",edge.getStart().getLat()) + "," +
+                    String.format(Locale.ROOT, "%.4f", edge.getStart().getLon()) + "," +
+                    String.format(Locale.ROOT, "%.4f", edge.getEnd().getLat()) + "," +
+                    String.format(Locale.ROOT, "%.4f", edge.getEnd().getLon()) + "," +
+                    String.format(Locale.ROOT, "%.4f",edge.getDistance()) + "," +
+                    accident  + "," + person.getPreviousAccidents()+ "\n");
+//                    String.format(Locale.ROOT, "%.4f", person.getHome().getLatitude()) + "," +
+//                    String.format(Locale.ROOT, "%.4f", person.getHome().getLongitude()) + "," +
+//                    String.format(Locale.ROOT, "%.4f", person.getWork().getLatitude()) + "," +
+//                    String.format(Locale.ROOT, "%.4f", person.getWork().getLongitude()) + "," +
+//                    String.format(Locale.ROOT, "%.3f", distance) + "," +
+//                    String.format(Locale.ROOT, "%.3f", person.getToWork().getDistance() + person.getToHome().getDistance()) + "," +
+//                    person.getPreviousAccidents() + "," + String.format(Locale.ROOT, "%.6f", person.getProbability()) + "," +
+//                    person.getAccidents() + '\n');
+
         }
     }
 }
