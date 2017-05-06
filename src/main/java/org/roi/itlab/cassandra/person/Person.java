@@ -31,10 +31,14 @@ public class Person {
     private double probability;
     private int accidents;
     private int previousAccidents;
-    private Map<Edge, Integer> edgeWithAccidentc = new HashMap<Edge, Integer>();
+    //private Map<Edge, Integer> edgeWithAccidentc ;
+    private Set<Edge> edgeSet;
 
     public Person()
-    {}
+    {
+        //edgeWithAccidentc = new HashMap<Edge, Integer>();
+        edgeSet = new HashSet<Edge>();
+    }
 
     public UUID getId() {
         return id;
@@ -190,26 +194,39 @@ public class Person {
         this.probability = probability;
     }
 
+//    public boolean isAccidentOnEdge(Edge e)
+//    {
+//        if(edgeWithAccidentc.containsKey(e)){
+//            if(edgeWithAccidentc.get(e)  < 2)
+//                edgeWithAccidentc.remove(e);
+//            else
+//                edgeWithAccidentc.put(e, edgeWithAccidentc.get(e)-1);
+//            return true;
+//        }
+//        else{
+//            return false;
+//        }
+//    }
+
+//    public void setEdgeWithAccidentc(Edge e){
+//        if(edgeWithAccidentc.containsKey(e)){
+//            edgeWithAccidentc.put(e, edgeWithAccidentc.get(e)+1);
+//        }
+//        else{
+//            edgeWithAccidentc.put(e, new Integer(1));
+//        }
+//    }
     public boolean isAccidentOnEdge(Edge e)
     {
-        if(edgeWithAccidentc.containsKey(e)){
-            if(edgeWithAccidentc.get(e)  < 2)
-                edgeWithAccidentc.remove(e);
-            else
-                edgeWithAccidentc.put(e, edgeWithAccidentc.get(e)-1);
+        if(edgeSet.contains(e)){
+            edgeSet.remove(e);
             return true;
         }
         else{
             return false;
         }
     }
-
     public void setEdgeWithAccidentc(Edge e){
-        if(edgeWithAccidentc.containsKey(e)){
-            edgeWithAccidentc.put(e, edgeWithAccidentc.get(e)+1);
-        }
-        else{
-            edgeWithAccidentc.put(e, new Integer(1));
-        }
+        edgeSet.add(e);
     }
 }

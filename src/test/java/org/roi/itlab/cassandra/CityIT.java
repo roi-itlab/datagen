@@ -21,7 +21,7 @@ public class CityIT {
     private static final String DRIVERS_FILENAME_PREFIX = "./target/drivers";
     private static final String ROUTES_FILENAME_PREFIX = "./target/routes";
 
-    private static final int[] DRIVERS_COUNT = new int[]{5_000, 50_000, 250_000};
+    private static final int[] DRIVERS_COUNT = new int[]{1000, 2000};//{5_000, 50_000, 250_000};
     private RandomGenerator rng = new MersenneTwister(2);
 
     @Test
