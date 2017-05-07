@@ -1,6 +1,5 @@
 package org.roi.itlab.cassandra;
 
-import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.roi.itlab.cassandra.person.Person;
 import org.roi.itlab.cassandra.random_attributes.IntensityNormalGenerator;
@@ -18,7 +17,6 @@ public class AccidentRate {
     private final static double averageAccidentProbability = 1.0 / 80_000_000;
     private final static double onewwayFactor = 0.75;
     private RandomGenerator rng;
-    private RandomGenerator r = new MersenneTwister(2);
 
     public AccidentRate(IntensityMap intensityMap, RandomGenerator rng) {
         this.intensityMap = intensityMap;
@@ -63,8 +61,9 @@ public class AccidentRate {
         int accidents = 0;
         double probability = getProbability(person);
         for (int i = 0; i < days; i++) {
-            if(rng.nextDouble() < probability){
-                person.setEdgeWithAccidentc(test(person));
+            double d = rng.nextDouble();
+            if(d < probability){
+                person.setEdgeWithAccidentc(getEdgeWithAccident(person));
                 accidents++;
             }
         }
@@ -73,14 +72,6 @@ public class AccidentRate {
     }
 
     private Edge getEdgeWithAccident(Person person){
-        Edge[] edges = person.getToHome().getEdges();;
-        if(rng.nextDouble() > 0.5){
-            edges = person.getToWork().getEdges();
-        }
-        return edges[rng.nextInt(edges.length)];
-    }
-
-    private Edge test(Person person){
         Edge[] edges = person.getToWork().getEdges();
         boolean direction = true;
         long time = person.getWorkStart().getHour()*1000;
@@ -92,12 +83,12 @@ public class AccidentRate {
         double[] x = new double[edges.length];
         double[] y = new double[edges.length];
         for(int i = 0 ; i< edges.length; ++i){
-            x[i] = (double)i;
+            x[i] = i;
             y[i] = intensityMap.getIntensity(edges[i], time, direction) + 1;
+            time += edges[i].getTime();
         }
         org.roi.itlab.cassandra.random_attributes.RandomGenerator randomGenerator
-                = new org.roi.itlab.cassandra.random_attributes.RandomGenerator( r, x,y);
-        int i = randomGenerator.getRandomInt();
-        return edges[i];
+                = new org.roi.itlab.cassandra.random_attributes.RandomGenerator( rng, x,y);
+        return edges[randomGenerator.getRandomInt()];
     }
 }

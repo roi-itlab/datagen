@@ -2,7 +2,6 @@ package org.roi.itlab.cassandra.person;
 
 import org.mongodb.morphia.geo.Point;
 import org.roi.itlab.cassandra.Edge;
-import org.roi.itlab.cassandra.Poi;
 import org.roi.itlab.cassandra.Route;
 
 import java.time.LocalTime;

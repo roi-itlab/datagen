@@ -21,7 +21,7 @@ public class CityIT {
     private static final String DRIVERS_FILENAME_PREFIX = "./target/drivers";
     private static final String ROUTES_FILENAME_PREFIX = "./target/routes";
 
-    private static final int[] DRIVERS_COUNT = new int[]{1000, 2000};//{5_000, 50_000, 250_000};
+    private static final int[] DRIVERS_COUNT = new int[]{5_000, 50_000, 250_000};
     private RandomGenerator rng = new MersenneTwister(2);
 
     @Test
@@ -30,8 +30,8 @@ public class CityIT {
         City city = new City(DRIVERS_COUNT[DRIVERS_COUNT.length - 1], rng);
         city.simulateAlter();
         for (int drivers : DRIVERS_COUNT) {
-            city.saveAlter(DRIVERS_FILENAME_PREFIX + "_" + drivers + "_alter.csv", drivers);
-            //city.saveRoutes(ROUTES_FILENAME_PREFIX + "_" + drivers + ".csv", drivers);
+            city.saveAlter(DRIVERS_FILENAME_PREFIX + "_" + drivers + "_.csv", drivers);
+            city.saveRoutes(ROUTES_FILENAME_PREFIX + "_" + drivers + ".csv", drivers);
         }
     }
 }
