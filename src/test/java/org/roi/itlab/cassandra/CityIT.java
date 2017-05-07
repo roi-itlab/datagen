@@ -25,7 +25,7 @@ public class CityIT {
     private RandomGenerator rng = new MersenneTwister(2);
 
     @Test
-    //@Ignore
+    @Ignore
     public void citySimulationTest() throws IOException, ClassNotFoundException {
         City city = new City(DRIVERS_COUNT[DRIVERS_COUNT.length - 1], rng);
 //        city.simulate();
