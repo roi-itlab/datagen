@@ -122,7 +122,7 @@ public class City {
             writer.write(person.getAge() + "," + String.format(Locale.ROOT, "%.1f", person.getExperience()) + "," +
                     String.format(Locale.ROOT, "%.3f", person.getSkill()) + "," +
                     String.format(Locale.ROOT, "%.3f", person.getRushFactor()) + "," +
-                    (int) (time / 1000 / 60 % (60 * 24))/60 + ":" + (int) (time / 1000 / 60 % (60 * 24))%60 + "," +
+                    (int) (time / 1000 / 60 % (60 * 24))/60 + "," +
                     String.format(Locale.ROOT, "%.4f",edge.getStart().getLat()) + "," +
                     String.format(Locale.ROOT, "%.4f", edge.getStart().getLon()) + "," +
                     String.format(Locale.ROOT, "%.4f", edge.getEnd().getLat()) + "," +
