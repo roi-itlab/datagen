@@ -15,6 +15,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,8 +35,8 @@ public class City {
 
     public City(int size, RandomGenerator rng) throws IOException, ClassNotFoundException {
         PersonGenerator personGenerator = new PersonGenerator(rng);
-        drivers = IntStream.range(0, size).parallel().mapToObj(i -> personGenerator.getResult()).collect(Collectors.toList());
-
+        //drivers = IntStream.range(0, size).parallel().mapToObj(i -> personGenerator.getResult()).collect(Collectors.toList());
+        drivers = IntStream.range(0, size).mapToObj(i -> personGenerator.getResult()).collect(Collectors.toList());
         IntensityMap intensityMap = new IntensityMap();
         Routing.loadEdgesStorage(EDGES_FILENAME);
         intensityMap.load(INTENSITY_FILENAME);
@@ -80,6 +81,55 @@ public class City {
                 Person person = drivers.get(i);
                 writer.write(person.getToWork().edgeIds() + ',' + person.getToHome().edgeIds() + '\n');
             }
+        }
+    }
+
+
+    public void simulateAlter() {
+        drivers.stream().forEach(person -> {
+            int previousAccidents = accidentRate.calculateAccidentsAlter(person, PREVIOUS_YEARS * 365);
+            int accidents = accidentRate.calculateAccidents(person, 365);
+            person.setAccidents(accidents);
+            person.setPreviousAccidents(previousAccidents);
+        });
+    }
+
+    public void saveAlter(String filename, int size) throws IOException {
+        Path path = FileSystems.getDefault().getPath(filename);
+        Files.deleteIfExists(path);
+        Files.createFile(path);
+        try (
+                OutputStream out = Files.newOutputStream(path, StandardOpenOption.WRITE);
+                OutputStreamWriter writer = new OutputStreamWriter(out, Charset.defaultCharset());) {
+            writer.write("Age,Experience,Skill,RushFactor,TimeStartEdge,StartLat,StartLng,EndLat,EndLng," +
+                    "Distance,Accidents" + '\n');
+            for (int i = 0; i < size; i++) {
+                Person person = drivers.get(i);
+
+                printEdges(person, person.getToWork(), person.getWorkStart(), writer);
+                printEdges(person, person.getToHome(), person.getWorkEnd(), writer);
+          }
+        }
+    }
+
+    private void printEdges(Person person, Route route, LocalTime localTime,  OutputStreamWriter writer) throws IOException{
+        Edge[] edges =  route.getEdges();
+        long time = localTime.toSecondOfDay()* 1000;
+        for(Edge edge: edges){
+            int accident = 0;
+            if(person.isAccidentOnEdge(edge))
+                accident = 1;
+            writer.write(person.getAge() + "," + String.format(Locale.ROOT, "%.1f", person.getExperience()) + "," +
+                    String.format(Locale.ROOT, "%.3f", person.getSkill()) + "," +
+                    String.format(Locale.ROOT, "%.3f", person.getRushFactor()) + "," +
+                    (int) (time / 1000 / 60 % (60 * 24))/60 + "," +
+                    String.format(Locale.ROOT, "%.4f",edge.getStart().getLat()) + "," +
+                    String.format(Locale.ROOT, "%.4f", edge.getStart().getLon()) + "," +
+                    String.format(Locale.ROOT, "%.4f", edge.getEnd().getLat()) + "," +
+                    String.format(Locale.ROOT, "%.4f", edge.getEnd().getLon()) + "," +
+                    String.format(Locale.ROOT, "%.4f",edge.getDistance()) + "," +
+                    accident  + "\n"); //+ "," + person.getPreviousAccidents()
+            time += edge.getTime();
         }
     }
 }
