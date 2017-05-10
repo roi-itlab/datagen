@@ -73,22 +73,32 @@ public class AccidentRate {
 
     private Edge getEdgeWithAccident(Person person){
         Edge[] edges = person.getToWork().getEdges();
-        boolean direction = true;
+        boolean[] directions =person.getToWork().getDirections();
         long time = person.getWorkStart().getHour()*1000;
-        if(rng.nextDouble() > 0.5){
+        double noramlizedDistanceToWork = getNormalizedDistance(person.getToWork(), person.getWorkStart());
+        if(rng.nextDouble() > noramlizedDistanceToWork / (noramlizedDistanceToWork + getNormalizedDistance(person.getToHome(), person.getWorkEnd()))){
             edges = person.getToHome().getEdges();
             time = person.getWorkEnd().getHour()*1000;
-            direction = false;
+            directions =person.getToHome().getDirections();
         }
+
         double[] x = new double[edges.length];
         double[] y = new double[edges.length];
         for(int i = 0 ; i< edges.length; ++i){
             x[i] = i;
-            y[i] = intensityMap.getIntensity(edges[i], time, direction) + 1;
+            y[i] = getNormalizedEdgeDistance(edges[i], time, directions[i]);
             time += edges[i].getTime();
         }
         org.roi.itlab.cassandra.random_attributes.RandomGenerator randomGenerator
                 = new org.roi.itlab.cassandra.random_attributes.RandomGenerator( rng, x,y);
         return edges[randomGenerator.getRandomInt()];
+    }
+
+    private double getNormalizedEdgeDistance(Edge edge, long time, boolean direction){
+        if (edge.isOneWay()) {
+            return edge.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(edge, time, direction)) * onewwayFactor;
+        } else {
+            return edge.getDistance() * normalGenerator.getRandomDouble(intensityMap.getIntensity(edge, time, direction));
+        }
     }
 }
