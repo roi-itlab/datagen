@@ -57,41 +57,27 @@ public class AccidentRate {
         return result;
     }
 
-    public int calculateAccidentsAlter(Person person, int days) {
-        int accidents = 0;
-        double probability = getProbability(person);
-        for (int i = 0; i < days; i++) {
+    private void calculateRouteAccidents(Person  person, Route route, long time, int days){
+        Edge[] edges = route.getEdges();
+        boolean[] directions = route.getDirections();
+        double probability = 0.0;
+        for (int i = 0; i < edges.length; i++) {
             double d = rng.nextDouble();
+            probability =  1 - Math.pow(1 - averageAccidentProbability *
+                    getNormalizedEdgeDistance(edges[i], time, directions[i]) * person.getRushFactor() /
+                    person.getSkill(), days);
             if(d < probability){
-                person.setEdgeWithAccidentc(getEdgeWithAccident(person));
-                accidents++;
+                person.setEdgeWithAccidentc(edges[i]);
+                person.setAccidents(person.getAccidents()+1);
             }
-        }
-        person.setProbability(1 - Math.pow(1 - probability, days));
-        return accidents;
-    }
-
-    private Edge getEdgeWithAccident(Person person){
-        Edge[] edges = person.getToWork().getEdges();
-        boolean[] directions =person.getToWork().getDirections();
-        long time = person.getWorkStart().getHour()*1000;
-        double noramlizedDistanceToWork = getNormalizedDistance(person.getToWork(), person.getWorkStart());
-        if(rng.nextDouble() > noramlizedDistanceToWork / (noramlizedDistanceToWork + getNormalizedDistance(person.getToHome(), person.getWorkEnd()))){
-            edges = person.getToHome().getEdges();
-            time = person.getWorkEnd().getHour()*1000;
-            directions =person.getToHome().getDirections();
-        }
-
-        double[] x = new double[edges.length];
-        double[] y = new double[edges.length];
-        for(int i = 0 ; i< edges.length; ++i){
-            x[i] = i;
-            y[i] = getNormalizedEdgeDistance(edges[i], time, directions[i]);
             time += edges[i].getTime();
         }
-        org.roi.itlab.cassandra.random_attributes.RandomGenerator randomGenerator
-                = new org.roi.itlab.cassandra.random_attributes.RandomGenerator( rng, x,y);
-        return edges[randomGenerator.getRandomInt()];
+    }
+
+    public int calculateAccidentsAlter(Person person, int days) {
+        calculateRouteAccidents(person,person.getToWork(), person.getWorkStart().getHour()*1000, days);
+        calculateRouteAccidents(person,person.getToHome(), person.getWorkEnd().getHour()*1000, days);
+        return person.getAccidents();
     }
 
     private double getNormalizedEdgeDistance(Edge edge, long time, boolean direction){
