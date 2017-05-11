@@ -128,7 +128,7 @@ public class City {
                     String.format(Locale.ROOT, "%.4f", edge.getEnd().getLat()) + "," +
                     String.format(Locale.ROOT, "%.4f", edge.getEnd().getLon()) + "," +
                     String.format(Locale.ROOT, "%.4f",edge.getDistance()) + "," +
-                    accident  + "\n"); //+ "," + person.getPreviousAccidents()
+                    accident  + "\n"); //+ "," + person.getPreviousAccidents() + "\n");
             time += edge.getTime();
         }
     }
