@@ -30,13 +30,9 @@ public class Person {
     private double probability;
     private int accidents;
     private int previousAccidents;
-    //private Map<Edge, Integer> edgeWithAccidentc ;
-    private Set<Edge> edgeSet;
+    private Set<Edge> accidentEdges;
 
-    public Person()
-    {
-        //edgeWithAccidentc = new HashMap<Edge, Integer>();
-        edgeSet = new HashSet<Edge>();
+    public Person() {
     }
 
     public UUID getId() {
@@ -217,15 +213,10 @@ public class Person {
 //    }
     public boolean isAccidentOnEdge(Edge e)
     {
-        if(edgeSet.contains(e)){
-            edgeSet.remove(e);
-            return true;
-        }
-        else{
-            return false;
-        }
+        return accidentEdges.contains(e);
     }
-    public void setEdgeWithAccidentc(Edge e){
-        edgeSet.add(e);
+
+    public void setAccidentEdges(Set<Edge> accidentEdges) {
+        this.accidentEdges = accidentEdges;
     }
 }

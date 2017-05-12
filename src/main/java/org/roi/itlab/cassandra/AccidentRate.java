@@ -6,6 +6,8 @@ import org.roi.itlab.cassandra.random_attributes.IntensityNormalGenerator;
 import org.roi.itlab.cassandra.random_attributes.NormalGenerator;
 
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Anna Striganova
@@ -57,27 +59,28 @@ public class AccidentRate {
         return result;
     }
 
-    private void calculateRouteAccidents(Person  person, Route route, long time, int days){
+    private Set<Edge> calculateRouteAccidents(Person  person, Route route, long time, int days){
+        Set<Edge> accidentEdges = new HashSet<>();
         Edge[] edges = route.getEdges();
         boolean[] directions = route.getDirections();
-        double probability = 0.0;
         for (int i = 0; i < edges.length; i++) {
             double d = rng.nextDouble();
-            probability =  1 - Math.pow(1 - averageAccidentProbability *
+            double probability =  1 - Math.pow(1 - averageAccidentProbability *
                     getNormalizedEdgeDistance(edges[i], time, directions[i]) * person.getRushFactor() /
                     person.getSkill(), days);
             if(d < probability){
-                person.setEdgeWithAccidentc(edges[i]);
-                person.setAccidents(person.getAccidents()+1);
+                accidentEdges.add(edges[i]);
             }
             time += edges[i].getTime();
         }
+        return accidentEdges;
     }
 
-    public int calculateAccidentsAlter(Person person, int days) {
-        calculateRouteAccidents(person,person.getToWork(), person.getWorkStart().getHour()*1000, days);
-        calculateRouteAccidents(person,person.getToHome(), person.getWorkEnd().getHour()*1000, days);
-        return person.getAccidents();
+    public Set<Edge> calculateAccidentsAlter(Person person, int days) {
+        Set<Edge> toWork = calculateRouteAccidents(person, person.getToWork(), person.getWorkStart().getHour() * 1000, days);
+        Set<Edge> toHome = calculateRouteAccidents(person,person.getToHome(), person.getWorkEnd().getHour()*1000, days);
+        toWork.addAll(toHome);
+        return toWork;
     }
 
     private double getNormalizedEdgeDistance(Edge edge, long time, boolean direction){
