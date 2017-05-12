@@ -20,6 +20,7 @@ public class CityIT {
 
     private static final String DRIVERS_FILENAME_PREFIX = "./target/drivers";
     private static final String ROUTES_FILENAME_PREFIX = "./target/routes";
+    private static final String EDGES_FILENAME_PREFIX = "./target/edges";
 
     private static final int[] DRIVERS_COUNT = new int[]{5_000, 50_000, 250_000};
     private RandomGenerator rng = new MersenneTwister(2);
@@ -35,7 +36,9 @@ public class CityIT {
 //        }
         city.simulateAlter();
         for (int drivers : DRIVERS_COUNT) {
-            city.saveAlter(DRIVERS_FILENAME_PREFIX + "_" + drivers + "_.csv", drivers);
+            city.save(DRIVERS_FILENAME_PREFIX + "_" + drivers + ".csv", drivers);
+            city.saveAlter(DRIVERS_FILENAME_PREFIX + "_" + drivers + "_edges.csv", drivers);
+            city.saveAlterEdges(EDGES_FILENAME_PREFIX + "_" + drivers + ".csv", drivers);
             city.saveRoutes(ROUTES_FILENAME_PREFIX + "_" + drivers + ".csv", drivers);
         }
     }
